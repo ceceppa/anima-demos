@@ -24,15 +24,10 @@ func _ready():
 
 	Anima.register_animation(self, 'gridAnimation')
 
-	var anima = Anima.group($Grid)
-	anima.set_animation('gridAnimation')
-	anima.set_start_delay(0.5)
-	anima.set_items_delay(0.05)
-	anima.set_duration(1.0)
-	anima.set_animation_type(Anima.GRID.SEQUENCE_TOP_LEFT)
-	anima.end()
+	var anima = Anima.begin($Grid)
+	anima.then({ group = $Grid, items_delay = 0.05, duration = 1, animation = 'gridAnimation' })
 
-	anima.play()
+	anima.play_with_delay(0.5)
 
 	yield(anima, "animation_completed")
 	print('yay, all done :)')

@@ -63,9 +63,9 @@ shader_param/uv1_offset = Vector3( 0, 0, 0 )
 shader_param/uv2_scale = Vector3( 1, 1, 1 )
 shader_param/uv2_offset = Vector3( 0, 0, 0 )
 
-[node name="3DBoxes" type="Spatial"]
+[node name="3DBoxesBackwards" type="Spatial"]
 script = ExtResource( 1 )
-_play_reverse = true
+_play_backwards = true
 
 [node name="Base" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.78114, 0, -88.8639 )

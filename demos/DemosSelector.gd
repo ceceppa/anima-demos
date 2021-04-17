@@ -32,3 +32,6 @@ func _on_Button3DGrid_pressed():
 
 func _on_Button3DBoxesReverse_pressed():
 	_change_scene("res://demos/3DBoxesReverse.tscn")
+
+func _on_ButtonSequence3_pressed():
+	_change_scene("res://demos/SequenceWithParallelBackwards.tscn")

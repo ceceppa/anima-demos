@@ -93,7 +93,7 @@ __meta__ = {
 
 [node name="ButtonAnimations" type="Button" parent="Control"]
 margin_right = 510.0
-margin_bottom = 106.0
+margin_bottom = 88.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -109,7 +109,7 @@ text = "Built-in animations"
 [node name="ButtonEasings" type="Button" parent="Control"]
 margin_left = 514.0
 margin_right = 1024.0
-margin_bottom = 106.0
+margin_bottom = 88.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -123,9 +123,9 @@ custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
 text = "Built-in easings"
 
 [node name="ButtonGroup" type="Button" parent="Control"]
-margin_top = 110.0
+margin_top = 92.0
 margin_right = 510.0
-margin_bottom = 216.0
+margin_bottom = 180.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -140,9 +140,9 @@ text = "Animate Group"
 
 [node name="ButtonSequence" type="Button" parent="Control"]
 margin_left = 514.0
-margin_top = 110.0
+margin_top = 92.0
 margin_right = 1024.0
-margin_bottom = 216.0
+margin_bottom = 180.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -156,9 +156,9 @@ custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
 text = "Sequential and parallel animation"
 
 [node name="ButtonSequence2" type="Button" parent="Control"]
-margin_top = 220.0
+margin_top = 184.0
 margin_right = 510.0
-margin_bottom = 326.0
+margin_bottom = 272.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -171,11 +171,27 @@ custom_colors/font_color_hover = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
 text = "Sequential with paralel animation"
 
-[node name="ButtonCallbacks" type="Button" parent="Control"]
+[node name="ButtonSequence3" type="Button" parent="Control"]
 margin_left = 514.0
-margin_top = 220.0
+margin_top = 184.0
 margin_right = 1024.0
-margin_bottom = 326.0
+margin_bottom = 272.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/normal = SubResource( 6 )
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+text = "Sequential with paralel animation - Backwards"
+
+[node name="ButtonCallbacks" type="Button" parent="Control"]
+margin_top = 276.0
+margin_right = 510.0
+margin_bottom = 364.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -192,9 +208,10 @@ __meta__ = {
 }
 
 [node name="Button3DRings" type="Button" parent="Control"]
-margin_top = 330.0
-margin_right = 510.0
-margin_bottom = 436.0
+margin_left = 514.0
+margin_top = 276.0
+margin_right = 1024.0
+margin_bottom = 364.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -211,10 +228,9 @@ __meta__ = {
 }
 
 [node name="Button3DBoxes" type="Button" parent="Control"]
-margin_left = 514.0
-margin_top = 330.0
-margin_right = 1024.0
-margin_bottom = 436.0
+margin_top = 368.0
+margin_right = 510.0
+margin_bottom = 456.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -231,9 +247,10 @@ __meta__ = {
 }
 
 [node name="Button3DBoxesReverse" type="Button" parent="Control"]
-margin_top = 440.0
-margin_right = 510.0
-margin_bottom = 546.0
+margin_left = 514.0
+margin_top = 368.0
+margin_right = 1024.0
+margin_bottom = 456.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -244,16 +261,15 @@ custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
-text = "3D Boxes - Reverse"
+text = "3D Boxes - Backwards"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Button3DGrid" type="Button" parent="Control"]
-margin_left = 514.0
-margin_top = 440.0
-margin_right = 1024.0
-margin_bottom = 546.0
+margin_top = 460.0
+margin_right = 510.0
+margin_bottom = 548.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -273,6 +289,7 @@ __meta__ = {
 [connection signal="pressed" from="Control/ButtonGroup" to="." method="_on_Button1_pressed"]
 [connection signal="pressed" from="Control/ButtonSequence" to="." method="_on_ButtonSequence_pressed"]
 [connection signal="pressed" from="Control/ButtonSequence2" to="." method="_on_ButtonSequence2_pressed"]
+[connection signal="pressed" from="Control/ButtonSequence3" to="." method="_on_ButtonSequence3_pressed"]
 [connection signal="pressed" from="Control/ButtonCallbacks" to="." method="_on_ButtonCallbacks_pressed"]
 [connection signal="pressed" from="Control/Button3DRings" to="." method="_on_Button3DRings_pressed"]
 [connection signal="pressed" from="Control/Button3DBoxes" to="." method="_on_Button3DBoxes_pressed"]
