@@ -280,4 +280,5 @@ custom_fonts/font = SubResource( 11 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_colors/font_color_hover = Color( 0, 0, 0, 1 )
 text = "Start Animation"
+
 [connection signal="pressed" from="SequenceCallback/MarginContainer/VBoxContainer/Start" to="SequenceCallback" method="_on_Start_pressed"]
