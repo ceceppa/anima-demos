@@ -24,6 +24,9 @@ func _init_balls() -> void:
 	var available_height: float = window_size.y - FIRST_BALL_Y
 	var rows = floor(available_height / ball_size.y) - 3
 
+	columns = min(20, columns)
+	rows = min(10, rows)
+
 	var gap_x = (window_size.x - (ball_size.x * columns)) / columns
 	var gap_y = (available_height - (ball_size.y * rows)) / rows
 

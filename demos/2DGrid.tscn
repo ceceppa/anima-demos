@@ -13,6 +13,7 @@ __meta__ = {
 }
 
 [node name="ShowAllDemos" parent="." instance=ExtResource( 1 )]
+visible = false
 
 [node name="Label" parent="." instance=ExtResource( 3 )]
 text = "Grid sequence demo"
