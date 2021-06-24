@@ -16,6 +16,6 @@ __meta__ = {
 visible = false
 
 [node name="Label" parent="." instance=ExtResource( 3 )]
-text = "Grid sequence demo"
+text = "Grid demo"
 
 [node name="Grid" type="Node" parent="."]
