@@ -13,7 +13,7 @@ func _ready():
 	player.then(self._get_anima())
 	player.then($VBoxContainer/Header._get_anima())
 
-	player.play_with_delay(5.3)
+	player.play_with_delay(0.3)
 
 func _draw():
 	var size: Vector2 = _bg_rect_size * _screen_multiplier
