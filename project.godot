@@ -24,6 +24,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/utils/node_properties.gd"
 }, {
+"base": "Node",
+"class": "AnimaPlayer",
+"language": "GDScript",
+"path": "res://addons/anima/core/player.gd"
+}, {
 "base": "Reference",
 "class": "AnimaStrings",
 "language": "GDScript",
@@ -38,6 +43,7 @@ _global_script_class_icons={
 "AnimaEasing": "",
 "AnimaNode": "",
 "AnimaNodesProperties": "",
+"AnimaPlayer": "",
 "AnimaStrings": "",
 "AnimaTween": ""
 }
