@@ -5,6 +5,9 @@ export (Texture) var _image
 onready var _image_height = rect_size.y setget _set_image_height
 onready var _original_height = _image_height
 
+func _ready():
+	_on_CardPanel_mouse_exited()
+
 func _get_anima_node():
 	var anima = Anima.begin(self)
 
@@ -70,7 +73,7 @@ func _set_image_height(height: float) -> void:
 
 	update()
 
-func _animate_height_change(anchor_top: float) -> void:
+func _animate_height_change(anchor_top: float, opacity: int) -> void:
 	var anima := Anima.begin(self)
 
 	anima.then({ node = $Title, property = "anchor_top", to = anchor_top, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK })
@@ -78,14 +81,15 @@ func _animate_height_change(anchor_top: float) -> void:
 
 	anima.with({ node = $Subtitle, property = "anchor_top", to = anchor_top + 0.1, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK, delay = 0.1 })
 	anima.with({ node = $Subtitle, property = "anchor_bottom", to = anchor_top + 0.2, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK, delay = 0.1 })
+	anima.with({ node = $Subtitle, property = "opacity", to = opacity, duration = 0.3, hide_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY })
 
 	anima.play()
 
 func _on_CardPanel_mouse_entered():
-	_animate_height_change(0.8)
+	_animate_height_change(0.8, 1)
 
 func _on_CardPanel_mouse_exited():
-	_animate_height_change(0.9)
+	_animate_height_change(0.9, 0)
 
 func _on_CardPanel_item_rect_changed():
 	update()
