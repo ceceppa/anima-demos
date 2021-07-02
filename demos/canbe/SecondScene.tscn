@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://addons/anima/shapes/Line.gd" type="Script" id=1]
+[ext_resource path="res://demos/canbe/SecondScene.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/components/AnimaChars.tscn" type="PackedScene" id=3]
+[ext_resource path="res://resources/fonts/OpenSans-ExtraBold.ttf" type="DynamicFontData" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 84
+font_data = ExtResource( 4 )
+
+[node name="SecondScene" type="CenterContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.0
+margin_right = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimaLine" type="Control" parent="."]
+margin_left = 512.0
+margin_top = 300.0
+margin_right = 512.0
+margin_bottom = 300.0
+script = ExtResource( 1 )
+_line_width = 2.0
+
+[node name="AnimaLine2" type="Control" parent="."]
+margin_left = 512.0
+margin_top = 300.0
+margin_right = 512.0
+margin_bottom = 300.0
+script = ExtResource( 1 )
+_line_width = 2.0
+
+[node name="Anima" parent="." instance=ExtResource( 3 )]
+margin_left = 353.0
+margin_top = 265.0
+margin_right = 671.0
+margin_bottom = 335.0
+rect_min_size = Vector2( 0, 70 )
+_label = "ANIMA"
+_font = SubResource( 1 )
