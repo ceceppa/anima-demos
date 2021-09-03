@@ -1,0 +1,173 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://addons/anima/src/scene/anima_preview_scene.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/anima/icons/icon_loop.svg" type="Texture" id=3]
+[ext_resource path="res://addons/anima/fonts/Lato-Bold.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://addons/anima/icons/visibility_hidden.svg" type="Texture" id=9]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_size = 5
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends PanelContainer
+
+var _can_drag_preview_panel
+var _mouse_start_position := Vector2.ZERO
+
+func get_preview_node():
+	return $VBoxContainer/Preview
+
+func get_preview_scene_node():
+	return $VBoxContainer/Preview/Viewport/PreviewScene
+
+func _gui_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT:
+			_can_drag_preview_panel = event.pressed
+
+func _input(event):
+	if event is InputEventMouseButton and event.pressed:
+		_mouse_start_position = event.get_position()
+
+		if event.button_index == BUTTON_LEFT:
+
+			if not event.pressed:
+				_can_drag_preview_panel = false
+
+	if event is InputEventMouseMotion and _can_drag_preview_panel:
+		var current_position = event.get_position()
+		var dragged = _mouse_start_position - current_position
+		var position = get_position()
+
+		set_position(position - dragged)
+
+		_mouse_start_position = current_position
+
+func _on_TogglePreview_pressed():
+	var preview = get_preview_node()
+	preview.visible = not preview.visible
+
+	var height = 256 if preview.visible else 24
+	var size = self.get_size()
+
+	self.set_size(Vector2(size.x, height))
+
+func _on_ToggleLoop_pressed():
+	var preview_scene = get_preview_scene_node()
+	
+	preview_scene.toggle_loop()
+
+func update_shader(shader_code: String) -> void:
+	$VBoxContainer/Preview/Viewport/PreviewScene.update_shader(shader_code)
+"
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.301961, 0.247059, 0.458824, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="DynamicFont" id=4]
+size = 18
+use_filter = true
+font_data = ExtResource( 4 )
+
+[node name="EditorPreview" type="PanelContainer"]
+margin_left = 768.0
+margin_top = 100.0
+margin_right = 1024.0
+margin_bottom = 356.0
+mouse_filter = 1
+custom_styles/panel = SubResource( 1 )
+script = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_right = 256.0
+margin_bottom = 286.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PreviewPanelTitle" type="PanelContainer" parent="VBoxContainer"]
+margin_right = 256.0
+margin_bottom = 30.0
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/PreviewPanelTitle"]
+margin_right = 256.0
+margin_bottom = 30.0
+mouse_filter = 1
+custom_constants/margin_right = 7
+custom_constants/margin_top = 2
+custom_constants/margin_left = 7
+custom_constants/margin_bottom = 2
+
+[node name="Container" type="HBoxContainer" parent="VBoxContainer/PreviewPanelTitle/MarginContainer"]
+margin_left = 7.0
+margin_top = 2.0
+margin_right = 249.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Spacer" type="Control" parent="VBoxContainer/PreviewPanelTitle/MarginContainer/Container"]
+margin_bottom = 26.0
+mouse_filter = 1
+
+[node name="Title" type="Label" parent="VBoxContainer/PreviewPanelTitle/MarginContainer/Container"]
+margin_left = 4.0
+margin_top = 2.0
+margin_right = 176.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 4 )
+text = "Preview"
+valign = 1
+
+[node name="TogglePreview" type="ToolButton" parent="VBoxContainer/PreviewPanelTitle/MarginContainer/Container"]
+margin_left = 180.0
+margin_right = 208.0
+margin_bottom = 26.0
+toggle_mode = true
+icon = ExtResource( 9 )
+
+[node name="Toggle360Loop" type="ToolButton" parent="VBoxContainer/PreviewPanelTitle/MarginContainer/Container"]
+margin_left = 212.0
+margin_right = 242.0
+margin_bottom = 26.0
+icon = ExtResource( 3 )
+
+[node name="Preview" type="ViewportContainer" parent="VBoxContainer"]
+margin_top = 30.0
+margin_right = 256.0
+margin_bottom = 286.0
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="VBoxContainer/Preview"]
+size = Vector2( 256, 256 )
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="PreviewScene" parent="VBoxContainer/Preview/Viewport" instance=ExtResource( 1 )]
+[connection signal="pressed" from="VBoxContainer/PreviewPanelTitle/MarginContainer/Container/TogglePreview" to="." method="_on_TogglePreview_pressed"]
+[connection signal="pressed" from="VBoxContainer/PreviewPanelTitle/MarginContainer/Container/Toggle360Loop" to="." method="_on_ToggleLoop_pressed"]

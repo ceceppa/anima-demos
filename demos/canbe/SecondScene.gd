@@ -31,20 +31,20 @@ func get_anima() -> AnimaNode:
 	anima.with({ node = $AnimaLine2, animation = 'move_line_2', duration = 0.3, easing = Anima.EASING.EASE_OUT_CUBIC })
 
 	anima.then({ node = $AnimaLine, animation = 'move_line_1_again', duration = 0.3, delay = - 0.1, easing = Anima.EASING.EASE_OUT_CUBIC })
-	anima.with({ node = $AnimaLine2, animation = 'move_line_2_again', duration = 0.3, delay = - 0.0, easing = Anima.EASING.EASE_OUT_CUBIC })
+	anima.with({ node = $AnimaLine2, animation = 'move_line_2_again', duration = 0.3, easing = Anima.EASING.EASE_OUT_CUBIC })
 
 	anima.with({ group = $Anima, animation = 'animate_anima', duration = 0.5, easing_points = [0.5,1,0.85,1.78], hide_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY })
 
-	anima.then({ node = $AnimaLine, property = '_x1', to = 100, relative = true, duration = 0.3, easing = Anima.EASING.EASE_IN_CUBIC })
-	anima.with({ node = $AnimaLine, property = '_x2', to = -100, relative = true, duration = 0.3, easing = Anima.EASING.EASE_IN_CUBIC })
+	anima.then({ node = $AnimaLine, property = '_x1', to = 100, relative = true, duration = 0.3, delay = -0.1, easing = Anima.EASING.EASE_OUT_CUBIC })
+	anima.with({ node = $AnimaLine, property = '_x2', to = -100, relative = true, duration = 0.3, easing = Anima.EASING.EASE_OUT_CUBIC })
 
-	anima.with({ node = $AnimaLine2, property = '_x1', to = -100, relative = true, duration = 0.3, easing = Anima.EASING.EASE_IN_CUBIC })
-	anima.with({ node = $AnimaLine2, property = '_x2', to = 100, relative = true, duration = 0.3, easing = Anima.EASING.EASE_IN_CUBIC })
+	anima.with({ node = $AnimaLine2, property = '_x1', to = -100, relative = true, duration = 0.3, easing = Anima.EASING.EASE_OUT_CUBIC })
+	anima.with({ node = $AnimaLine2, property = '_x2', to = 100, relative = true, duration = 0.3, easing = Anima.EASING.EASE_OUT_CUBIC })
 
 	anima.wait(3.0)
 
-	anima.then({ group = $Anima, animation = 'fade_out', duration = 0.3, animation_type = Anima.GRID.RANDOM })
-	anima.with({ node = $Anima, property = '_letter_spacing', to = 20, duration = 0.3 })
+	anima.then({ group = $Anima, property = 'opacity', to = 0, duration = 0.2, items_delay = 0.05, animation_type = Anima.GRID.RANDOM })
+	anima.with({ node = $Anima, property = '_letter_spacing', to = 20, duration = 0.5, easing = Anima.EASING.EASE_IN_CUBIC })
 
 	anima.with({ node = $AnimaLine, property = '_x1', to = 0, duration = 0.3, easing = Anima.EASING.EASE_IN_CUBIC })
 	anima.with({ node = $AnimaLine, property = '_x2', to = 0, duration = 0.3, easing = Anima.EASING.EASE_IN_CUBIC })

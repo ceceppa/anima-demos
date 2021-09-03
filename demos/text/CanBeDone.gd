@@ -6,4 +6,4 @@ func _ready():
 	player.then($AnimaSquare/Text.get_anima())
 	player.then($AnimaSquare/SecondScene.get_anima())
 
-	player.play_with_delay(10.5)
+	player.play_with_delay(0.5)

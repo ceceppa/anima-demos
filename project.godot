@@ -9,6 +9,21 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Control",
+"class": "AnimaArc",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Arc.gd"
+}, {
+"base": "HBoxContainer",
+"class": "AnimaChars",
+"language": "GDScript",
+"path": "res://addons/anima/components/AnimaChars.gd"
+}, {
+"base": "Control",
+"class": "AnimaCircle",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Circle.gd"
+}, {
 "base": "Reference",
 "class": "AnimaEasing",
 "language": "GDScript",
@@ -40,6 +55,16 @@ _global_script_classes=[ {
 "path": "res://addons/anima/core/player.gd"
 }, {
 "base": "Control",
+"class": "AnimaRectangle",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Rectangle.gd"
+}, {
+"base": "Control",
+"class": "AnimaShape",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Base.gd"
+}, {
+"base": "Control",
 "class": "AnimaSquare",
 "language": "GDScript",
 "path": "res://addons/anima/shapes/Square.gd"
@@ -49,20 +74,31 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/anima/utils/strings.gd"
 }, {
+"base": "Control",
+"class": "AnimaTriangle",
+"language": "GDScript",
+"path": "res://addons/anima/shapes/Triangle.gd"
+}, {
 "base": "Tween",
 "class": "AnimaTween",
 "language": "GDScript",
 "path": "res://addons/anima/core/tween.gd"
 } ]
 _global_script_class_icons={
+"AnimaArc": "",
+"AnimaChars": "",
+"AnimaCircle": "",
 "AnimaEasing": "",
 "AnimaLabel": "",
 "AnimaLine": "",
 "AnimaNode": "",
 "AnimaNodesProperties": "",
 "AnimaPlayer": "",
+"AnimaRectangle": "",
+"AnimaShape": "",
 "AnimaSquare": "",
 "AnimaStrings": "",
+"AnimaTriangle": "",
 "AnimaTween": ""
 }
 
@@ -73,6 +109,7 @@ run/main_scene="res://demos/DemosSelector.tscn"
 
 [autoload]
 
+AnimaUI="*res://addons/anima/ui/anima_ui.gd"
 Anima="*res://addons/anima/core/anima.gd"
 
 [editor_plugins]

@@ -65,6 +65,9 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Anima"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="item_rect_changed" from="." to="." method="_on_DemoSelector_item_rect_changed"]
 [connection signal="minimum_size_changed" from="." to="." method="_on_DemoSelector_minimum_size_changed"]

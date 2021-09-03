@@ -1,0 +1,76 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://addons/anima/fonts/Lato-Bold.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://addons/anima/icons/edit.svg" type="Texture" id=2]
+[ext_resource path="res://addons/anima/ui/custom_node_title.gd" type="Script" id=3]
+[ext_resource path="res://addons/anima/icons/visibility_hidden.svg" type="Texture" id=4]
+[ext_resource path="res://addons/anima/icons/close.svg" type="Texture" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+size = 18
+use_filter = true
+font_data = ExtResource( 1 )
+
+[node name="CustomNodeTitle" type="PanelContainer"]
+margin_right = 212.0
+margin_bottom = 38.0
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Container" type="HBoxContainer" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 205.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon" type="TextureRect" parent="Container"]
+margin_bottom = 24.0
+stretch_mode = 4
+
+[node name="Spacer" type="Control" parent="Container"]
+margin_left = 4.0
+margin_right = 4.0
+margin_bottom = 24.0
+
+[node name="Title" type="Label" parent="Container"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 134.0
+margin_bottom = 23.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 1 )
+text = "Title goes here"
+
+[node name="TogglePreview" type="ToolButton" parent="Container"]
+visible = false
+margin_left = 99.0
+margin_right = 127.0
+margin_bottom = 24.0
+toggle_mode = true
+icon = ExtResource( 4 )
+
+[node name="RenameButton" type="ToolButton" parent="Container"]
+margin_left = 138.0
+margin_right = 166.0
+margin_bottom = 24.0
+icon = ExtResource( 2 )
+
+[node name="CloseButton" type="ToolButton" parent="Container"]
+margin_left = 170.0
+margin_right = 198.0
+margin_bottom = 24.0
+icon = ExtResource( 5 )
+
+[connection signal="toggled" from="Container/TogglePreview" to="." method="_on_TogglePreview_toggled"]
+[connection signal="pressed" from="Container/RenameButton" to="." method="_on_RenameButton_pressed"]
+[connection signal="pressed" from="Container/CloseButton" to="." method="_on_CloseButton_pressed"]

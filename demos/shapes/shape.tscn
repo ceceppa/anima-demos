@@ -1,0 +1,52 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://addons/anima/shapes/Triangle.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/core/node.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/components/AnimaLabel.gd" type="Script" id=3]
+[ext_resource path="res://resources/fonts/Lato-Bold.ttf" type="DynamicFontData" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 4 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Opening1" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+point2 = Vector2( 100, 100 )
+point3 = Vector2( 0, 100 )
+values_in = 1
+border_color = Color( 1, 1, 1, 1 )
+
+[node name="Opening2" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+point2 = Vector2( 100, 0 )
+point3 = Vector2( 100, 100 )
+values_in = 1
+border_color = Color( 1, 1, 1, 1 )
+
+[node name="Line2D" type="Line2D" parent="."]
+
+[node name="AnimaNode" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="AnimaLabel" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_clip_content = true
+script = ExtResource( 3 )
+font = SubResource( 1 )
