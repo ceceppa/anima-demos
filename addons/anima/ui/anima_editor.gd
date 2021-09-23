@@ -5,6 +5,8 @@ signal switch_position
 
 var _shader_code: String = ""
 var _anima_node: AnimaNode
+var _source_node: AnimaNode
+
 onready var _graph_edit = find_node("GraphEdit")
 
 func _ready():
@@ -129,6 +131,25 @@ func add_nodes(nodes_data: Array) -> void:
 			node.render()
 			_graph_edit.add_child(node)
 
+func set_source_node(node) -> void:
+	_source_node = node
+
+	visible = _maybe_show_graph_edit()
+
+func show() -> void:
+	.show()
+	_maybe_show_graph_edit()
+
+func _maybe_show_graph_edit() -> bool:
+	var is_graph_edit_visible = _source_node is AnimaNode
+	
+	$GraphEdit.visible = is_graph_edit_visible
+	$WarningLabel.visible = !is_graph_edit_visible
+
+	$NodesPopup.set_source_node(_source_node)
+	
+	return is_graph_edit_visible
+
 func _on_node_connected(connection_list: Array) -> void:
 	graph_edit_children_reset_all_connections_info()
 
@@ -148,3 +169,22 @@ func _on_node_updated() -> void:
 
 func _on_Right_pressed():
 	emit_signal("switch_position")
+
+func _on_AddButton_pressed():
+	if $NodesPopup.visible:
+		$NodesPopup.hide()
+	else:
+		$NodesPopup.show()
+
+func _on_GraphEdit_show_nodes_list(position: Vector2):
+	$NodesPopup.set_global_position(position)
+	$NodesPopup.show()
+
+func _on_animaEditor_visibility_changed():
+	if not visible:
+		$NodesPopup.hide()
+
+	_maybe_show_graph_edit()
+
+func _on_GraphEdit_hide_nodes_list():
+	$NodesPopup.hide()

@@ -7,12 +7,13 @@ var shader_output_node
 signal node_connected
 signal node_updated
 signal generate_full_shader
+signal show_nodes_list(position)
+signal hide_nodes_list
 
 func _init():
 	self.connect('connection_request', self, '_on_connection_request')
 	self.connect('disconnection_request', self, '_on_disconnection_request')
 
-	print_debug("init")
 	shader_output_node = ANIMA_START_NODE.new()
 
 	# TODO: Add test
@@ -70,3 +71,10 @@ func _on_node_updated():
 
 func _on_generate_full_shader():
 	emit_signal('generate_full_shader', shader_output_node)
+
+func _on_GraphEdit_gui_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_RIGHT:
+			emit_signal("show_nodes_list", event.global_position)
+		else:
+			emit_signal("hide_nodes_list")

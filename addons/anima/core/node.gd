@@ -27,7 +27,9 @@ func _ready():
 		_init_node(self)
 
 func _exit_tree():
-	_timer.stop()
+	if _timer:
+		_timer.stop()
+
 	_anima_tween.stop_all()
 
 	_timer.queue_free()

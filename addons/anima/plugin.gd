@@ -29,6 +29,19 @@ func _exit_tree():
 	if _anima_editor:
 		_anima_editor.queue_free()
 
+func handles(object):
+	var is_anima_node = object is AnimaNode
+
+	if is_anima_node:
+		_anima_editor.set_source_node(object)
+	else:
+		_anima_editor.set_source_node(null)
+
+	return is_anima_node
+
+func edit(object):
+	print('editing', object)
+
 func _on_anima_editor_switch_position() -> void:
 	if _current_position == EditorPosition.BOTTOM:
 		remove_control_from_bottom_panel(_anima_editor)
