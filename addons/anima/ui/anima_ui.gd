@@ -8,16 +8,22 @@ enum Port {
 
 enum PortType {
 	LABEL_ONLY,
-	START,
 	ANIMATION,
-	ACTION
+}
+
+enum NodeType {
+	START,
+	ANIMATION
 }
 
 const PortColor = {
 	PortType.LABEL_ONLY: Color.transparent,
-	PortType.START: Color('#008484'),
 	PortType.ANIMATION: Color('#008484'),
-	PortType.ACTION: Color.green
+}
+
+const NodeTypeColor = {
+	NodeType.START: Color('#008484'),
+	NodeType.ANIMATION: Color('#005500')
 }
 
 # Title
@@ -68,7 +74,7 @@ func get_row(index: int, input_label_text: String, output_label_text: String, in
 	return row
 
 func customise_node_style(node: GraphNode, title_node: PanelContainer, node_type: int) -> void:
-	var node_color = PortColor[node_type] if PortColor.has(node_type) else Color.black
+	var node_color = NodeTypeColor[node_type] if NodeTypeColor.has(node_type) else Color.black
 	var title_color = node_color
 
 	apply_style_to_graph_node(node, node_color)

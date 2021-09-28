@@ -34,9 +34,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GraphEdit" parent="." instance=ExtResource( 3 )]
+[node name="AnimaNodeEditor" parent="." instance=ExtResource( 3 )]
+visible = false
 
-[node name="HBoxContainer" type="HBoxContainer" parent="GraphEdit"]
+[node name="HBoxContainer" type="HBoxContainer" parent="AnimaNodeEditor"]
 anchor_right = 1.0
 margin_bottom = 48.0
 mouse_filter = 2
@@ -45,7 +46,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Controls" type="Panel" parent="GraphEdit/HBoxContainer"]
+[node name="Controls" type="Panel" parent="AnimaNodeEditor/HBoxContainer"]
 margin_left = 302.0
 margin_right = 722.0
 margin_bottom = 48.0
@@ -55,7 +56,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="GraphEdit/HBoxContainer/Controls"]
+[node name="MarginContainer" type="MarginContainer" parent="AnimaNodeEditor/HBoxContainer/Controls"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 12.0
@@ -66,42 +67,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="GraphEdit/HBoxContainer/Controls/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="AnimaNodeEditor/HBoxContainer/Controls/MarginContainer"]
 margin_right = 399.0
 margin_bottom = 32.0
 custom_constants/separation = 12
 alignment = 1
 
-[node name="AddButton" type="Button" parent="GraphEdit/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
+[node name="AddButton" type="Button" parent="AnimaNodeEditor/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
 margin_right = 50.0
 margin_bottom = 32.0
 text = "Add..."
 
-[node name="PlayButton4" type="Button" parent="GraphEdit/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
+[node name="PlayButton4" type="Button" parent="AnimaNodeEditor/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
 margin_left = 62.0
 margin_right = 104.0
 margin_bottom = 32.0
 text = "Play"
 
-[node name="PlayButton2" type="Button" parent="GraphEdit/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
+[node name="PlayButton2" type="Button" parent="AnimaNodeEditor/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
 margin_left = 116.0
 margin_right = 170.0
 margin_bottom = 32.0
 text = "Pause"
 
-[node name="PlayButton3" type="Button" parent="GraphEdit/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
+[node name="PlayButton3" type="Button" parent="AnimaNodeEditor/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
 margin_left = 182.0
 margin_right = 226.0
 margin_bottom = 32.0
 text = "Stop"
 
-[node name="PlayReverseButton" type="Button" parent="GraphEdit/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
+[node name="PlayReverseButton" type="Button" parent="AnimaNodeEditor/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
 margin_left = 238.0
 margin_right = 338.0
 margin_bottom = 32.0
 text = "Play Reverse"
 
-[node name="Right" type="Button" parent="GraphEdit/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
+[node name="Right" type="Button" parent="AnimaNodeEditor/HBoxContainer/Controls/MarginContainer/HBoxContainer"]
 margin_left = 350.0
 margin_right = 399.0
 margin_bottom = 32.0
@@ -110,7 +111,6 @@ text = "Right"
 [node name="NodesPopup" parent="." instance=ExtResource( 4 )]
 
 [node name="WarningLabel" type="Label" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -121,7 +121,8 @@ align = 1
 valign = 1
 
 [connection signal="visibility_changed" from="." to="." method="_on_animaEditor_visibility_changed"]
-[connection signal="hide_nodes_list" from="GraphEdit" to="." method="_on_GraphEdit_hide_nodes_list"]
-[connection signal="show_nodes_list" from="GraphEdit" to="." method="_on_GraphEdit_show_nodes_list"]
-[connection signal="pressed" from="GraphEdit/HBoxContainer/Controls/MarginContainer/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
-[connection signal="pressed" from="GraphEdit/HBoxContainer/Controls/MarginContainer/HBoxContainer/Right" to="." method="_on_Right_pressed"]
+[connection signal="hide_nodes_list" from="AnimaNodeEditor" to="." method="_on_GraphEdit_hide_nodes_list"]
+[connection signal="show_nodes_list" from="AnimaNodeEditor" to="." method="_on_GraphEdit_show_nodes_list"]
+[connection signal="pressed" from="AnimaNodeEditor/HBoxContainer/Controls/MarginContainer/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
+[connection signal="pressed" from="AnimaNodeEditor/HBoxContainer/Controls/MarginContainer/HBoxContainer/Right" to="." method="_on_Right_pressed"]
+[connection signal="node_selected" from="NodesPopup" to="." method="_on_NodesPopup_node_selected"]

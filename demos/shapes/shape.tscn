@@ -43,6 +43,17 @@ border_color = Color( 1, 1, 1, 1 )
 
 [node name="AnimaNode" type="Node" parent="."]
 script = ExtResource( 2 )
+__anima_visual_editor_data = [ {
+"from": "AnimaNode",
+"from_port": 0,
+"to": "Opening1",
+"to_port": 0
+}, {
+"from": "AnimaNode",
+"from_port": 1,
+"to": "Opening2",
+"to_port": 0
+} ]
 
 [node name="AnimaLabel" type="Control" parent="."]
 anchor_right = 1.0

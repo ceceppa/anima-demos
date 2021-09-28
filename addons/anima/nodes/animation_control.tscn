@@ -1,0 +1,28 @@
+[gd_scene format=2]
+
+[node name="Control" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSeparator" type="HSeparator" parent="."]
+margin_right = 1024.0
+margin_bottom = 4.0
+
+[node name="GridContainer" type="GridContainer" parent="."]
+margin_top = 8.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OptionButton" type="OptionButton" parent="GridContainer"]
+margin_right = 83.0
+margin_bottom = 20.0
+text = "Property"

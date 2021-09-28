@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/anima/fonts/Lato-Bold.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://addons/anima/icons/edit.svg" type="Texture" id=2]
+[ext_resource path="res://addons/anima/icons/play.svg" type="Texture" id=2]
 [ext_resource path="res://addons/anima/ui/custom_node_title.gd" type="Script" id=3]
-[ext_resource path="res://addons/anima/icons/visibility_hidden.svg" type="Texture" id=4]
 [ext_resource path="res://addons/anima/icons/close.svg" type="Texture" id=5]
 
 [sub_resource type="DynamicFont" id=1]
@@ -51,18 +50,11 @@ size_flags_horizontal = 3
 custom_fonts/font = SubResource( 1 )
 text = "Title goes here"
 
-[node name="TogglePreview" type="ToolButton" parent="Container"]
-visible = false
-margin_left = 99.0
-margin_right = 127.0
-margin_bottom = 24.0
-toggle_mode = true
-icon = ExtResource( 4 )
-
-[node name="RenameButton" type="ToolButton" parent="Container"]
+[node name="PlayButton" type="ToolButton" parent="Container"]
 margin_left = 138.0
 margin_right = 166.0
 margin_bottom = 24.0
+toggle_mode = true
 icon = ExtResource( 2 )
 
 [node name="CloseButton" type="ToolButton" parent="Container"]
@@ -71,6 +63,5 @@ margin_right = 198.0
 margin_bottom = 24.0
 icon = ExtResource( 5 )
 
-[connection signal="toggled" from="Container/TogglePreview" to="." method="_on_TogglePreview_toggled"]
-[connection signal="pressed" from="Container/RenameButton" to="." method="_on_RenameButton_pressed"]
+[connection signal="toggled" from="Container/PlayButton" to="." method="_on_TogglePreview_toggled"]
 [connection signal="pressed" from="Container/CloseButton" to="." method="_on_CloseButton_pressed"]

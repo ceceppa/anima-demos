@@ -7,6 +7,7 @@ enum EditorPosition {
 }
 
 var _anima_editor: Control
+var _anima_node: AnimaNode
 var _current_position = EditorPosition.BOTTOM
 
 func get_name():
@@ -17,8 +18,8 @@ func _enter_tree():
 	add_autoload_singleton("AnimaUI", 'res://addons/anima/ui/anima_ui.gd')
 
 	_anima_editor = preload("res://addons/anima/ui/anima_editor.tscn").instance()
-#	_anima_editor.set_custom_minimum_size(Vector2(0, 300))
 	_anima_editor.connect("switch_position", self, "_on_anima_editor_switch_position")
+	_anima_editor.connect("connections_updated", self, '_on_connections_updated')
 
 	add_control_to_bottom_panel(_anima_editor, "Anima")
 
@@ -40,7 +41,9 @@ func handles(object):
 	return is_anima_node
 
 func edit(object):
-	print('editing', object)
+	print('editing anima node', object)
+	_anima_node = object
+	_anima_editor.edit(object)
 
 func _on_anima_editor_switch_position() -> void:
 	if _current_position == EditorPosition.BOTTOM:
@@ -56,4 +59,15 @@ func _on_anima_editor_switch_position() -> void:
 		_current_position = EditorPosition.BOTTOM
 
 	_anima_editor.show()
+
+func _on_connections_updated(new_list: Array) -> void:
+	var current_list: Array = _anima_node.__anima_visual_editor_data
+	var _undo_redo = get_undo_redo() # Method of EditorPlugin.
+
+	_undo_redo.create_action('Updated AnimaNode')
+#	_undo_redo.add_do_method(self, "_do_update_anima_node")
+#	_undo_redo.add_undo_method(self, "_do_update_anima_node")
+	_undo_redo.add_do_property(_anima_node, "__anima_visual_editor_data", new_list)
+	_undo_redo.add_undo_property(_anima_node, "__anima_visual_editor_data", current_list)
+	_undo_redo.commit_action()
 

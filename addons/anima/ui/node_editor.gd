@@ -2,11 +2,11 @@ tool
 extends GraphEdit
 
 const ANIMA_START_NODE = preload("res://addons/anima/nodes/start.gd")
-var shader_output_node
+const ANIMA_ANIMATION_NODE = preload("res://addons/anima/nodes/animation.gd")
+var _anima_start_node
 
 signal node_connected
 signal node_updated
-signal generate_full_shader
 signal show_nodes_list(position)
 signal hide_nodes_list
 
@@ -14,17 +14,16 @@ func _init():
 	self.connect('connection_request', self, '_on_connection_request')
 	self.connect('disconnection_request', self, '_on_disconnection_request')
 
-	shader_output_node = ANIMA_START_NODE.new()
+	_anima_start_node = ANIMA_START_NODE.new()
 
 	# TODO: Add test
-	shader_output_node.set_offset(Vector2(get_rect().size.x - 300, 20))
-	shader_output_node.connect('generate_full_shader', self, '_on_generate_full_shader')
-	add_child(shader_output_node)
+	_anima_start_node.set_offset(Vector2(get_rect().size.x - 300, 20))
+	add_child(_anima_start_node)
 
 	set_right_disconnects(true)
 
 func get_shader_output_node():
-	return shader_output_node
+	return _anima_start_node
 
 func _on_connection_request(from_node: String, from_slot: int, to_node: String, to_slot: int) -> bool:
 	if from_node == to_node:
@@ -53,12 +52,13 @@ func get_connections():
 
 	return connections
 
-func add_node(fullQualifiedNodeName: String, add_node: bool = true) -> GraphNode:
-	var node = find_node(fullQualifiedNodeName)
+func add_node(node_to_animate: Node, add_node: bool = true) -> GraphNode:
+	var node = ANIMA_ANIMATION_NODE.new()
+
+	node.set_node_to_animate(node_to_animate)
 
 	if add_node:
 		add_child(node)
-		node.render()
 
 	return node
 
@@ -68,9 +68,6 @@ func _on_disconnection_request(from: String, from_slot: int, to: String, to_slot
 
 func _on_node_updated():
 	emit_signal('node_updated')
-
-func _on_generate_full_shader():
-	emit_signal('generate_full_shader', shader_output_node)
 
 func _on_GraphEdit_gui_input(event):
 	if event is InputEventMouseButton:

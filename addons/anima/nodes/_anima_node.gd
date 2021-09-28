@@ -1,12 +1,9 @@
 tool
 extends "./_base_node.gd"
 
+const ANIMATION_CONTROL = preload("res://addons/anima/nodes/animation_control.tscn")
+
 var row_slot_controls := []
-
-# This is used to allow "spying" for testing purpose
-var this = self
-
-const POSSIBLE_NODE_PROPERTIES = [ 'color' ]
 
 func _init():
 	_custom_title = load('res://addons/anima/ui/custom_node_title.tscn').instance()
@@ -39,8 +36,13 @@ func register_node(node_data: Dictionary) -> void:
 	if node_data.has('icon'):
 		set_icon(node_data.icon)
 
+	if node_data.has('playable') and not node_data.playable:
+		_custom_title.hide_play_button()
+
+	if node_data.has('closable') and not node_data.closable:
+		_custom_title.hide_close_button()
+
 	set_type(node_data.type)
-#	Sciamano_Nodes.add(node_id, get_script().get_path())
 
 func set_category(category: String) -> void:
 	node_category = category
@@ -84,8 +86,8 @@ func add_input_slot(name: String, type: int, default_value = null) -> void:
 func add_output_slot(name: String, type: int) -> void:
 	output_slots.push_back([name, true, type])
 
-func add_row_slot(control: Control) -> void:
-	row_slot_controls.push_back(control)
+func add_row_animation_control() -> void:
+	row_slot_controls.push_back(ANIMATION_CONTROL.instance())
 
 # Godot automatically adds the slot next to the element added.
 # So to have a right and left label, we need to wrap them inside
@@ -101,6 +103,7 @@ func render() -> void:
 
 		return
 
+	print_debug('rendering node')
 	AnimaUI.customise_node_style(self, _custom_title, _node_type)
 
 	# Used when there is no matching input/output node for the row
@@ -136,28 +139,12 @@ func render() -> void:
 		var input_color: Color = AnimaUI.PortColor[input_slot_type]
 		var output_color: Color = AnimaUI.PortColor[output_slot_type]
 
-		this.set_slot(index + 1, input_slot_enabled, input_slot_type, input_color, output_slot_enabled, output_slot_type, output_color, null, null)
+		.set_slot(index + 1, input_slot_enabled, input_slot_type, input_color, output_slot_enabled, output_slot_type, output_color, null, null)
 
 	for row_slot_control in row_slot_controls:
-		add_row_slot_control(row_slot_control)
+		_add_row_slot_control(row_slot_control)
 
-	maybe_add_preview_panel();
-
-func maybe_add_preview_panel() -> void:
-	var has_preview_panel = input_slots.size() > 0 and output_slots.size() > 0
-
-	if has_preview_panel:
-		add_preview_panel()
-
-func add_preview_panel() -> void:
-	preview_panel = load('res://addons/anima/common/sciamano_preview_panel.gd').new()
-
-	preview_panel.set_name('PreviewPanel')
-	add_child(preview_panel)
-
-	_custom_title.show_preview_toggle()
-
-func add_row_slot_control(row_slot_control: Control) -> void:
+func _add_row_slot_control(row_slot_control: Control) -> void:
 	var container = PanelContainer.new()
 	container.set_name('RowSlot')
 	container.add_stylebox_override("panel", AnimaUI.generate_row_slot_panel_style())
@@ -168,14 +155,15 @@ func add_row_slot_control(row_slot_control: Control) -> void:
 func get_row_slot_values() -> Array:
 	var values = []
 
-	for row_slot in row_slot_controls:
-		for property in POSSIBLE_NODE_PROPERTIES:
-			var value = row_slot.get(property)
-			if value:
-				values.push_back({
-				'property': property,
-				'value': row_slot[property]
-			})
+#	pass
+#	for row_slot in row_slot_controls:
+#		for property in POSSIBLE_NODE_PROPERTIES:
+#			var value = row_slot.get(property)
+#			if value:
+#				values.push_back({
+#				'property': property,
+#				'value': row_slot[property]
+#			})
 
 	return values
 
@@ -203,7 +191,3 @@ func _on_toggle_preview(visible: bool):
 		self._set_size(node_size_with_preview_panel_closed)
 
 #	self.update_preview_shader()
-
-# NOTE: USE FOR TESTING ONLY!
-func __set_fake_this(fake_graph_node):
-	this = fake_graph_node
