@@ -1,5 +1,5 @@
 tool
-extends "./_anima_node.gd"
+extends "./_base_node.gd"
 
 var _node_to_animate: Node
 
@@ -13,9 +13,9 @@ func _init():
 	})
 
 func setup():
-	add_input_slot("", AnimaUI.PortType.ANIMATION)
-	add_output_slot("then", AnimaUI.PortType.ANIMATION)
-	add_output_slot("with", AnimaUI.PortType.ANIMATION)
+	add_input_slot("", "", AnimaUI.PortType.ANIMATION)
+	add_output_slot("then", "", AnimaUI.PortType.ANIMATION)
+	add_output_slot("with", "", AnimaUI.PortType.ANIMATION)
 	add_row_animation_control()
 
 func set_node_to_animate(node: Node) -> void:

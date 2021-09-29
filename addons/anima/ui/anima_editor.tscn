@@ -121,8 +121,6 @@ align = 1
 valign = 1
 
 [connection signal="visibility_changed" from="." to="." method="_on_animaEditor_visibility_changed"]
-[connection signal="hide_nodes_list" from="AnimaNodeEditor" to="." method="_on_GraphEdit_hide_nodes_list"]
-[connection signal="show_nodes_list" from="AnimaNodeEditor" to="." method="_on_GraphEdit_show_nodes_list"]
 [connection signal="pressed" from="AnimaNodeEditor/HBoxContainer/Controls/MarginContainer/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
 [connection signal="pressed" from="AnimaNodeEditor/HBoxContainer/Controls/MarginContainer/HBoxContainer/Right" to="." method="_on_Right_pressed"]
 [connection signal="node_selected" from="NodesPopup" to="." method="_on_NodesPopup_node_selected"]

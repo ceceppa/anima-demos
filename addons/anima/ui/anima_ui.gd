@@ -53,20 +53,23 @@ const ROW_SEPARATION = 1.0
 const DISCONNECTED_LABEL_COLOR = Color(1.0, 1.0, 1.0, 0.5)
 const CONNECTED_LABEL_COLOR = Color.white
 
-func get_row(index: int, input_label_text: String, output_label_text: String, input_default_value = null) -> PanelContainer:
+func create_row_for_node(index: int, input_label_text: String, input_tooltip: String, output_label_text: String, output_tooltip: String, input_default_value = null) -> PanelContainer:
 	var row_container = load("res://addons/anima/ui/anima_node_row_container.tscn")
 	var row: PanelContainer = row_container.instance()
 
 	row.set_name("Row" + str(index))
 	row.add_stylebox_override('panel', generate_row_style())
 
-	var input_label = row.find_node("Label1")
+	var input_label: Label = row.find_node("Label1")
 	input_label.set_name("Input" + str(index))
 	input_label.set_text(input_label_text)
+	input_label.hint_tooltip = input_tooltip
 
-	var output_label = row.find_node("Label2")
+	var output_label: Label = row.find_node("Label2")
 	output_label.set_name("Output" + str(index))
 	output_label.set_text(output_label_text)
+	output_label.hint_tooltip = output_tooltip
+	print(output_tooltip)
 
 	if input_default_value == null:
 		row.hide_default_input_container()

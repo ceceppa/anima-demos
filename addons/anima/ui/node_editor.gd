@@ -1,7 +1,7 @@
 tool
 extends GraphEdit
 
-const ANIMA_START_NODE = preload("res://addons/anima/nodes/start.gd")
+const ANIMA_START_NODE = preload("res://addons/anima/nodes/anima_node.gd")
 const ANIMA_ANIMATION_NODE = preload("res://addons/anima/nodes/animation.gd")
 var _anima_start_node
 

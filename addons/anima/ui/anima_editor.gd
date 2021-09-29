@@ -57,7 +57,7 @@ func edit(node: AnimaNode) -> void:
 	_anima_node = node
 
 #	clear_all_nodes()
-#	add_nodes(node.get_nodes())
+#	add_nodes(node.__anima_visual_editor_data)
 
 func clear_all_nodes() -> void:
 	for node in _graph_edit.get_children():
