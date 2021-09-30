@@ -119,10 +119,6 @@ func _on_AddButton_pressed():
 	else:
 		_nodes_popup.show()
 
-func _on_GraphEdit_show_nodes_list(position: Vector2):
-	_nodes_popup.set_global_position(position)
-	_nodes_popup.show()
-
 func _on_animaEditor_visibility_changed():
 	if not visible:
 		_nodes_popup.hide()
@@ -132,11 +128,35 @@ func _on_animaEditor_visibility_changed():
 func _on_GraphEdit_hide_nodes_list():
 	_nodes_popup.hide()
 
-func _on_NodesPopup_node_selected(node):
+func _on_NodesPopup_node_selected(node: Node, position: Vector2):
 	_nodes_popup.hide()
 
-	_graph_edit.add_node(node)
+	var graph_node: GraphNode = _graph_edit.add_node(node)
+#	graph_node.set_offset(position)
+
 	_update_anima_node()
 
 func _update_anima_node() -> void:
-	emit_signal("connections_updated", _graph_edit.get_connection_list())
+	var data:= {
+		nodes = [],
+		connection_list = _graph_edit.get_connection_list()
+	}
+
+	for child in _graph_edit.get_children():
+		if child is GraphNode:
+			var node_to_animate = null
+			
+			if child.has_method('get_node_to_animate'):
+				node_to_animate = child.get_node_to_animate().name
+
+			data.nodes.push_back({
+				name = child.name,
+				position = child.get_offset(),
+				node_to_animate = node_to_animate
+			})
+
+	emit_signal("connections_updated", data)
+
+func _on_AnimaNodeEditor_show_nodes_list(position):
+	_nodes_popup.set_global_position(position)
+	_nodes_popup.show()

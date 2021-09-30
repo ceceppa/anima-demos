@@ -3,7 +3,7 @@ extends PopupPanel
 
 var _source_node: AnimaNode
 
-signal node_selected(node)
+signal node_selected(node, position)
 
 onready var _search_filed: LineEdit = find_node("SearchField")
 onready var _nodes_list: Tree = find_node("NodesList")
@@ -56,4 +56,4 @@ func _on_NodesList_item_activated():
 	var node_name = _nodes_list.get_selected().get_text(0)
 	var node = _start_node.find_node(node_name)
 
-	emit_signal("node_selected", node)
+	emit_signal("node_selected", node, rect_position)

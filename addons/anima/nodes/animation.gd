@@ -23,6 +23,9 @@ func set_node_to_animate(node: Node) -> void:
 	
 	set_title(_node_to_animate.name)
 
+func get_node_to_animate() -> Node:
+	return _node_to_animate
+
 func is_shader_output() -> bool:
 	return true
 

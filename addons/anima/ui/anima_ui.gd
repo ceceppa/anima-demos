@@ -55,7 +55,7 @@ const CONNECTED_LABEL_COLOR = Color.white
 
 func create_row_for_node(index: int, input_label_text: String, input_tooltip: String, output_label_text: String, output_tooltip: String, input_default_value = null) -> PanelContainer:
 	var row_container = load("res://addons/anima/ui/anima_node_row_container.tscn")
-	var row: PanelContainer = row_container.instance()
+	var row = row_container.instance()
 
 	row.set_name("Row" + str(index))
 	row.add_stylebox_override('panel', generate_row_style())

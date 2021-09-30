@@ -33,4 +33,3 @@ func _set_connected_color(label: Node):
 	
 func _set_disconnected_color(label: Node):
 	label.add_color_override("font_color", AnimaUI.DISCONNECTED_LABEL_COLOR)
-	

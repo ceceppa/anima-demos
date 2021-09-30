@@ -60,14 +60,14 @@ func _on_anima_editor_switch_position() -> void:
 
 	_anima_editor.show()
 
-func _on_connections_updated(new_list: Array) -> void:
-	var current_list: Array = _anima_node.__anima_visual_editor_data
-	var _undo_redo = get_undo_redo() # Method of EditorPlugin.
+func _on_connections_updated(data: Dictionary) -> void:
+	var current_data: Dictionary = _anima_node.__anima_visual_editor_data
+	var undo_redo = get_undo_redo() # Method of EditorPlugin.
 
-	_undo_redo.create_action('Updated AnimaNode')
-#	_undo_redo.add_do_method(self, "_do_update_anima_node")
-#	_undo_redo.add_undo_method(self, "_do_update_anima_node")
-	_undo_redo.add_do_property(_anima_node, "__anima_visual_editor_data", new_list)
-	_undo_redo.add_undo_property(_anima_node, "__anima_visual_editor_data", current_list)
-	_undo_redo.commit_action()
+	undo_redo.create_action('Updated AnimaNode')
+#	undo_redo.add_do_method(self, "_do_update_anima_node")
+#	undo_redo.add_undo_method(self, "_do_update_anima_node")
+	undo_redo.add_do_property(_anima_node, "__anima_visual_editor_data", data)
+	undo_redo.add_undo_property(_anima_node, "__anima_visual_editor_data", current_data)
+	undo_redo.commit_action()
 
