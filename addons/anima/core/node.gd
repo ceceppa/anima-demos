@@ -21,7 +21,7 @@ var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
 var _play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 
 var __do_nothing := 0.0
-export (Array) var __anima_visual_editor_data
+export (Dictionary) var __anima_visual_editor_data
 
 func _ready():
 	if _timer.get_parent() != self:

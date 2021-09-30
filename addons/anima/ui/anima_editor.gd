@@ -7,6 +7,7 @@ signal connections_updated(new_list)
 var _shader_code: String = ""
 var _anima_node: AnimaNode
 var _source_node: AnimaNode
+var _node_offset: Vector2
 
 onready var _graph_edit: GraphEdit = find_node("AnimaNodeEditor")
 onready var _nodes_popup: PopupPanel = find_node("NodesPopup")
@@ -56,8 +57,17 @@ func edit(node: AnimaNode) -> void:
 	print_debug('editing  node', node)
 	_anima_node = node
 
-#	clear_all_nodes()
-#	add_nodes(node.__anima_visual_editor_data)
+	clear_all_nodes()
+
+	var data = node.__anima_visual_editor_data
+
+	if data == null || not data.has('nodes') || data.nodes.size() == 0:
+		_graph_edit.add_default_node()
+
+		return
+
+	_add_nodes(data.nodes)
+	_connect_nodes(data.connection_list)
 
 func clear_all_nodes() -> void:
 	for node in _graph_edit.get_children():
@@ -65,25 +75,36 @@ func clear_all_nodes() -> void:
 			node.free()
 			_graph_edit.remove_child(node)
 
-func add_nodes(nodes_data: Array) -> void:
+func _add_nodes(nodes_data: Array) -> void:
 	print_debug('adding nodes: ', nodes_data.size())
 
 	for node_data in nodes_data:
-		var node_info = _graph_edit.add_node(node_data.id, false)
+		var node: Node
+		
+		if node_data.id == 'AnimaNode':
+			node = _graph_edit.maybe_add_default_node(false)
+		else:
+			var root = _anima_node.get_parent()
 
-		print_debug(node_data, node_info)
+			if root == null:
+				root = _anima_node
 
-		var node_script = node_info.script
-		var node = load(node_script).new()
+			var node_to_animate = root.find_node(node_data.node_to_animate, false)
 
-		if node is GraphNode:
-			node.name = node_data.name
-			node.set_offset(Vector2(0, 0))
-			node.set_title(node_data.title)
-			node.set_row_slot_values(node_data.values)
+			print('node to animate', node_to_animate)
+			node = _graph_edit.add_node(node_data.id, node_to_animate, false)
 
-			node.render()
-			_graph_edit.add_child(node)
+		node.name = node_data.name
+		node.set_offset(node_data.position)
+		node.set_title(node_data.title)
+#		node.set_row_slot_values(node_data.values)
+
+		node.render()
+		_graph_edit.add_child(node)
+
+func _connect_nodes(connection_list: Array) -> void:
+	for connection in connection_list:
+		_graph_edit.connect_node(connection.from, connection.from_port, connection.to, connection.to_port)
 
 func set_source_node(node) -> void:
 	_source_node = node
@@ -128,11 +149,11 @@ func _on_animaEditor_visibility_changed():
 func _on_GraphEdit_hide_nodes_list():
 	_nodes_popup.hide()
 
-func _on_NodesPopup_node_selected(node: Node, position: Vector2):
+func _on_NodesPopup_node_selected(node: Node):
 	_nodes_popup.hide()
 
-	var graph_node: GraphNode = _graph_edit.add_node(node)
-#	graph_node.set_offset(position)
+	var graph_node: GraphNode = _graph_edit.add_node('', node)
+	graph_node.set_offset(_node_offset)
 
 	_update_anima_node()
 
@@ -145,18 +166,24 @@ func _update_anima_node() -> void:
 	for child in _graph_edit.get_children():
 		if child is GraphNode:
 			var node_to_animate = null
-			
+
 			if child.has_method('get_node_to_animate'):
 				node_to_animate = child.get_node_to_animate().name
 
 			data.nodes.push_back({
 				name = child.name,
+				title = child.get_title(),
 				position = child.get_offset(),
-				node_to_animate = node_to_animate
+				node_to_animate = node_to_animate,
+				id = child.get_id()
 			})
 
 	emit_signal("connections_updated", data)
 
-func _on_AnimaNodeEditor_show_nodes_list(position):
+func _on_AnimaNodeEditor_show_nodes_list(offset: Vector2, position: Vector2):
+	_node_offset = offset
 	_nodes_popup.set_global_position(position)
 	_nodes_popup.show()
+
+func _on_AnimaNodeEditor_hide_nodes_list():
+	_nodes_popup.hide()

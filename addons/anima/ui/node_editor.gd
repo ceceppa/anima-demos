@@ -7,20 +7,26 @@ var _anima_start_node
 
 signal node_connected
 signal node_updated
-signal show_nodes_list(position)
+signal show_nodes_list(offset, position)
 signal hide_nodes_list
 
 func _init():
 	self.connect('connection_request', self, '_on_connection_request')
 	self.connect('disconnection_request', self, '_on_disconnection_request')
 
-	_anima_start_node = ANIMA_START_NODE.new()
+	maybe_add_default_node()
+	set_right_disconnects(true)
+
+func maybe_add_default_node(add := true) -> GraphNode:
+	var node = ANIMA_START_NODE.new()
 
 	# TODO: Add test
-	_anima_start_node.set_offset(Vector2(get_rect().size.x - 300, 20))
-	add_child(_anima_start_node)
+	node.set_offset(Vector2(get_rect().size.x - 300, 20))
+	
+	if add:
+		add_child(node)
 
-	set_right_disconnects(true)
+	return node
 
 func get_shader_output_node():
 	return _anima_start_node
@@ -52,7 +58,7 @@ func get_connections():
 
 	return connections
 
-func add_node(node_to_animate: Node, add_node: bool = true) -> GraphNode:
+func add_node(node_id: String, node_to_animate: Node, add_node := true) -> GraphNode:
 	var node = ANIMA_ANIMATION_NODE.new()
 
 	node.set_node_to_animate(node_to_animate)
@@ -72,6 +78,6 @@ func _on_node_updated():
 func _on_GraphEdit_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_RIGHT:
-			emit_signal("show_nodes_list", event.global_position)
+			emit_signal("show_nodes_list", event.position, event.global_position)
 		else:
 			emit_signal("hide_nodes_list")

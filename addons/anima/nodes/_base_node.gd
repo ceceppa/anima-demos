@@ -4,6 +4,7 @@ extends "./_base_signals.gd"
 const ANIMATION_CONTROL = preload("res://addons/anima/nodes/animation_control.tscn")
 
 var _node_body_data := []
+var _node_id: String
 
 enum BodyDataType {
 	INPUT_SLOT,
@@ -49,6 +50,8 @@ func register_node(node_data: Dictionary) -> void:
 	if node_data.has('closable') and not node_data.closable:
 		_custom_title.hide_close_button()
 
+	_node_id = node_data.id
+
 	set_type(node_data.type)
 
 func set_category(category: String) -> void:
@@ -74,6 +77,9 @@ func set_title(title: String) -> void:
 
 func get_title() -> String:
 	return _custom_title.get_title()
+
+func get_id() -> String:
+	return _node_id
 
 func set_name(name: String, index: int = 1):
 	var new_name = "{name}{index}".format({

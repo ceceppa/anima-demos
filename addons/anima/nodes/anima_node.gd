@@ -4,6 +4,7 @@ extends "./_base_node.gd"
 func _init():
 	register_node({
 		category = 'Anima',
+		id = 'AnimaNode',
 		name = 'AnimaNode',
 		icon = 'res://addons/anima/icons/anima.svg',
 		type = AnimaUI.NodeType.START,

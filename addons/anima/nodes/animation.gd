@@ -6,6 +6,7 @@ var _node_to_animate: Node
 func _init():
 	register_node({
 		category = 'Anima',
+		id = 'Animation',
 		name = 'Animation',
 		icon = 'res://addons/anima/icons/node.svg',
 		type = AnimaUI.NodeType.ANIMATION,
