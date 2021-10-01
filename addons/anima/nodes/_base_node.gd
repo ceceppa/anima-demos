@@ -5,6 +5,7 @@ const ANIMATION_CONTROL = preload("res://addons/anima/nodes/animation_control.ts
 
 var _node_body_data := []
 var _node_id: String
+var _default_empty_slot = ["", "", false, 0, Color.aliceblue]
 
 enum BodyDataType {
 	INPUT_SLOT,
@@ -144,7 +145,6 @@ func render() -> void:
 	AnimaUI.customise_node_style(self, _custom_title, _node_type)
 
 	# Used when there is no matching input/output node for the row
-	var default_empty_slot = ["", "", false, 0, Color.aliceblue]
 
 	var total_slots := 0
 	for data in _node_body_data:
@@ -159,8 +159,8 @@ func render() -> void:
 
 			continue
 
-		var input_slot = default_empty_slot
-		var output_slot = default_empty_slot
+		var input_slot = _default_empty_slot
+		var output_slot = _default_empty_slot
 
 		if data.type == BodyDataType.INPUT_SLOT:
 			input_slot = data.data
@@ -178,6 +178,25 @@ func render() -> void:
 		else:
 			_add_slot_labels(index, input_slot[0], input_slot[1], output_slot[0], output_slot[1], input_default_value)
 
+	_setup_slots()
+
+func _setup_slots() -> void:
+	for index in _node_body_data.size():
+		var data: Dictionary = _node_body_data[index]
+
+		var input_slot = _default_empty_slot
+		var output_slot = _default_empty_slot
+
+		if data.type == BodyDataType.ROW:
+			.set_slot(index, false, TYPE_NIL, Color.transparent, false, TYPE_NIL, Color.transparent)
+
+			continue
+		elif data.type == BodyDataType.INPUT_SLOT:
+			input_slot = data.data
+		else:
+			output_slot = data.data
+
+		var input_default_value = input_slot[5] if input_slot.size() >= 6 else null
 		var input_slot_type = input_slot[3]
 		var input_slot_enabled = input_slot[2]
 
@@ -193,6 +212,7 @@ func render() -> void:
 		var input_color: Color = AnimaUI.PortColor[input_slot_type]
 		var output_color: Color = AnimaUI.PortColor[output_slot_type]
 
+		print(index)
 		.set_slot(index + 1, input_slot_enabled, input_slot_type, input_color, output_slot_enabled, output_slot_type, output_color, null, null)
 
 func _add_row_slot_control(row_slot_control: Control) -> void:

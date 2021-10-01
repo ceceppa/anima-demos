@@ -60,7 +60,7 @@ __anima_visual_editor_data = {
 "id": "Animation",
 "name": "Opening1",
 "node_to_animate": "Opening1",
-"position": Vector2( 1400, -80 ),
+"position": Vector2( 1340, 20 ),
 "title": "Opening1"
 } ]
 }

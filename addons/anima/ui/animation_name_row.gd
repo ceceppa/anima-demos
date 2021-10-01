@@ -18,3 +18,6 @@ func set_tooltip(tooltip: String) -> void:
 func _on_LineEdit_focus_exited():
 	if $HBoxContainer/LineEdit.text.strip_edges() == '':
 		$HBoxContainer/LineEdit.text = _default_name
+
+func _on_DeleteButton_pressed():
+	queue_free()
