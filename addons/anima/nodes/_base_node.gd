@@ -99,8 +99,11 @@ func add_input_slot(name: String, tooltip: String, type: int, default_value = nu
 func add_output_slot(name: String, tooltip: String, type: int) -> void:
 	_node_body_data.push_back({type = BodyDataType.OUTPUT_SLOT, data = [name, tooltip, true, type]})
 
-func add_row_animation_control() -> void:
-	_node_body_data.push_back({type = BodyDataType.ROW, node = ANIMATION_CONTROL.instance()})
+func add_custom_output_slot(custom_row: Node, name: String, type: int) -> void:
+	_node_body_data.push_back({type = BodyDataType.OUTPUT_SLOT, custom_row = custom_row, data = [name, '', true, type]})
+
+func add_custom_row(node = Node) -> void:
+	_node_body_data.push_back({type = BodyDataType.ROW, node = node})
 
 func add_divider() -> void:
 	var separator := HSeparator.new()
@@ -138,7 +141,6 @@ func render() -> void:
 
 		return
 
-	print_debug('rendering node')
 	AnimaUI.customise_node_style(self, _custom_title, _node_type)
 
 	# Used when there is no matching input/output node for the row
@@ -170,7 +172,11 @@ func render() -> void:
 		# because we can't choose in which column they need to be.
 
 		var input_default_value = input_slot[5] if input_slot.size() >= 6 else null
-		_add_slot_labels(index, input_slot[0], input_slot[1], output_slot[0], output_slot[1], input_default_value)
+
+		if data.has('custom_row'):
+			add_child(data.custom_row)
+		else:
+			_add_slot_labels(index, input_slot[0], input_slot[1], output_slot[0], output_slot[1], input_default_value)
 
 		var input_slot_type = input_slot[3]
 		var input_slot_enabled = input_slot[2]

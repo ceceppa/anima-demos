@@ -17,7 +17,8 @@ func setup():
 	add_input_slot("", "", AnimaUI.PortType.ANIMATION)
 	add_output_slot("then", "", AnimaUI.PortType.ANIMATION)
 	add_output_slot("with", "", AnimaUI.PortType.ANIMATION)
-	add_row_animation_control()
+
+	add_custom_row(ANIMATION_CONTROL.instance())
 
 func set_node_to_animate(node: Node) -> void:
 	_node_to_animate = node

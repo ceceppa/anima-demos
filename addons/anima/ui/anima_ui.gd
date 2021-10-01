@@ -9,21 +9,27 @@ enum Port {
 enum PortType {
 	LABEL_ONLY,
 	ANIMATION,
+	EVENT,
 }
 
 enum NodeType {
 	START,
-	ANIMATION
+	ANIMATION,
+	ACTION,
+	MUSIC
 }
 
 const PortColor = {
 	PortType.LABEL_ONLY: Color.transparent,
 	PortType.ANIMATION: Color('#008484'),
+	PortType.EVENT: Color('#eb8937'),
 }
 
 const NodeTypeColor = {
 	NodeType.START: Color('#008484'),
-	NodeType.ANIMATION: Color('#005500')
+	NodeType.ANIMATION: Color('#737f96'),
+	NodeType.ACTION: Color('#2f384d'),
+	NodeType.MUSIC: Color('#183f28'),
 }
 
 # Title
@@ -69,7 +75,6 @@ func create_row_for_node(index: int, input_label_text: String, input_tooltip: St
 	output_label.set_name("Output" + str(index))
 	output_label.set_text(output_label_text)
 	output_label.hint_tooltip = output_tooltip
-	print(output_tooltip)
 
 	if input_default_value == null:
 		row.hide_default_input_container()
