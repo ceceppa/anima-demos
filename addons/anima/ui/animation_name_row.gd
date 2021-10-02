@@ -1,7 +1,10 @@
 tool
 extends MarginContainer
 
+signal delete_animation(index)
+
 var _default_name: String
+var _index: int
 
 func disable_delete_button() -> void:
 	$HBoxContainer/DeleteButton.hide()
@@ -12,6 +15,9 @@ func set_default_name(name: String) -> void:
 
 	$HBoxContainer/LineEdit.text = name
 
+func set_index(index: int) -> void:
+	_index = index
+
 func set_tooltip(tooltip: String) -> void:
 	$HBoxContainer/LineEdit.hint_tooltip = tooltip
 
@@ -20,4 +26,6 @@ func _on_LineEdit_focus_exited():
 		$HBoxContainer/LineEdit.text = _default_name
 
 func _on_DeleteButton_pressed():
+	emit_signal("delete_animation", _index)
+
 	queue_free()

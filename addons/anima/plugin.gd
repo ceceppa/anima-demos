@@ -34,9 +34,9 @@ func handles(object):
 	var is_anima_node = object is AnimaNode
 
 	if is_anima_node:
-		_anima_editor.set_source_node(object)
+		_anima_editor.set_anima_node(object)
 	else:
-		_anima_editor.set_source_node(null)
+		_anima_editor.set_anima_node(null)
 
 	return is_anima_node
 

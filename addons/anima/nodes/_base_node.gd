@@ -3,6 +3,8 @@ extends "./_base_signals.gd"
 
 const ANIMATION_CONTROL = preload("res://addons/anima/nodes/animation_control.tscn")
 
+signal node_updated
+
 var _node_body_data := []
 var _node_id: String
 var _default_empty_slot = ["", "", false, 0, Color.aliceblue]
@@ -21,6 +23,9 @@ func _init():
 	set_show_close_button(false)
 
 	_custom_title.connect('toggle_preview', self, '_on_toggle_preview')
+
+	connect("offset_changed", self, "_on_offset_changed")
+
 
 func _ready():
 	setup()
@@ -118,23 +123,27 @@ func add_spacer() -> void:
 	separator.size_flags_horizontal = SIZE_EXPAND_FILL
 	_node_body_data.push_back({type = BodyDataType.ROW, node = separator})
 
-func add_label(v: String) -> void:
+func add_label(v: String, tooltip: String) -> void:
 	var label := Label.new()
 	
 	label.size_flags_horizontal = SIZE_EXPAND_FILL
 	label.align = VALIGN_CENTER
 	label.modulate.a = 0.4
 	label.set_text(v)
+	label.hint_tooltip = tooltip
 
 	_node_body_data.push_back({type = BodyDataType.ROW, node = label})
 
 # Godot automatically adds the slot next to the element added.
 # So to have a right and left label, we need to wrap them inside
 # a HBoxContainer
-func _add_slot_labels(index: int, input_label_text, input_tooltip, output_label_text, output_tooltip, input_default_value = null) -> void:
+func _add_slot_labels(index: int, input_label_text, input_tooltip, output_label_text, output_tooltip, input_default_value = null, add := true) -> PanelContainer:
 	var slots_row: PanelContainer = AnimaUI.create_row_for_node(index, input_label_text, input_tooltip, output_label_text, output_tooltip, input_default_value)
 
-	add_child(slots_row)
+	if add:
+		add_child(slots_row)
+
+	return slots_row
 
 func render() -> void:
 	if self.node_id == '':
@@ -181,14 +190,17 @@ func render() -> void:
 	_setup_slots()
 
 func _setup_slots() -> void:
+	clear_all_slots()
+
 	for index in _node_body_data.size():
+		var slot_index = index + 1
 		var data: Dictionary = _node_body_data[index]
 
 		var input_slot = _default_empty_slot
 		var output_slot = _default_empty_slot
 
 		if data.type == BodyDataType.ROW:
-			.set_slot(index, false, TYPE_NIL, Color.transparent, false, TYPE_NIL, Color.transparent)
+			.set_slot(slot_index, false, TYPE_NIL, Color.transparent, false, TYPE_NIL, Color.transparent)
 
 			continue
 		elif data.type == BodyDataType.INPUT_SLOT:
@@ -212,8 +224,7 @@ func _setup_slots() -> void:
 		var input_color: Color = AnimaUI.PortColor[input_slot_type]
 		var output_color: Color = AnimaUI.PortColor[output_slot_type]
 
-		print(index)
-		.set_slot(index + 1, input_slot_enabled, input_slot_type, input_color, output_slot_enabled, output_slot_type, output_color, null, null)
+		.set_slot(slot_index, input_slot_enabled, input_slot_type, input_color, output_slot_enabled, output_slot_type, output_color, null, null)
 
 func _add_row_slot_control(row_slot_control: Control) -> void:
 	var container = PanelContainer.new()
@@ -254,3 +265,6 @@ func _on_toggle_preview(visible: bool):
 		self._set_size(node_size_with_preview_panel_closed)
 
 #	self.update_preview_shader()
+
+func _on_offset_changed() -> void:
+	emit_signal("node_updated")

@@ -44,23 +44,25 @@ border_color = Color( 1, 1, 1, 1 )
 [node name="AnimaNode" type="Node" parent="."]
 script = ExtResource( 2 )
 __anima_visual_editor_data = {
+"animations_slots": [  ],
 "connection_list": [ {
 "from": "AnimaNode",
 "from_port": 0,
 "to": "Opening1",
 "to_port": 0
 } ],
+"events_slots": [ "visibility_visible" ],
 "nodes": [ {
 "id": "AnimaNode",
 "name": "AnimaNode",
 "node_to_animate": null,
-"position": Vector2( 960, 20 ),
+"position": Vector2( 1916, 20 ),
 "title": "AnimaNode"
 }, {
 "id": "Animation",
 "name": "Opening1",
 "node_to_animate": "Opening1",
-"position": Vector2( 1340, 20 ),
+"position": Vector2( 2540, -60 ),
 "title": "Opening1"
 } ]
 }

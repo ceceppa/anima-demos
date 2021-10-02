@@ -2,34 +2,44 @@ tool
 extends GraphEdit
 
 const ANIMA_START_NODE = preload("res://addons/anima/nodes/anima_node.gd")
-const ANIMA_ANIMATION_NODE = preload("res://addons/anima/nodes/animation.gd")
-var _anima_start_node
+const ANIMA_ANIMATION_CONTROL_NODE = preload("res://addons/anima/nodes/animation_control.gd")
 
 signal node_connected
 signal node_updated
 signal show_nodes_list(offset, position)
 signal hide_nodes_list
 
+var _anima_start_node: GraphNode
+
+
 func _init():
 	self.connect('connection_request', self, '_on_connection_request')
-	self.connect('disconnection_request', self, '_on_disconnection_request')
+	self.connect('disconnection_request', self, '_on_node_updated')
 
-	maybe_add_default_node()
 	set_right_disconnects(true)
 
-func maybe_add_default_node(add := true) -> GraphNode:
-	var node = ANIMA_START_NODE.new()
+func add_default_node(source_node: Node, animations_slots := [], events_slots := []) -> GraphNode:
+	if _anima_start_node == null or not is_instance_valid(_anima_start_node):
+		_anima_start_node = ANIMA_START_NODE.new()
 
-	# TODO: Add test
-	node.set_offset(Vector2(get_rect().size.x - 300, 20))
-	
-	if add:
-		add_child(node)
+		_anima_start_node.connect("node_updated", self, "_on_node_updated")
 
-	return node
+		_anima_start_node.set_offset(Vector2(get_rect().size.x - 300, 20))
+
+	_anima_start_node.set_source_node(source_node)
+	_anima_start_node.set_animations_slots(animations_slots)
+	_anima_start_node.set_events_slots(events_slots)
+
+	return _anima_start_node
 
 func get_shader_output_node():
 	return _anima_start_node
+
+func get_events_slots() -> Array:
+	return _anima_start_node.get_events_slots()
+
+func get_animations_slots() -> Array:
+	return _anima_start_node.get_animations_slots()
 
 func _on_connection_request(from_node: String, from_slot: int, to_node: String, to_slot: int) -> bool:
 	if from_node == to_node:
@@ -59,9 +69,10 @@ func get_connections():
 	return connections
 
 func add_node(node_id: String, node_to_animate: Node, add_node := true) -> GraphNode:
-	var node = ANIMA_ANIMATION_NODE.new()
+	var node = ANIMA_ANIMATION_CONTROL_NODE.new()
 
 	node.set_node_to_animate(node_to_animate)
+	node.connect("node_updated", self, "_on_node_updated")
 
 	if add_node:
 		add_child(node)

@@ -1,7 +1,7 @@
 tool
 extends PopupPanel
 
-var _source_node: AnimaNode
+var _anima_node: AnimaNode
 
 signal node_selected(node)
 
@@ -18,13 +18,10 @@ func show() -> void:
 	_search_filed.grab_focus()
 
 func set_source_node(node: AnimaNode) -> void:
-	_source_node = node
+	_anima_node = node
 
 func _retrieves_list_of_nodes() -> void:
-	_start_node = _source_node.get_parent()
-
-	if _start_node == null:
-		_start_node = _source_node
+	_start_node = _anima_node.get_source_node()
 
 	_nodes_list.clear()
 

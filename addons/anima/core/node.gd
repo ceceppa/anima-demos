@@ -196,6 +196,18 @@ func _do_play() -> void:
 func set_loop_strategy(strategy: int):
 	_loop_strategy = strategy
 
+#
+# Returns the node that Anima will use when handling the animations
+# done via visual editor
+#
+func get_source_node() -> Node:
+	var parent = self.get_parent()
+
+	if parent == null:
+		return self
+
+	return parent
+
 func _setup_animation(data: Dictionary) -> float:
 	if data.has('grid'):
 		if not data.has('grid_size'):
