@@ -24,8 +24,11 @@ func set_style(style: StyleBoxFlat, selected_style: StyleBoxFlat) -> void:
 func set_title(title: String) -> void:
 	$Container/Title.set_text(title)
 
-func set_icon(icon_path: String) -> void:
-	$Container/Icon.set_texture(load(icon_path))
+func set_icon(icon) -> void:
+	if icon is String:
+		$Container/Icon.set_texture(load(icon))
+	else:
+		$Container/Icon.set_texture(icon)
 
 func hide_close_button() -> void:
 	$Container/CloseButton.set_visible(false)

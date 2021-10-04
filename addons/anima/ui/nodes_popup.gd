@@ -27,6 +27,7 @@ func _retrieves_list_of_nodes() -> void:
 
 	var root_item := _nodes_list.create_item()
 	root_item.set_text(0, _start_node.name)
+	root_item.set_icon(0, AnimaUI.get_node_icon(_start_node))
 
 	_add_children(root_item, _start_node)
 
@@ -37,6 +38,7 @@ func _add_children(parent_item: TreeItem, start_node: Node) -> void:
 
 		var item = _nodes_list.create_item(parent_item)
 		item.set_text(0, child.name)
+		item.set_icon(0, AnimaUI.get_node_icon(child))
 
 		if child.get_child_count() > 0 and not child is AnimaShape:
 			_add_children(item, child)

@@ -1,17 +1,19 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://addons/anima/icons/close.svg" type="Texture" id=2]
 [ext_resource path="res://addons/anima/ui/event_name_row.gd" type="Script" id=3]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="StreamTexture" id=1]
+flags = 4
+load_path = "res://.import/close.svg-996ff8e611da075ffbe1d4d897cee7a2.stex"
+
+[sub_resource type="DynamicFont" id=2]
 size = 18
 use_filter = true
 font_data = ExtResource( 1 )
 
 [node name="EventNameRow" type="MarginContainer"]
 anchor_right = 1.0
-anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 12
@@ -27,22 +29,20 @@ __meta__ = {
 margin_left = 12.0
 margin_top = 4.0
 margin_right = 1012.0
-margin_bottom = 596.0
+margin_bottom = 26.0
 
 [node name="DeleteButton" type="Button" parent="HBoxContainer"]
 margin_right = 28.0
-margin_bottom = 592.0
+margin_bottom = 22.0
 hint_tooltip = "delete animation"
-icon = ExtResource( 2 )
+icon = SubResource( 1 )
 
 [node name="Label" type="Label" parent="HBoxContainer"]
 margin_left = 32.0
-margin_top = 285.0
 margin_right = 1000.0
-margin_bottom = 307.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
-size_flags_vertical = 6
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 2 )
 valign = 1
 
 [connection signal="pressed" from="HBoxContainer/DeleteButton" to="." method="_on_DeleteButton_pressed"]

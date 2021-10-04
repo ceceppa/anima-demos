@@ -59,6 +59,9 @@ const ROW_SEPARATION = 1.0
 const DISCONNECTED_LABEL_COLOR = Color(1.0, 1.0, 1.0, 0.5)
 const CONNECTED_LABEL_COLOR = Color.white
 
+# Used to get Godot Icons
+var _godot_base_control: Control
+
 func create_row_for_node(index: int, input_label_text: String, input_tooltip: String, output_label_text: String, output_tooltip: String, input_default_value = null) -> PanelContainer:
 	var row_container = load("res://addons/anima/ui/anima_node_row_container.tscn")
 	var row = row_container.instance()
@@ -193,3 +196,17 @@ func generate_row_slot_panel_style():
 
 func get_dpi_scale() -> float:
 	return 1.0
+
+func set_godot_gui(base_control: Control) -> void:
+	_godot_base_control = base_control
+
+func get_godot_icon(name: String) -> Texture:
+	return _godot_base_control.get_icon(name, "EditorIcons")
+
+func get_node_icon(node: Node) -> Texture:
+	var node_icon: Texture = AnimaUI.get_godot_icon(node.get_class())
+
+	if node.has_method('get_editor_icon'):
+		node_icon = node.get_editor_icon()
+
+	return node_icon

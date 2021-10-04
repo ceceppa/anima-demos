@@ -50,21 +50,34 @@ __anima_visual_editor_data = {
 "from_port": 0,
 "to": "Opening1",
 "to_port": 0
+}, {
+"from": "Opening1",
+"from_port": 0,
+"to": "Line2D",
+"to_port": 0
 } ],
 "events_slots": [ "visibility_visible" ],
 "nodes": [ {
 "id": "AnimaNode",
 "name": "AnimaNode",
 "node_to_animate": null,
-"position": Vector2( 1916, 20 ),
+"position": Vector2( 1460, 40 ),
 "title": "AnimaNode"
 }, {
 "id": "Animation",
 "name": "Opening1",
 "node_to_animate": "Opening1",
-"position": Vector2( 2540, -60 ),
+"position": Vector2( 1840, 0 ),
 "title": "Opening1"
-} ]
+}, {
+"id": "Animation",
+"name": "Line2D",
+"node_to_animate": "Line2D",
+"position": Vector2( 2220, 80 ),
+"title": "Line2D"
+} ],
+"scroll_offset": Vector2( 1008, -126 ),
+"zoom": 1.0
 }
 
 [node name="AnimaLabel" type="Control" parent="."]

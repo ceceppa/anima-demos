@@ -28,12 +28,18 @@ func set_source_node(node: Node) -> void:
 func setup():
 	_init_add_buttons()
 
-	add_output_slot("default", "This is the default animation that will be played when using any .play*() function without specifying a name", AnimaUI.PortType.ANIMATION)
+	add_slot({
+		output = {
+			label = "default",
+			tooltip = "This is the default animation that will be played when using any .play*() function without specifying a name",
+			type = AnimaUI.PortType.ANIMATION
+		}
+	})
 
 	for index in _animations_slots.size():
 		var name = _animations_slots[index]
 
-		add_custom_output_slot(_create_animation_row(name, index > 0), name, AnimaUI.PortType.ANIMATION)
+		add_custom_slot(_create_animation_row(name, index > 0), name, AnimaUI.PortType.ANIMATION)
 
 	add_custom_row(_add_animation_button)
 	add_divider()
@@ -44,7 +50,7 @@ func setup():
 	add_child(_events_list_popup)
 
 	for index in _events_slots.size():
-		add_custom_output_slot(_create_event_name_row(_events_slots[index], index), _events_slots[index], AnimaUI.PortType.EVENT)
+		add_custom_slot(_create_event_name_row(_events_slots[index], index), _events_slots[index], AnimaUI.PortType.EVENT)
 
 	add_custom_row(_add_event_button)
 
@@ -122,10 +128,11 @@ func _on_add_new_event_pressed() -> void:
 func _on_event_selected(name: String) -> void:
 	var button_index = _add_event_button.get_position_in_parent()
 	var previous = get_child(button_index - 1)
+	var index = _events_slots.size()
 
 	_events_slots.push_back(name)
 
-	var node = _add_slot_labels(button_index, '', '', name, '', null, false)
+	var node = _create_event_name_row(_events_slots[index], index)
 	add_child_below_node(previous, node)
 
 	_node_body_data.insert(_node_body_data.size() - 1, {type = BodyDataType.OUTPUT_SLOT, node = node, data = [name, '', true, AnimaUI.PortType.EVENT]})

@@ -18,7 +18,7 @@ func _init():
 
 	set_right_disconnects(true)
 
-func add_default_node(source_node: Node, animations_slots := [], events_slots := []) -> GraphNode:
+func get_anima_start_node(source_node: Node, animations_slots := [], events_slots := []) -> GraphNode:
 	if _anima_start_node == null or not is_instance_valid(_anima_start_node):
 		_anima_start_node = ANIMA_START_NODE.new()
 

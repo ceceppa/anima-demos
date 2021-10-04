@@ -7,6 +7,7 @@ signal connections_updated(new_list)
 var _shader_code: String = ""
 var _anima_node: AnimaNode
 var _node_offset: Vector2
+var _is_restoring_data := false
 
 onready var _graph_edit: GraphEdit = find_node("AnimaNodeEditor")
 onready var _nodes_popup: PopupPanel = find_node("NodesPopup")
@@ -53,22 +54,28 @@ func update__anima_node_nodes_info(connection_list: Array) -> void:
 	_anima_node.set_connection_list(connection_list)
 
 func edit(node: AnimaNode) -> void:
-	print_debug('editing  node', node)
+	_is_restoring_data = true
+
+	print_debug('editing node', node)
 	_anima_node = node
 
 	clear_all_nodes()
 
 	var data = node.__anima_visual_editor_data
+	printt('restoring visual editor data', data)
 
 	if data == null || not data.has('nodes') || data.nodes.size() == 0:
-		var start_node = _graph_edit.add_default_node(node, [], [])
+		var start_node = _graph_edit.get_anima_start_node(node, [], [])
 
 		_graph_edit.add_child(start_node)
+	else:
+		_add_nodes(data.nodes, data.animations_slots, data.events_slots)
+		_connect_nodes(data.connection_list)
 
-		return
+		_graph_edit.set_scroll_ofs(data.scroll_offset)
+		_graph_edit.set_zoom(data.zoom)
 
-	_add_nodes(data.nodes, data.animations_slots, data.events_slots)
-	_connect_nodes(data.connection_list)
+	_is_restoring_data = false
 
 func clear_all_nodes() -> void:
 	for node in _graph_edit.get_children():
@@ -83,7 +90,7 @@ func _add_nodes(nodes_data: Array, animations_slots: Array, events_slots: Array)
 		var node: Node
 		
 		if node_data.id == 'AnimaNode':
-			node = _graph_edit.add_default_node(_anima_node, animations_slots, events_slots)
+			node = _graph_edit.get_anima_start_node(_anima_node, animations_slots, events_slots)
 		else:
 			var root = _anima_node.get_parent()
 
@@ -101,6 +108,7 @@ func _add_nodes(nodes_data: Array, animations_slots: Array, events_slots: Array)
 
 		node.render()
 		_graph_edit.add_child(node)
+
 
 func _connect_nodes(connection_list: Array) -> void:
 	for connection in connection_list:
@@ -126,10 +134,10 @@ func _maybe_show_graph_edit() -> bool:
 	return is_graph_edit_visible
 
 func _on_node_connected(connection_list: Array) -> void:
-	_update_anima_node()
+	_update_anima_node_data()
 
 func _on_node_updated() -> void:
-	_update_anima_node()
+	_update_anima_node_data()
 
 func _on_Right_pressed():
 	emit_signal("switch_position")
@@ -155,14 +163,22 @@ func _on_NodesPopup_node_selected(node: Node):
 	var graph_node: GraphNode = _graph_edit.add_node('', node)
 	graph_node.set_offset(_node_offset)
 
-	_update_anima_node()
+	_update_anima_node_data()
 
-func _update_anima_node() -> void:
+func _update_anima_node_data() -> void:
+	# This method is also invoked when restoring the Visual Editor using the
+	# AnimaNode data, and in this case we don't need to do anything here
+	# or will lose some informations.
+	if _is_restoring_data:
+		return
+
 	var data:= {
 		nodes = [],
 		animations_slots = [],
 		events_slots = [],
-		connection_list = _graph_edit.get_connection_list()
+		connection_list = _graph_edit.get_connection_list(),
+		scroll_offset = _graph_edit.get_scroll_ofs(),
+		zoom = _graph_edit.get_zoom(),
 	}
 
 	for child in _graph_edit.get_children():
@@ -182,6 +198,8 @@ func _update_anima_node() -> void:
 
 	data.animations_slots = _graph_edit.get_animations_slots()
 	data.events_slots = _graph_edit.get_events_slots()
+
+	printt('updating visual editor data', data)
 
 	emit_signal("connections_updated", data)
 

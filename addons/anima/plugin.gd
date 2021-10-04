@@ -21,6 +21,8 @@ func _enter_tree():
 	_anima_editor.connect("switch_position", self, "_on_anima_editor_switch_position")
 	_anima_editor.connect("connections_updated", self, '_on_connections_updated')
 
+	AnimaUI.set_godot_gui(get_editor_interface().get_base_control())
+
 	add_control_to_bottom_panel(_anima_editor, "Anima")
 
 func _exit_tree():

@@ -7,11 +7,9 @@ signal node_updated
 
 var _node_body_data := []
 var _node_id: String
-var _default_empty_slot = ["", "", false, 0, Color.aliceblue]
 
 enum BodyDataType {
-	INPUT_SLOT,
-	OUTPUT_SLOT,
+	SLOT,
 	ROW
 }
 #var _row_slot_controls := []
@@ -74,8 +72,8 @@ func set_id(fullQualifiedName: String) -> void:
 func set_type(type: int) -> void:
 	_node_type = type
 
-func set_icon(icon_path) -> void:
-	_custom_title.set_icon(icon_path)
+func set_icon(icon) -> void:
+	_custom_title.set_icon(icon)
 
 func set_title(title: String) -> void:
 	self.name = title
@@ -99,14 +97,11 @@ func set_name(name: String, index: int = 1):
 	if '@' in self.name:
 		self.set_name(name, index + 1)
 
-func add_input_slot(name: String, tooltip: String, type: int, default_value = null) -> void:
-	_node_body_data.push_back({type = BodyDataType.INPUT_SLOT, data = [name, tooltip, true, type, default_value]})
+func add_slot(data: Dictionary) -> void:
+	_node_body_data.push_back({type = BodyDataType.SLOT, io_data = data})
 
-func add_output_slot(name: String, tooltip: String, type: int) -> void:
-	_node_body_data.push_back({type = BodyDataType.OUTPUT_SLOT, data = [name, tooltip, true, type]})
-
-func add_custom_output_slot(custom_row: Node, name: String, type: int) -> void:
-	_node_body_data.push_back({type = BodyDataType.OUTPUT_SLOT, custom_row = custom_row, data = [name, '', true, type]})
+func add_custom_slot(custom_row: Node, name: String, type: int) -> void:
+	_node_body_data.push_back({type = BodyDataType.SLOT, custom_row = custom_row})
 
 func add_custom_row(node = Node) -> void:
 	_node_body_data.push_back({type = BodyDataType.ROW, node = node})
@@ -137,8 +132,22 @@ func add_label(v: String, tooltip: String) -> void:
 # Godot automatically adds the slot next to the element added.
 # So to have a right and left label, we need to wrap them inside
 # a HBoxContainer
-func _add_slot_labels(index: int, input_label_text, input_tooltip, output_label_text, output_tooltip, input_default_value = null, add := true) -> PanelContainer:
-	var slots_row: PanelContainer = AnimaUI.create_row_for_node(index, input_label_text, input_tooltip, output_label_text, output_tooltip, input_default_value)
+func _add_slot_labels(index: int, input_slot: Dictionary, output_slot: Dictionary, add := true) -> PanelContainer:
+	var input_label_text: String = input_slot.label if input_slot.has('label') else ''
+	var input_tooltip: String = input_slot.tooltip if input_slot.has('tooltip') else ''
+	var input_default_value = input_slot.default if input_slot.has('default') else ''
+
+	var output_label_text: String = output_slot.label if output_slot.has('label') else ''
+	var output_tooltip: String = output_slot.tooltip if output_slot.has('tooltip') else ''
+
+	var slots_row: PanelContainer = AnimaUI.create_row_for_node(
+		index,
+		input_label_text,
+		input_tooltip,
+		output_label_text,
+		output_tooltip,
+		input_default_value
+	)
 
 	if add:
 		add_child(slots_row)
@@ -153,13 +162,6 @@ func render() -> void:
 
 	AnimaUI.customise_node_style(self, _custom_title, _node_type)
 
-	# Used when there is no matching input/output node for the row
-
-	var total_slots := 0
-	for data in _node_body_data:
-		if data.type == BodyDataType.INPUT_SLOT or data.type == BodyDataType.OUTPUT_SLOT:
-			total_slots += 1
-
 	for index in _node_body_data.size():
 		var data: Dictionary = _node_body_data[index]
 
@@ -167,25 +169,22 @@ func render() -> void:
 			add_child(data.node)
 
 			continue
-
-		var input_slot = _default_empty_slot
-		var output_slot = _default_empty_slot
-
-		if data.type == BodyDataType.INPUT_SLOT:
-			input_slot = data.data
-		else:
-			output_slot = data.data
-
-		# Both input and output labels needs to be added
-		# regardless of the existance of the corresponding slot,
-		# because we can't choose in which column they need to be.
-
-		var input_default_value = input_slot[5] if input_slot.size() >= 6 else null
-
-		if data.has('custom_row'):
+		elif data.has('custom_row'):
 			add_child(data.custom_row)
-		else:
-			_add_slot_labels(index, input_slot[0], input_slot[1], output_slot[0], output_slot[1], input_default_value)
+
+			continue
+
+		var io_data = data.io_data if data.has('io_data') else {}
+		var input_slot: Dictionary = {}
+		var output_slot: Dictionary = {}
+
+		if io_data.has('input'):
+			input_slot = io_data.input
+
+		if io_data.has('output'):
+			output_slot = io_data.output
+
+		_add_slot_labels(index, input_slot, output_slot)
 
 	_setup_slots()
 
@@ -193,27 +192,29 @@ func _setup_slots() -> void:
 	clear_all_slots()
 
 	for index in _node_body_data.size():
-		var slot_index = index + 1
 		var data: Dictionary = _node_body_data[index]
 
-		var input_slot = _default_empty_slot
-		var output_slot = _default_empty_slot
-
 		if data.type == BodyDataType.ROW:
-			.set_slot(slot_index, false, TYPE_NIL, Color.transparent, false, TYPE_NIL, Color.transparent)
+			.set_slot(index + 1, false, TYPE_NIL, Color.transparent, false, TYPE_NIL, Color.transparent)
 
 			continue
-		elif data.type == BodyDataType.INPUT_SLOT:
-			input_slot = data.data
-		else:
-			output_slot = data.data
 
-		var input_default_value = input_slot[5] if input_slot.size() >= 6 else null
-		var input_slot_type = input_slot[3]
-		var input_slot_enabled = input_slot[2]
+		var input_slot: Dictionary = {}
+		var output_slot: Dictionary = {}
+		var io_data = data.io_data if data.has('io_data') else {}
 
-		var output_slot_type = output_slot[3]
-		var output_slot_enabled = output_slot[2]
+		if io_data.has('input'):
+			input_slot = io_data.input
+
+		if io_data.has('output'):
+			output_slot = io_data.output
+
+		var input_default_value = input_slot.default if input_slot.has('default') else null
+		var input_slot_type: int = input_slot.type if input_slot.has('type') else 0
+		var input_slot_enabled: bool = input_slot.has('type')
+
+		var output_slot_type: int = output_slot.type if output_slot.has('type') else 0
+		var output_slot_enabled: bool = output_slot.has('type')
 
 		if input_slot_type == AnimaUI.PortType.LABEL_ONLY:
 			input_slot_enabled = false
@@ -224,7 +225,7 @@ func _setup_slots() -> void:
 		var input_color: Color = AnimaUI.PortColor[input_slot_type]
 		var output_color: Color = AnimaUI.PortColor[output_slot_type]
 
-		.set_slot(slot_index, input_slot_enabled, input_slot_type, input_color, output_slot_enabled, output_slot_type, output_color, null, null)
+		.set_slot(index + 1, input_slot_enabled, input_slot_type, input_color, output_slot_enabled, output_slot_type, output_color, null, null)
 
 func _add_row_slot_control(row_slot_control: Control) -> void:
 	var container = PanelContainer.new()

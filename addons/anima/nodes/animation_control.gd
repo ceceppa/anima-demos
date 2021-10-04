@@ -8,22 +8,40 @@ func _init():
 		category = 'Anima',
 		id = 'Animation',
 		name = 'Animation',
-		icon = 'res://addons/anima/icons/node.svg',
+#		icon = 'res://addons/anima/icons/node.svg',
 		type = AnimaUI.NodeType.ANIMATION,
 		closable = false
 	})
 
 func setup():
-	add_input_slot("", "", AnimaUI.PortType.ANIMATION)
-	add_output_slot("then", "", AnimaUI.PortType.ANIMATION)
-	add_output_slot("with", "", AnimaUI.PortType.ANIMATION)
+	add_slot({
+		input = {
+			label = "",
+			type = AnimaUI.PortType.ANIMATION
+		},
+		output = {
+			label = "then",
+			type = AnimaUI.PortType.ANIMATION
+		}
+	})
+
+	add_slot({
+		output = {
+			label = "with",
+			type = AnimaUI.PortType.ANIMATION
+		}
+	})
+
 
 	add_custom_row(ANIMATION_CONTROL.instance())
 
 func set_node_to_animate(node: Node) -> void:
+	print_debug('set node to animate', node)
+
 	_node_to_animate = node
-	
+
 	set_title(_node_to_animate.name)
+	set_icon(AnimaUI.get_node_icon(node))
 
 func get_node_to_animate() -> Node:
 	return _node_to_animate
