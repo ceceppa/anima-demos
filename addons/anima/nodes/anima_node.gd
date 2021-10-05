@@ -19,7 +19,7 @@ func _init():
 		icon = 'res://addons/anima/icons/anima.svg',
 		type = AnimaUI.NodeType.START,
 		playable = false,
-		closable = false
+		deletable = false
 	})
 
 func set_source_node(node: Node) -> void:

@@ -57,11 +57,11 @@ margin_bottom = 24.0
 toggle_mode = true
 icon = ExtResource( 2 )
 
-[node name="CloseButton" type="ToolButton" parent="Container"]
+[node name="RemoveButton" type="ToolButton" parent="Container"]
 margin_left = 170.0
 margin_right = 198.0
 margin_bottom = 24.0
 icon = ExtResource( 5 )
 
 [connection signal="toggled" from="Container/PlayButton" to="." method="_on_TogglePreview_toggled"]
-[connection signal="pressed" from="Container/CloseButton" to="." method="_on_CloseButton_pressed"]
+[connection signal="pressed" from="Container/RemoveButton" to="." method="_on_RemoveButton_pressed"]

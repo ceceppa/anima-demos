@@ -21,9 +21,11 @@ func _init():
 	set_show_close_button(false)
 
 	_custom_title.connect('toggle_preview', self, '_on_toggle_preview')
+	_custom_title.connect('remove_node', self, '_on_remove_node')
 
 	connect("offset_changed", self, "_on_offset_changed")
 
+	rect_min_size = get_minimum_size() + Vector2(200, 150)
 
 func _ready():
 	setup()
@@ -51,8 +53,11 @@ func register_node(node_data: Dictionary) -> void:
 	if node_data.has('playable') and not node_data.playable:
 		_custom_title.hide_play_button()
 
-	if node_data.has('closable') and not node_data.closable:
+	if node_data.has('deletable') and not node_data.deletable:
 		_custom_title.hide_close_button()
+
+	if node_data.has('min_size'):
+		rect_min_size = get_minimum_size() + node_data.min_size
 
 	_node_id = node_data.id
 
@@ -269,3 +274,6 @@ func _on_toggle_preview(visible: bool):
 
 func _on_offset_changed() -> void:
 	emit_signal("node_updated")
+
+func _on_remove_node() -> void:
+	queue_free()

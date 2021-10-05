@@ -1,28 +1,113 @@
-[gd_scene format=2]
+[gd_scene load_steps=4 format=2]
 
-[node name="Control" type="VBoxContainer"]
+[ext_resource path="res://addons/anima/ui/animation_data.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/anima/nodes/animation_control.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/ui/AnimationsWindow.tscn" type="PackedScene" id=3]
+
+[node name="AnimationControl" type="MarginContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HSeparator" type="HSeparator" parent="."]
-margin_right = 1024.0
-margin_bottom = 4.0
-
-[node name="GridContainer" type="GridContainer" parent="."]
-margin_top = 8.0
-margin_right = 1024.0
-margin_bottom = 600.0
+mouse_filter = 1
 size_flags_horizontal = 3
 size_flags_vertical = 3
-columns = 2
+custom_constants/margin_right = 8
+custom_constants/margin_top = 8
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 8
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="OptionButton" type="OptionButton" parent="GridContainer"]
-margin_right = 83.0
-margin_bottom = 20.0
-text = "Property"
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 1016.0
+margin_bottom = 592.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+margin_right = 1008.0
+margin_bottom = 4.0
+
+[node name="GridContainer2" type="GridContainer" parent="VBoxContainer"]
+margin_top = 8.0
+margin_right = 1008.0
+margin_bottom = 64.0
+custom_constants/vseparation = 8
+custom_constants/hseparation = 12
+columns = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer2"]
+margin_top = 5.0
+margin_right = 120.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 120, 0 )
+text = "duration (s):"
+
+[node name="duration" type="LineEdit" parent="VBoxContainer/GridContainer2"]
+margin_left = 132.0
+margin_right = 1008.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+align = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/GridContainer2"]
+margin_top = 37.0
+margin_right = 120.0
+margin_bottom = 51.0
+rect_min_size = Vector2( 120, 0 )
+text = "delay (s):"
+
+[node name="delay" type="LineEdit" parent="VBoxContainer/GridContainer2"]
+margin_left = 132.0
+margin_top = 32.0
+margin_right = 1008.0
+margin_bottom = 56.0
+hint_tooltip = "Use a negative value to anticipate the start time of this animation."
+size_flags_horizontal = 3
+align = 2
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+margin_top = 68.0
+margin_right = 1008.0
+margin_bottom = 72.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+margin_top = 76.0
+margin_right = 1008.0
+margin_bottom = 584.0
+rect_min_size = Vector2( 0, 400 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+margin_right = 1008.0
+margin_bottom = 508.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AnimationData" parent="VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+margin_right = 1008.0
+margin_bottom = 68.0
+
+[node name="AnimationData2" parent="VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+margin_top = 72.0
+margin_right = 1008.0
+margin_bottom = 140.0
+
+[node name="PropertiesWindow" type="WindowDialog" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 1016.0
+margin_bottom = 592.0
+window_title = "Select the property to animate"
+
+[node name="AnimationsWindow" parent="." instance=ExtResource( 3 )]
+
+[connection signal="select_animation" from="VBoxContainer/ScrollContainer/VBoxContainer/AnimationData" to="." method="_on_AnimationData_select_animation"]
+[connection signal="select_property" from="VBoxContainer/ScrollContainer/VBoxContainer/AnimationData" to="." method="_on_AnimationData_select_property"]

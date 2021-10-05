@@ -50,11 +50,6 @@ __anima_visual_editor_data = {
 "from_port": 0,
 "to": "Opening1",
 "to_port": 0
-}, {
-"from": "Opening1",
-"from_port": 0,
-"to": "Line2D",
-"to_port": 0
 } ],
 "events_slots": [ "visibility_visible" ],
 "nodes": [ {
@@ -69,14 +64,8 @@ __anima_visual_editor_data = {
 "node_to_animate": "Opening1",
 "position": Vector2( 1840, 0 ),
 "title": "Opening1"
-}, {
-"id": "Animation",
-"name": "Line2D",
-"node_to_animate": "Line2D",
-"position": Vector2( 2220, 80 ),
-"title": "Line2D"
 } ],
-"scroll_offset": Vector2( 1008, -126 ),
+"scroll_offset": Vector2( 1054, -90 ),
 "zoom": 1.0
 }
 

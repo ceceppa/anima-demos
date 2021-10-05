@@ -2,7 +2,7 @@ tool
 extends GraphEdit
 
 const ANIMA_START_NODE = preload("res://addons/anima/nodes/anima_node.gd")
-const ANIMA_ANIMATION_CONTROL_NODE = preload("res://addons/anima/nodes/animation_control.gd")
+const ANIMATION_NODE = preload("res://addons/anima/nodes/animation_node.gd")
 
 signal node_connected
 signal node_updated
@@ -69,7 +69,7 @@ func get_connections():
 	return connections
 
 func add_node(node_id: String, node_to_animate: Node, add_node := true) -> GraphNode:
-	var node = ANIMA_ANIMATION_CONTROL_NODE.new()
+	var node = ANIMATION_NODE.new()
 
 	node.set_node_to_animate(node_to_animate)
 	node.connect("node_updated", self, "_on_node_updated")

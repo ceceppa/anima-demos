@@ -11,9 +11,6 @@ func _on_TogglePreview_toggled(button_pressed):
 func _on_RenameButton_pressed():
 	emit_signal("rename_node")
 
-func _on_CloseButton_pressed():
-	emit_signal("remove_node")
-
 func hide_play_button() -> void:
 	$Container/PlayButton.set_visible(false)
 
@@ -35,3 +32,6 @@ func hide_close_button() -> void:
 
 func get_title() -> String:
 	return $Container/Title.get_text()
+
+func _on_RemoveButton_pressed():
+	emit_signal("remove_node")
