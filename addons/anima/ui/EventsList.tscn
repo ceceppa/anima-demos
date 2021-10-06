@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://addons/anima/ui/events_list.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/ui/EventsList.gd" type="Script" id=1]
 
 [node name="EventsList" type="WindowDialog"]
 margin_right = 640.0

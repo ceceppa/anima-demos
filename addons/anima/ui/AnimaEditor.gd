@@ -17,42 +17,6 @@ func _ready():
 	_graph_edit.connect("node_connected", self, '_on_node_connected')
 	_graph_edit.connect("node_updated", self, '_on_node_updated')
 
-func update__anima_node_nodes_info(connection_list: Array) -> void:
-	var nodes = []
-	var children = _graph_edit.get_children()
-
-	if not _anima_node:
-		return
-
-	for node in children:
-		if node is GraphNode and not node.node_id in 'anima/' and node.node_id:
-			var node_data = {}
-			var values = node.get_row_slot_values()
-
-			node_data[node.name] = {
-				"title": node.get_title(),
-				"id": node.node_id,
-				"position": node.get_position(),
-				'values': values
-			}
-
-			nodes.push_back(node_data)
-
-	_anima_node.set_nodes(nodes)
-	
-	# When saving the anima file we need to store the node id
-	# rather than its reference, because that's the only useful
-	# information we can use when we load a file
-	var connection_list_for_save = []
-
-	for item in connection_list:
-		item.from = item.from.node_id
-		item.to = item.to.node_id
-		
-		connection_list_for_save.push_back(item)
-
-	_anima_node.set_connection_list(connection_list)
-
 func edit(node: AnimaNode) -> void:
 	_is_restoring_data = true
 
@@ -105,6 +69,7 @@ func _add_nodes(nodes_data: Array, animations_slots: Array, events_slots: Array)
 		node.name = node_data.name
 		node.set_offset(node_data.position)
 		node.set_title(node_data.title)
+		node.restore_data(node_data.data)
 
 		node.render()
 		_graph_edit.add_child(node)
@@ -193,7 +158,8 @@ func _update_anima_node_data() -> void:
 				title = child.get_title(),
 				position = child.get_offset(),
 				node_to_animate = node_to_animate,
-				id = child.get_id()
+				id = child.get_id(),
+				data = child.get_data()
 			})
 
 	data.animations_slots = _graph_edit.get_animations_slots()

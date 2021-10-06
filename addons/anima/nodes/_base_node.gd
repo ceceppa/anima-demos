@@ -1,8 +1,6 @@
 tool
 extends "./_base_signals.gd"
 
-const ANIMATION_CONTROL = preload("res://addons/anima/nodes/animation_control.tscn")
-
 signal node_updated
 
 var _node_body_data := []
@@ -15,7 +13,7 @@ enum BodyDataType {
 #var _row_slot_controls := []
 
 func _init():
-	_custom_title = load('res://addons/anima/ui/custom_node_title.tscn').instance()
+	_custom_title = load('res://addons/anima/ui/CustomNodeTitle.tscn').instance()
 	add_child(_custom_title)
 
 	set_show_close_button(false)
@@ -30,6 +28,10 @@ func _init():
 func _ready():
 	setup()
 	render()
+	_after_render()
+
+func _after_render() -> void:
+	pass
 
 func register_node(node_data: Dictionary) -> void:
 	if node_data.has('category'):
@@ -54,7 +56,7 @@ func register_node(node_data: Dictionary) -> void:
 		_custom_title.hide_play_button()
 
 	if node_data.has('deletable') and not node_data.deletable:
-		_custom_title.hide_close_button()
+		_custom_title.hide_remove_button()
 
 	if node_data.has('min_size'):
 		rect_min_size = get_minimum_size() + node_data.min_size
@@ -240,20 +242,11 @@ func _add_row_slot_control(row_slot_control: Control) -> void:
 	container.add_child(row_slot_control)
 	add_child(container)
 
-func get_row_slot_values() -> Array:
-	var values = []
+func restore_data(_data: Dictionary) -> void:
+	pass
 
-#	pass
-#	for row_slot in _row_slot_controls:
-#		for property in POSSIBLE_NODE_PROPERTIES:
-#			var value = row_slot.get(property)
-#			if value:
-#				values.push_back({
-#				'property': property,
-#				'value': row_slot[property]
-#			})
-
-	return values
+func get_data() -> Dictionary:
+	return {}
 
 func _on_toggle_preview(visible: bool):
 	# Hiding the panel does not "restore" the previous

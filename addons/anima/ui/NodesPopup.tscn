@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://addons/anima/ui/nodes_popup.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/ui/NodesPopup.gd" type="Script" id=1]
 
 [node name="NodesPopup" type="PopupPanel"]
 margin_right = -0.280029

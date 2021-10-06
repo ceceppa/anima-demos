@@ -53,19 +53,32 @@ __anima_visual_editor_data = {
 } ],
 "events_slots": [ "visibility_visible" ],
 "nodes": [ {
+"data": {
+},
 "id": "AnimaNode",
 "name": "AnimaNode",
 "node_to_animate": null,
 "position": Vector2( 1460, 40 ),
 "title": "AnimaNode"
 }, {
+"data": {
+"animations": [ {
+"animation": {
+"label": "Rubber Band",
+"name": "rubber_band"
+},
+"type": 0
+} ],
+"delay": 0.0,
+"duration": 0.5
+},
 "id": "Animation",
 "name": "Opening1",
 "node_to_animate": "Opening1",
 "position": Vector2( 1840, 0 ),
 "title": "Opening1"
 } ],
-"scroll_offset": Vector2( 1054, -90 ),
+"scroll_offset": Vector2( 782, -17 ),
 "zoom": 1.0
 }
 

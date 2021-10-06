@@ -1,8 +1,8 @@
 tool
 extends "./_base_node.gd"
 
-const ANIMATION_NAME_ROW = preload('res://addons/anima/ui/animation_name_row.tscn')
-const EVENT_NAME_ROW = preload('res://addons/anima/ui/event_name_row.tscn')
+const ANIMATION_NAME_ROW = preload('res://addons/anima/ui/AnimationNameRow.tscn')
+const EVENT_NAME_ROW = preload('res://addons/anima/ui/EventNameRow.tscn')
 
 var _add_animation_button: Button
 var _add_event_button: Button
@@ -45,7 +45,7 @@ func setup():
 	add_divider()
 	add_label('On Event', 'Let Anima play the specified animation when an event occours')
 
-	_events_list_popup = preload('res://addons/anima/ui/events_list.tscn').instance()
+	_events_list_popup = preload('res://addons/anima/ui/EventsList.tscn').instance()
 	_events_list_popup.connect("event_selected", self, "_on_event_selected")
 	add_child(_events_list_popup)
 

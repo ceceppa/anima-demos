@@ -15,9 +15,9 @@ func get_name():
 
 func _enter_tree():
 	add_autoload_singleton("Anima", 'res://addons/anima/core/anima.gd')
-	add_autoload_singleton("AnimaUI", 'res://addons/anima/ui/anima_ui.gd')
+	add_autoload_singleton("AnimaUI", 'res://addons/anima/ui/AnimaUI.gd')
 
-	_anima_editor = preload("res://addons/anima/ui/anima_editor.tscn").instance()
+	_anima_editor = preload("res://addons/anima/ui/AnimaEditor.tscn").instance()
 	_anima_editor.connect("switch_position", self, "_on_anima_editor_switch_position")
 	_anima_editor.connect("connections_updated", self, '_on_connections_updated')
 

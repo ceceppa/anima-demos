@@ -27,8 +27,8 @@ func set_icon(icon) -> void:
 	else:
 		$Container/Icon.set_texture(icon)
 
-func hide_close_button() -> void:
-	$Container/CloseButton.set_visible(false)
+func hide_remove_button() -> void:
+	$Container/RemoveButton.set_visible(false)
 
 func get_title() -> String:
 	return $Container/Title.get_text()

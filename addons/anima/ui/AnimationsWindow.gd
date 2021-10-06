@@ -1,15 +1,31 @@
 tool
 extends WindowDialog
 
-signal animation_selected(name)
+signal animation_selected(label, name)
 
 onready var _list_container = find_node('ListContainer')
 onready var _confirm_button = find_node('ConfirmButton')
+onready var _control_demo: Control = find_node('ControlTest')
+onready var _sprite_demo: CanvasItem = find_node('SpriteTest')
 
 var _animation_name: String
+var _animation_script_name: String
+var _source_node: Node
+
+func show_demo_by_type(node: Node) -> void:
+	var is_control_demo_visible = node is Control
+
+	if _control_demo:
+		_control_demo.get_parent().visible = is_control_demo_visible
+		_sprite_demo.get_parent().get_parent().visible = not is_control_demo_visible
+	else:
+		_source_node = node
 
 func _ready():
 	_setup_list()
+
+	if _source_node:
+		show_demo_by_type(_source_node)
 
 func _setup_list() -> void:
 	var animations = Anima.get_available_animations()
@@ -24,7 +40,7 @@ func _setup_list() -> void:
 		var file = file_and_extension[0]
 
 		if category != old_category:
-			var header = create_new_header(category)
+			var header = _create_new_header(category)
 			_list_container.add_child(header)
 
 		var button := Button.new()
@@ -39,7 +55,7 @@ func _setup_list() -> void:
 		_list_container.add_child(button)
 		old_category = category
 
-func create_new_header(text: String) -> PanelContainer:
+func _create_new_header(text: String) -> PanelContainer:
 	var container := PanelContainer.new()
 	var label := Label.new()
 
@@ -62,10 +78,11 @@ func _on_animation_button_pressed(button: Button) -> void:
 
 	var duration = 0.5
 
-	_play_animation($HBoxContainer/VBoxContainer/ControlContainer/ControlTest, button)
-	_play_animation($HBoxContainer/VBoxContainer/SpriteContainer/Control2/SpriteTest, button)
+	_play_animation(_control_demo, button)
+	_play_animation(_sprite_demo, button)
 
-	_animation_name = script_name
+	_animation_name = button.text
+	_animation_script_name = script_name
 
 func _play_animation(node: Node, button: Button):
 	var script_name: String = button.get_meta('script')
@@ -102,8 +119,8 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 	return
 
 func _on_Timer_timeout():
-	var control := $HBoxContainer/VBoxContainer/ControlContainer/ControlTest
-	var sprite := $HBoxContainer/VBoxContainer/SpriteContainer/Control2/SpriteTest
+	var control := _control_demo
+	var sprite := _sprite_demo
 	
 	_remove_duplicate(control.get_parent(), control)
 	_remove_duplicate(sprite.get_parent(), sprite)
@@ -115,4 +132,6 @@ func _on_CancelButton_pressed():
 	hide()
 
 func _on_ConfirmButton_pressed():
-	emit_signal("animation_selected", _animation_name)
+	emit_signal("animation_selected", _animation_name, _animation_script_name)
+
+	hide()
