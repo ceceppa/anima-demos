@@ -10,6 +10,7 @@ var _animations_slots := []
 var _events_slots := []
 var _events_list_popup: WindowDialog
 var _source_node: Node
+var _animation_index: int
 
 func _init():
 	register_node({
@@ -17,7 +18,7 @@ func _init():
 		id = 'AnimaNode',
 		name = 'AnimaNode',
 		icon = 'res://addons/anima/icons/anima.svg',
-		type = AnimaUI.NodeType.START,
+		type = AnimaUI.NODE_TYPE.START,
 		playable = false,
 		deletable = false
 	})
@@ -28,18 +29,13 @@ func set_source_node(node: Node) -> void:
 func setup():
 	_init_add_buttons()
 
-	add_slot({
-		output = {
-			label = "default",
-			tooltip = "This is the default animation that will be played when using any .play*() function without specifying a name",
-			type = AnimaUI.PortType.ANIMATION
-		}
-	})
+	if _animations_slots.size() == 0:
+		_animations_slots.push_back('default')
 
 	for index in _animations_slots.size():
 		var name = _animations_slots[index]
 
-		add_custom_slot(_create_animation_row(name, index > 0), name, AnimaUI.PortType.ANIMATION)
+		add_custom_output_slot(_create_animation_row(name, index > 0), name, AnimaUI.PORT_TYPE.ANIMATION)
 
 	add_custom_row(_add_animation_button)
 	add_divider()
@@ -50,7 +46,7 @@ func setup():
 	add_child(_events_list_popup)
 
 	for index in _events_slots.size():
-		add_custom_slot(_create_event_name_row(_events_slots[index], index), _events_slots[index], AnimaUI.PortType.EVENT)
+		add_custom_output_slot(_create_event_name_row(_events_slots[index], index), _events_slots[index], AnimaUI.PORT_TYPE.EVENT)
 
 	add_custom_row(_add_event_button)
 
@@ -72,12 +68,16 @@ func set_animations_slots(animations: Array) -> void:
 func set_events_slots(events: Array) -> void:
 	_events_slots = events
 
+func get_data() -> Dictionary:
+	return {}
+
 func _create_animation_row(default_name: String, can_be_deleted := true) -> Node:
+	var index = _animations_slots.size() - 1
 	var row = ANIMATION_NAME_ROW.instance()
 
 	row.set_default_name(default_name)
-	row.set_index(_animations_slots.size())
-	row.connect("delete_animation", self, "_on_animation_deleted")
+	row.connect("delete_animation", self, "_on_animation_deleted", [index])
+	row.connect("play_animation", self, "_on_play_animation_by_index", [index])
 
 	if not can_be_deleted:
 		row.disable_delete_button()
@@ -89,8 +89,7 @@ func _create_event_name_row(label: String, index: int) -> Node:
 	var row = EVENT_NAME_ROW.instance()
 
 	row.set_label(label)
-	row.set_index(index)
-	row.connect("delete_event", self, "_on_event_deleted")
+	row.connect("delete_event", self, "_on_event_deleted", [index])
 
 	return row
 
@@ -115,7 +114,7 @@ func _on_add_new_animation_pressed() -> void:
 
 	add_child_below_node(previous, node)
 
-	_node_body_data.insert(_animations_slots.size() - 1, {type = BodyDataType.OUTPUT_SLOT, node = node, data = [name, '', true, AnimaUI.PortType.ANIMATION]})
+	_node_body_data.insert(_animations_slots.size() - 1, {type = BodyDataType.OUTPUT_SLOT, node = node, data = [name, '', true, AnimaUI.PORT_TYPE.ANIMATION]})
 
 	_setup_slots()
 
@@ -135,13 +134,14 @@ func _on_event_selected(name: String) -> void:
 	var node = _create_event_name_row(_events_slots[index], index)
 	add_child_below_node(previous, node)
 
-	_node_body_data.insert(_node_body_data.size() - 1, {type = BodyDataType.OUTPUT_SLOT, node = node, data = [name, '', true, AnimaUI.PortType.EVENT]})
+	_node_body_data.insert(_node_body_data.size() - 1, {type = BodyDataType.OUTPUT_SLOT, node = node, data = [name, '', true, AnimaUI.PORT_TYPE.EVENT]})
 
 	_setup_slots()
 
 	emit_signal("node_updated")
 
 func _on_animation_deleted(index: int) -> void:
+	printt('remove animation index', index)
 	_animations_slots.remove(index)
 
 	_setup_slots()
@@ -154,3 +154,8 @@ func _on_event_deleted(index: int) -> void:
 	_setup_slots()
 
 	emit_signal("node_updated")
+
+func _on_play_animation_by_index(index: int) -> void:
+	_animation_index = index
+
+	_on_play_animation()

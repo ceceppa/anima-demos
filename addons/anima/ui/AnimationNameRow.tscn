@@ -37,12 +37,19 @@ icon = ExtResource( 2 )
 
 [node name="LineEdit" type="LineEdit" parent="HBoxContainer"]
 margin_left = 32.0
-margin_right = 1000.0
+margin_right = 984.0
 margin_bottom = 592.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 1 )
 
+[node name="Button" type="Button" parent="HBoxContainer"]
+margin_left = 988.0
+margin_right = 1000.0
+margin_bottom = 592.0
+hint_tooltip = "Play the animation"
+
 [connection signal="pressed" from="HBoxContainer/DeleteButton" to="." method="_on_DeleteButton_pressed"]
 [connection signal="focus_exited" from="HBoxContainer/LineEdit" to="." method="_on_LineEdit_focus_exited"]
 [connection signal="text_changed" from="HBoxContainer/LineEdit" to="." method="_on_LineEdit_text_changed"]
+[connection signal="pressed" from="HBoxContainer/Button" to="." method="_on_Button_pressed"]

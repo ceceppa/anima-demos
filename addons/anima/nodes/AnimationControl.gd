@@ -31,7 +31,8 @@ func restore_data(data: Dictionary) -> void:
 	_duration.text = str(duration)
 	_delay.text = str(delay)
 
-	animations.push_back({})
+	if animations.size() == 0:
+		animations.push_back({})
 
 	print('restoring data', data)
 	for child in _animations_container.get_children():

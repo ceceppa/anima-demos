@@ -49,6 +49,26 @@ func _init_node(node: Node):
 	if node != self:
 		node.add_child(self)
 
+func generate_from_visual_data(node: Node, visual_data: Dictionary) -> void:
+	var data = {
+		node = node,
+		duration = visual_data.duration,
+		delay = visual_data.delay
+	}
+
+	var is_first := true
+
+	for animation in visual_data.animations:
+		if animation.type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
+			data.animation = animation.animation.name
+
+		if is_first:
+			then(data)
+		else:
+			also(data)
+
+		is_first = false
+
 func then(data: Dictionary) -> float:
 	data._wait_time = _total_animation
 

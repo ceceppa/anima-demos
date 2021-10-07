@@ -1,15 +1,8 @@
 tool
 extends PanelContainer
 
-signal toggle_preview
-signal rename_node
+signal play_animation
 signal remove_node
-
-func _on_TogglePreview_toggled(button_pressed):
-	emit_signal("toggle_preview", button_pressed)
-
-func _on_RenameButton_pressed():
-	emit_signal("rename_node")
 
 func hide_play_button() -> void:
 	$Container/PlayButton.set_visible(false)
@@ -35,3 +28,6 @@ func get_title() -> String:
 
 func _on_RemoveButton_pressed():
 	emit_signal("remove_node")
+
+func _on_PlayButton_pressed():
+	emit_signal("play_animation")

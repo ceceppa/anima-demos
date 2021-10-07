@@ -54,7 +54,6 @@ text = "Title goes here"
 margin_left = 138.0
 margin_right = 166.0
 margin_bottom = 24.0
-toggle_mode = true
 icon = ExtResource( 3 )
 
 [node name="RemoveButton" type="ToolButton" parent="Container"]
@@ -63,5 +62,6 @@ margin_right = 198.0
 margin_bottom = 24.0
 icon = ExtResource( 1 )
 
-[connection signal="toggled" from="Container/PlayButton" to="." method="_on_TogglePreview_toggled"]
+[connection signal="pressed" from="Container/PlayButton" to="." method="_on_PlayButton_pressed"]
+[connection signal="toggled" from="Container/PlayButton" to="." method="_on_PlayButton_toggled"]
 [connection signal="pressed" from="Container/RemoveButton" to="." method="_on_RemoveButton_pressed"]

@@ -28,7 +28,7 @@ func input_connected(slot: int, from: Node, from_port: int) -> void:
 	var row_container = find_node('Row' + str(slot), true, false)
 
 	if row_container:
-		row_container.set_connected(AnimaUI.Port.INPUT)
+		row_container.set_connected(AnimaUI.PORT.INPUT)
 
 	var is_already_connected = false
 	for index in range(0, connected_inputs.size()):
@@ -49,7 +49,7 @@ func output_connected(slot: int) -> void:
 	var row_container = find_node('Row' + str(slot), true, false)
 
 	if row_container:
-		row_container.set_connected(AnimaUI.Port.OUTPUT)
+		row_container.set_connected(AnimaUI.PORT.OUTPUT)
 
 	if not connected_outputs.has(slot):
 		connected_outputs.push_back(slot)

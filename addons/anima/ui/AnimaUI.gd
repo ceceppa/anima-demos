@@ -1,35 +1,40 @@
 tool
 extends Node
 
-enum Port {
+enum PORT {
 	INPUT,
 	OUTPUT
 }
 
-enum PortType {
+enum PORT_TYPE {
 	LABEL_ONLY,
 	ANIMATION,
 	EVENT,
 }
 
-enum NodeType {
+enum NODE_TYPE {
 	START,
 	ANIMATION,
 	ACTION,
 	MUSIC
 }
 
-const PortColor = {
-	PortType.LABEL_ONLY: Color.transparent,
-	PortType.ANIMATION: Color('#008484'),
-	PortType.EVENT: Color('#eb8937'),
+const PORT_COLOR = {
+	PORT_TYPE.LABEL_ONLY: Color.transparent,
+	PORT_TYPE.ANIMATION: Color('#008484'),
+	PORT_TYPE.EVENT: Color('#eb8937'),
 }
 
-const NodeTypeColor = {
-	NodeType.START: Color('#008484'),
-	NodeType.ANIMATION: Color('#737f96'),
-	NodeType.ACTION: Color('#2f384d'),
-	NodeType.MUSIC: Color('#183f28'),
+const NODE_TYPE_COLOR = {
+	NODE_TYPE.START: Color('#008484'),
+	NODE_TYPE.ANIMATION: Color('#737f96'),
+	NODE_TYPE.ACTION: Color('#2f384d'),
+	NODE_TYPE.MUSIC: Color('#183f28'),
+}
+
+enum VISUAL_ANIMATION_TYPE {
+	ANIMATION,
+	PROPERTY
 }
 
 # Title
@@ -85,7 +90,7 @@ func create_row_for_node(index: int, input_label_text: String, input_tooltip: St
 	return row
 
 func customise_node_style(node: GraphNode, title_node: PanelContainer, node_type: int) -> void:
-	var node_color = NodeTypeColor[node_type] if NodeTypeColor.has(node_type) else Color.black
+	var node_color = NODE_TYPE_COLOR[node_type] if NODE_TYPE_COLOR.has(node_type) else Color.black
 	var title_color = node_color
 
 	apply_style_to_graph_node(node, node_color)
@@ -100,7 +105,7 @@ func apply_style_to_graph_node(node: GraphNode, node_color: Color) -> void:
 	var selected_style = generate_selected_frame_style(frame_style)
 	node.add_stylebox_override("selectedframe", selected_style)
 
-	# Port offset
+	# PORT offset
 	override_port_offset(node)
 
 	# Space between rows

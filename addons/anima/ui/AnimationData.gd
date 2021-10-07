@@ -10,18 +10,14 @@ onready var _property_container = find_node('PropertyContainer')
 onready var _animation_button = find_node('AnimationButton')
 
 var _animation_name: String
-
-enum ANIMATION_TYPE {
-	ANIMATION,
-	PROPERTY
-}
+var _data_to_restore: Dictionary
 
 func get_animation_data() -> Dictionary:
 	var data := {
 		type = _animation_type.selected,
 	}
 
-	if _animation_type.selected == ANIMATION_TYPE.ANIMATION:
+	if _animation_type.selected == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
 		data.animation = {
 			label = _animation_button.text,
 			name = _animation_name
@@ -32,12 +28,17 @@ func get_animation_data() -> Dictionary:
 	return data
 
 func restore_data(data: Dictionary) -> void:
+	# This is called before onready and therefore _animation_type is null
+	if not is_inside_tree():
+		_animation_type = find_node('AnimationTypeButton')
+		_animation_button = find_node('AnimationButton')
+
 	if not data.has('type'):
 		return
 
 	_animation_type.selected = data.type
 
-	if data.type == ANIMATION_TYPE.ANIMATION:
+	if data.type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
 		_animation_button.text = data.animation.label
 		_animation_name = data.animation.name
 

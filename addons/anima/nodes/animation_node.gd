@@ -3,7 +3,6 @@ extends "./_base_node.gd"
 
 const ANIMATION_CONTROL = preload("res://addons/anima/nodes/AnimationControl.tscn")
 
-var _node_to_animate: Node
 var _animation_control
 var _animation_control_data: Dictionary = {}
 
@@ -13,7 +12,7 @@ func _init():
 		id = 'Animation',
 		name = 'Animation',
 #		icon = 'res://addons/anima/icons/node.svg',
-		type = AnimaUI.NodeType.ANIMATION,
+		type = AnimaUI.NODE_TYPE.ANIMATION,
 		min_size = Vector2(350, 150)
 	})
 
@@ -21,18 +20,18 @@ func setup():
 	add_slot({
 		input = {
 			label = "",
-			type = AnimaUI.PortType.ANIMATION
+			type = AnimaUI.PORT_TYPE.ANIMATION
 		},
 		output = {
 			label = "then",
-			type = AnimaUI.PortType.ANIMATION
+			type = AnimaUI.PORT_TYPE.ANIMATION
 		}
 	})
 
 	add_slot({
 		output = {
 			label = "with",
-			type = AnimaUI.PortType.ANIMATION
+			type = AnimaUI.PORT_TYPE.ANIMATION
 		}
 	})
 

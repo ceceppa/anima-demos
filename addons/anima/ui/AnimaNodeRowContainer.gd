@@ -22,8 +22,8 @@ func set_disconnected(index: int):
 	_set_disconnected_color(child)
 
 func disconnect_all():
-	set_disconnected(AnimaUI.Port.INPUT)
-	set_disconnected(AnimaUI.Port.OUTPUT)
+	set_disconnected(AnimaUI.PORT.INPUT)
+	set_disconnected(AnimaUI.PORT.OUTPUT)
 
 func hide_default_input_container():
 	$HBoxContainer/DefaultInputContainer.hide()

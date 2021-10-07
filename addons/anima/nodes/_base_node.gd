@@ -5,12 +5,12 @@ signal node_updated
 
 var _node_body_data := []
 var _node_id: String
+var _node_to_animate: Node
 
 enum BodyDataType {
 	SLOT,
 	ROW
 }
-#var _row_slot_controls := []
 
 func _init():
 	_custom_title = load('res://addons/anima/ui/CustomNodeTitle.tscn').instance()
@@ -18,7 +18,7 @@ func _init():
 
 	set_show_close_button(false)
 
-	_custom_title.connect('toggle_preview', self, '_on_toggle_preview')
+	_custom_title.connect('play_animation', self, '_on_play_animation')
 	_custom_title.connect('remove_node', self, '_on_remove_node')
 
 	connect("offset_changed", self, "_on_offset_changed")
@@ -107,8 +107,27 @@ func set_name(name: String, index: int = 1):
 func add_slot(data: Dictionary) -> void:
 	_node_body_data.push_back({type = BodyDataType.SLOT, io_data = data})
 
-func add_custom_slot(custom_row: Node, name: String, type: int) -> void:
-	_node_body_data.push_back({type = BodyDataType.SLOT, custom_row = custom_row})
+func add_custom_input_slot(node: Node, name: String, type: int) -> void:
+	var io_data := {
+		node = node,
+		input = {
+			label = name,
+			type = type,
+		}
+	}
+
+	_node_body_data.push_back({type = BodyDataType.SLOT, io_data = io_data})
+
+func add_custom_output_slot(node: Node, name: String, type: int) -> void:
+	var io_data := {
+		node = node,
+		output = {
+			label = name,
+			type = type,
+		}
+	}
+
+	_node_body_data.push_back({type = BodyDataType.SLOT, io_data = io_data})
 
 func add_custom_row(node = Node) -> void:
 	_node_body_data.push_back({type = BodyDataType.ROW, node = node})
@@ -176,10 +195,6 @@ func render() -> void:
 			add_child(data.node)
 
 			continue
-		elif data.has('custom_row'):
-			add_child(data.custom_row)
-
-			continue
 
 		var io_data = data.io_data if data.has('io_data') else {}
 		var input_slot: Dictionary = {}
@@ -191,6 +206,11 @@ func render() -> void:
 		if io_data.has('output'):
 			output_slot = io_data.output
 
+		if io_data.has('node'):
+			add_child(io_data.node)
+
+			continue
+
 		_add_slot_labels(index, input_slot, output_slot)
 
 	_setup_slots()
@@ -200,9 +220,10 @@ func _setup_slots() -> void:
 
 	for index in _node_body_data.size():
 		var data: Dictionary = _node_body_data[index]
+		var slot_index: int = index + 1
 
 		if data.type == BodyDataType.ROW:
-			.set_slot(index + 1, false, TYPE_NIL, Color.transparent, false, TYPE_NIL, Color.transparent)
+			.set_slot(slot_index, false, TYPE_NIL, Color.transparent, false, TYPE_NIL, Color.transparent)
 
 			continue
 
@@ -223,16 +244,16 @@ func _setup_slots() -> void:
 		var output_slot_type: int = output_slot.type if output_slot.has('type') else 0
 		var output_slot_enabled: bool = output_slot.has('type')
 
-		if input_slot_type == AnimaUI.PortType.LABEL_ONLY:
+		if input_slot_type == AnimaUI.PORT_TYPE.LABEL_ONLY:
 			input_slot_enabled = false
 
-		if output_slot_type == AnimaUI.PortType.LABEL_ONLY:
+		if output_slot_type == AnimaUI.PORT_TYPE.LABEL_ONLY:
 			output_slot_enabled = false
 
-		var input_color: Color = AnimaUI.PortColor[input_slot_type]
-		var output_color: Color = AnimaUI.PortColor[output_slot_type]
+		var input_color: Color = AnimaUI.PORT_COLOR[input_slot_type]
+		var output_color: Color = AnimaUI.PORT_COLOR[output_slot_type]
 
-		.set_slot(index + 1, input_slot_enabled, input_slot_type, input_color, output_slot_enabled, output_slot_type, output_color, null, null)
+		.set_slot(slot_index, input_slot_enabled, input_slot_type, input_color, output_slot_enabled, output_slot_type, output_color, null, null)
 
 func _add_row_slot_control(row_slot_control: Control) -> void:
 	var container = PanelContainer.new()
@@ -248,22 +269,23 @@ func restore_data(_data: Dictionary) -> void:
 func get_data() -> Dictionary:
 	return {}
 
-func _on_toggle_preview(visible: bool):
-	# Hiding the panel does not "restore" the previous
-	# node height, so we're going to store the original
-	# size and restore it manually once the panel is hidden
-	if visible:
-		if node_size_with_preview_panel_closed == Vector2.ZERO:
-			var rect := self.get_rect()
+func _on_play_animation():
+	if _node_to_animate == null:
+		printerr('No _node_to_animate defined!')
 
-			node_size_with_preview_panel_closed = rect.size
+		return
 
-		preview_panel.show()
-	else:
-		preview_panel.hide()
-		self._set_size(node_size_with_preview_panel_closed)
+	var animation_data = get_data()
+	print('playing animation')
 
-#	self.update_preview_shader()
+	var anima = Anima.begin(self)
+	anima.generate_from_visual_data(_node_to_animate, animation_data)
+
+	anima.play()
+	
+	yield(anima, "animation_completed")
+
+	anima.queue_free()
 
 func _on_offset_changed() -> void:
 	emit_signal("node_updated")
