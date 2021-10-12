@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://addons/anima/nodes/AnimationControl.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/ui/AnimationsWindow.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/ui/PropertiesWindow.tscn" type="PackedScene" id=3]
 
 [node name="AnimationControl" type="MarginContainer"]
 anchor_right = 1.0
@@ -88,12 +89,7 @@ margin_bottom = 508.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="PropertiesWindow" type="WindowDialog" parent="."]
-margin_left = 8.0
-margin_top = 8.0
-margin_right = 1016.0
-margin_bottom = 592.0
-window_title = "Select the property to animate"
+[node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
 
 [node name="AnimationsWindow" parent="." instance=ExtResource( 2 )]
 

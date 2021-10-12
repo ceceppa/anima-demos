@@ -19,7 +19,7 @@ func _init():
 func setup():
 	add_slot({
 		input = {
-			label = "",
+			label = "animate",
 			type = AnimaUI.PORT_TYPE.ANIMATION
 		},
 		output = {

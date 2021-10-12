@@ -6,9 +6,6 @@ signal play_animation
 
 var _default_name: String
 
-func _ready():
-	$HBoxContainer/Button.icon = AnimaUI.get_godot_icon('Play')
-
 func disable_delete_button() -> void:
 	$HBoxContainer/DeleteButton.hide()
 	$HBoxContainer/LineEdit.editable = false

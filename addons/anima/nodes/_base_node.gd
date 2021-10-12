@@ -6,6 +6,7 @@ signal node_updated
 var _node_body_data := []
 var _node_id: String
 var _node_to_animate: Node
+var _old_offset: Vector2
 
 enum BodyDataType {
 	SLOT,
@@ -161,7 +162,7 @@ func add_label(v: String, tooltip: String) -> void:
 func _add_slot_labels(index: int, input_slot: Dictionary, output_slot: Dictionary, add := true) -> PanelContainer:
 	var input_label_text: String = input_slot.label if input_slot.has('label') else ''
 	var input_tooltip: String = input_slot.tooltip if input_slot.has('tooltip') else ''
-	var input_default_value = input_slot.default if input_slot.has('default') else ''
+	var input_default_value = input_slot.default if input_slot.has('default') else null
 
 	var output_label_text: String = output_slot.label if output_slot.has('label') else ''
 	var output_tooltip: String = output_slot.tooltip if output_slot.has('tooltip') else ''
@@ -288,7 +289,10 @@ func _on_play_animation():
 	anima.queue_free()
 
 func _on_offset_changed() -> void:
-	emit_signal("node_updated")
+	if offset != _old_offset:
+		emit_signal("node_updated")
+
+	_old_offset = offset
 
 func _on_remove_node() -> void:
 	queue_free()

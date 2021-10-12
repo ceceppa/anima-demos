@@ -18,7 +18,7 @@ __meta__ = {
 [node name="Opening1" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_bottom = -0.000244141
+margin_bottom = -0.000488281
 rect_pivot_offset = Vector2( 512, 300 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -32,7 +32,7 @@ border_color = Color( 1, 1, 1, 1 )
 [node name="Opening2" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -0.000488281
+margin_right = 0.000244141
 rect_pivot_offset = Vector2( 512, 300 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -42,9 +42,6 @@ point2 = Vector2( 100, 0 )
 point3 = Vector2( 100, 100 )
 values_in = 1
 border_color = Color( 1, 1, 1, 1 )
-
-[node name="Line2D" type="Line2D" parent="."]
-points = PoolVector2Array( 467.404, 386.329 )
 
 [node name="AnimaNode" type="Node" parent="."]
 script = ExtResource( 2 )
@@ -73,12 +70,21 @@ __anima_visual_editor_data = {
 }, {
 "data": {
 "animations": [ {
-"animation": {
-"label": "Back In Up",
-"name": "back_in_up"
+"property": {
 },
-"type": 0
+"type": 1
+} ],
+"delay": 0.0,
+"duration": 0.5
+},
+"id": "Animation",
+"name": "Opening1",
+"node_to_animate": "Opening1",
+"position": Vector2( 1820, -80 ),
+"title": "Opening1"
 }, {
+"data": {
+"animations": [ {
 "animation": {
 "label": "Select animation...",
 "name": ""
@@ -89,31 +95,17 @@ __anima_visual_editor_data = {
 "duration": 0.5
 },
 "id": "Animation",
-"name": "Opening1",
-"node_to_animate": "Opening1",
-"position": Vector2( 1780, 0 ),
-"title": "Opening1"
-}, {
-"data": {
-"animations": [ {
-"animation": {
-"label": "Back In Right",
-"name": "back_in_right"
-},
-"type": 0
-} ],
-"delay": 0.0,
-"duration": 0.5
-},
-"id": "Animation",
 "name": "Opening2",
-"node_to_animate": "Opening2",
-"position": Vector2( 2280, 0 ),
-"title": "Opening2"
+"node_to_animate": "Opening1",
+"position": Vector2( 2320, -80 ),
+"title": "Opening1"
 } ],
-"scroll_offset": Vector2( 1342, -55.9375 ),
+"scroll_offset": Vector2( 1297, -149.938 ),
 "zoom": 1.0
 }
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PoolVector2Array( 467.404, 386.329 )
 
 [node name="AnimaLabel" type="Control" parent="."]
 anchor_right = 1.0
@@ -123,4 +115,12 @@ script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+label = "AnimaLabel"
 font = SubResource( 1 )
+align = 1
+valign = 1
+font_color = Color( 1, 1, 1, 1 )
+text_offset = Vector2( 0, 0 )
+text_scale = Vector2( 1, 1 )
+label_shader = null
+make_label_shader_unique = false

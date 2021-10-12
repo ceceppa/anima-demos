@@ -4,8 +4,8 @@ func _ready():
 	_setup_list()
 
 func _setup_list() -> void:
-	var animations = Anima.get_available_animations()
-	var base = Anima.BASE_PATH
+	var animations = AnimaConstants.get_available_animations()
+	var base = AnimaConstants.BASE_PATH
 	var old_category := ''
 
 	for item in animations:

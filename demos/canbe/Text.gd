@@ -12,7 +12,7 @@ func _ready():
 		get_anima().play_with_delay(0.5)
 
 func get_anima() -> AnimaNode:
-	var anima := Anima.begin(self)
+	var anima: AnimaNode = Anima.begin(self)
 	var letter_e = $Can.get_child(5)
 
 	anima.then({ 

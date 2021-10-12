@@ -1,13 +1,14 @@
 tool
-extends VBoxContainer
+extends PanelContainer
 
 signal select_property
 signal select_animation
+signal delete_animation
 
-onready var _animation_type = find_node('AnimationTypeButton')
-onready var _animation_container = find_node('AnimationContainer')
-onready var _property_container = find_node('PropertyContainer')
-onready var _animation_button = find_node('AnimationButton')
+onready var _animation_type: OptionButton = find_node('AnimationTypeButton')
+onready var _animation_container: GridContainer = find_node('AnimationContainer')
+onready var _property_container: GridContainer = find_node('PropertyContainer')
+onready var _animation_button: Button = find_node('AnimationButton')
 
 var _animation_name: String
 var _data_to_restore: Dictionary
@@ -47,21 +48,27 @@ func set_animation_data(label: String, name: String) -> void:
 	_animation_name = name
 
 func _ready():
+	_animation_type.clear()
 	_animation_type.add_item("Animation")
 	_animation_type.add_item("Property")
 	
 	_animation_type.selected = 0
 
-	_on_OptionButton_item_selected(0)
-
-func _on_OptionButton_item_selected(index):
-	var animation_container_visible = index == 0
-
-	_animation_container.visible = animation_container_visible
-	_property_container.visible = not animation_container_visible
+	_on_AnimationTypeButton_item_selected(0)
 
 func _on_PropertyButton_pressed():
 	emit_signal("select_property")
 
 func _on_AnimationButton_pressed():
 	emit_signal("select_animation")
+
+func _on_DeleteButton_pressed():
+	emit_signal("delete_animation")
+
+	queue_free()
+
+func _on_AnimationTypeButton_item_selected(index):
+	var animation_container_visible = index == 0
+
+	_animation_container.visible = animation_container_visible
+	_property_container.visible = not animation_container_visible
