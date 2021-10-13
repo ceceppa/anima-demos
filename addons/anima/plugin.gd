@@ -14,7 +14,6 @@ func get_name():
 	return 'Anima'
 
 func _enter_tree():
-	add_autoload_singleton("AnimaConstants", 'res://addons/anima/core/constants.gd')
 	add_autoload_singleton("Anima", 'res://addons/anima/core/anima.gd')
 	add_autoload_singleton("AnimaUI", 'res://addons/anima/ui/AnimaUI.gd')
 

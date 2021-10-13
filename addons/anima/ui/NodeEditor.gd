@@ -11,7 +11,6 @@ signal hide_nodes_list
 
 var _anima_start_node: GraphNode
 
-
 func _init():
 	self.connect('connection_request', self, '_on_connection_request')
 	self.connect('disconnection_request', self, '_on_node_updated')
@@ -46,18 +45,19 @@ func _on_connection_request(from_node: String, from_slot: int, to_node: String, 
 		return false
 
 	for connection in get_connection_list():
-			if connection["to"] == to_node and connection["to_port"] == to_slot:
-				disconnect_node(connection["from"], connection["from_port"], connection["to"], connection["to_port"])
-				break
+		if connection["to"] == to_node and connection["to_port"] == to_slot:
+			disconnect_node(connection["from"], connection["from_port"], connection["to"], connection["to_port"])
+			break
 
 	connect_node(from_node, from_slot, to_node, to_slot)
 
-	emit_signal("node_connected", get_connections())
+	emit_signal("node_connected")
 
 	return true
 
-func get_connections():
+func get_connections() -> Array:
 	var connections := [];
+
 	for connection in get_connection_list():
 		connections.push_back({
 			'from': get_node(connection.from),
@@ -73,15 +73,15 @@ func add_node(node_id: String, node_to_animate: Node, add_node := true) -> Graph
 
 	node.set_node_to_animate(node_to_animate)
 	node.connect("node_updated", self, "_on_node_updated")
+	node.connect("close_request", self, "_on_node_close_request", [node])
 
 	if add_node:
 		add_child(node)
 
 	return node
 
-func _on_disconnection_request(from: String, from_slot: int, to: String, to_slot: int):
-	print_debug(from, from_slot, to, to_slot)
-	pass
+func _on_disconnection_request(from: String, from_port: int, to: String, to_port: int):
+	disconnect_node(from, from_port, to, to_port)
 
 func _on_node_updated():
 	emit_signal('node_updated')
@@ -92,3 +92,12 @@ func _on_GraphEdit_gui_input(event):
 			emit_signal("show_nodes_list", event.position, event.global_position)
 		else:
 			emit_signal("hide_nodes_list")
+
+func _on_node_close_request(node: GraphNode) -> void:
+	for connection in get_connection_list():
+		if connection.from == node.name or connection.to == node.name:
+			_on_disconnection_request(connection.from, connection.from_port, connection.to, connection.to_port)
+
+	node.queue_free()
+	
+	emit_signal("node_updated")

@@ -10,7 +10,7 @@ var _backwards_animation_data := []
 # Needed to use interpolate_property
 var _fake_property: Dictionary = {}
 
-var _visibility_strategy: int = AnimaConstants.VISIBILITY.IGNORE
+var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
 var _callbacks := {}
 
 enum PLAY_MODE {
@@ -65,7 +65,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	_animation_data.push_back(animation_data)
 
 	var index = str(_animation_data.size())
-	var duration = animation_data.duration if animation_data.has('duration') else AnimaConstants.DEFAULT_DURATION
+	var duration = animation_data.duration if animation_data.has('duration') else Anima.DEFAULT_DURATION
 	var property_key = 'p' + index
 
 	_fake_property[property_key] = 0.0
@@ -124,7 +124,7 @@ func _add_frames(data: Dictionary, property: String, frames: Array, relative: bo
 		var percentage = frame.percentage if frame.has('percentage') else 100.0
 		percentage /= 100.0
 
-		var frame_duration = max(AnimaConstants.MINIMUM_DURATION, duration * percentage)
+		var frame_duration = max(Anima.MINIMUM_DURATION, duration * percentage)
 		var diff = frame_duration - last_duration
 		var is_first_frame = true
 		var is_last_frame = percentage == 1
@@ -209,7 +209,7 @@ func reset_data(strategy: int, play_mode: int, animation_length: float):
 	clear_animations()
 
 	for animation_data in data:
-		animation_data._recalculate_from_to = strategy == AnimaConstants.LOOP.RECALCULATE_RELATIVE_DATA and animation_data.has('relative')
+		animation_data._recalculate_from_to = strategy == Anima.LOOP.RECALCULATE_RELATIVE_DATA and animation_data.has('relative')
 
 		add_animation_data(animation_data, play_mode)
 
@@ -254,13 +254,13 @@ func _flip_animations(data: Array, animation_length) -> Array:
 		else:
 			previous_frames[node][property] = animation_data.from
 
-		animation_data._wait_time = max(AnimaConstants.MINIMUM_DURATION, new_wait_time)
+		animation_data._wait_time = max(Anima.MINIMUM_DURATION, new_wait_time)
 
 		new_data.push_back(animation_data)
 
 	return new_data
 
-func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = AnimaConstants.VISIBILITY.IGNORE):
+func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anima.VISIBILITY.IGNORE):
 	if not animation_data.has('_is_first_frame'):
 		return
 
@@ -270,12 +270,12 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anim
 	if animation_data.has('hide_strategy'):
 		strategy = animation_data.hide_strategy
 
-	if strategy == AnimaConstants.VISIBILITY.HIDDEN_ONLY:
+	if strategy == Anima.VISIBILITY.HIDDEN_ONLY:
 		should_hide_nodes = true
-	elif strategy == AnimaConstants.VISIBILITY.HIDDEN_AND_TRANSPARENT:
+	elif strategy == Anima.VISIBILITY.HIDDEN_AND_TRANSPARENT:
 		should_hide_nodes = true
 		should_make_nodes_transparent = true
-	elif strategy == AnimaConstants.VISIBILITY.TRANSPARENT_ONLY:
+	elif strategy == Anima.VISIBILITY.TRANSPARENT_ONLY:
 		should_make_nodes_transparent = true
 
 	var node = animation_data.node
@@ -510,12 +510,12 @@ func _on_tween_started(_ignore, key) -> void:
 	var should_restore_visibility := false
 	var should_restore_modulate := false
 
-	if hide_strategy == AnimaConstants.VISIBILITY.HIDDEN_ONLY:
+	if hide_strategy == Anima.VISIBILITY.HIDDEN_ONLY:
 		should_restore_visibility = true
-	elif hide_strategy == AnimaConstants.VISIBILITY.HIDDEN_AND_TRANSPARENT:
+	elif hide_strategy == Anima.VISIBILITY.HIDDEN_AND_TRANSPARENT:
 		should_restore_modulate = true
 		should_restore_visibility = true
-	elif hide_strategy == AnimaConstants.VISIBILITY.TRANSPARENT_ONLY:
+	elif hide_strategy == Anima.VISIBILITY.TRANSPARENT_ONLY:
 		should_restore_modulate = true
 
 	if should_restore_modulate:

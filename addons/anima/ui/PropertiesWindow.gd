@@ -1,7 +1,7 @@
 tool
 extends WindowDialog
 
-signal property_selected(property_name)
+signal property_selected(property_name, property_type)
 
 var _animatable_properties := []
 
@@ -56,6 +56,7 @@ func populate_tree(filter: String = '') -> void:
 		var item := tree.create_item(root_item)
 
 		item.set_text(0, animatable_property.name)
+		item.set_metadata(0, { type = animatable_property.type })
 
 		var sub_properties := []
 		if animatable_property.type == TYPE_VECTOR2:
@@ -88,7 +89,7 @@ func _on_PropertiesTree_item_double_clicked():
 	if is_child:
 		property_to_animate = parent.get_text(0) + ":" + property_to_animate
 
-	emit_signal("property_selected", property_to_animate)
+	emit_signal("property_selected", property_to_animate, selected_item.get_metadata(0).type)
 
 	hide()
 

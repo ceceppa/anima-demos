@@ -7,7 +7,7 @@ signal animation_updated
 
 onready var _duration: LineEdit = find_node('Duration')
 onready var _delay: LineEdit = find_node('Delay')
-onready var _animations_container = find_node('AnimationsContainer')
+onready var _animations_container: VBoxContainer = find_node('AnimationsContainer')
 
 var _source_animation_data: PanelContainer
 
@@ -37,14 +37,13 @@ func restore_data(data: Dictionary) -> void:
 
 	print('restoring data', data)
 	for child in _animations_container.get_children():
-		print(child)
 		child.queue_free()
 
 	for animation in animations:
 		var animation_data = ANIMATION_DATA.instance()
 
 		animation_data.connect("select_animation", self, "_on_select_animation", [animation_data])
-		animation_data.connect("select_property", self, "_on_select_property")
+		animation_data.connect("select_property", self, "_on_select_property", [animation_data])
 		animation_data.connect("delete_animation", self, "_on_delete_animation")
 
 		animation_data.restore_data(animation)
@@ -71,5 +70,12 @@ func _on_select_animation(source_animation_data: PanelContainer) -> void:
 func _on_delete_animation() -> void:
 	emit_signal("animation_updated")
 
-func _on_select_property() -> void:
+func _on_select_property(source_animation_data: PanelContainer) -> void:
+	_source_animation_data = source_animation_data
+
 	$PropertiesWindow.popup_centered()
+
+func _on_PropertiesWindow_property_selected(property_name: String, property_type: int):
+	_source_animation_data.set_property_to_animate(property_name, property_type)
+
+	emit_signal("animation_updated")

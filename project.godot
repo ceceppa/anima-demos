@@ -110,7 +110,6 @@ run/main_scene="res://demos/DemosSelector.tscn"
 [autoload]
 
 AnimaUI="*res://addons/anima/ui/AnimaUI.gd"
-AnimaConstants="*res://addons/anima/core/constants.gd"
 Anima="*res://addons/anima/core/anima.gd"
 
 [editor_plugins]

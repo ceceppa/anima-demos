@@ -17,7 +17,7 @@ var _timer := Timer.new()
 var _loop_times := 0
 var _loop_count := 0
 var _should_loop := false
-var _loop_strategy = AnimaConstants.LOOP.USE_EXISTING_RELATIVE_DATA
+var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
 var _play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 
 var __do_nothing := 0.0
@@ -89,7 +89,7 @@ func with(data: Dictionary) -> float:
 		if _last_animation_duration > 0:
 			data.duration = _last_animation_duration
 		else:
-			data.duration = AnimaConstants.DEFAULT_DURATION
+			data.duration = Anima.DEFAULT_DURATION
 
 	if not data.has('_wait_time'):
 		data._wait_time = start_time
@@ -145,7 +145,7 @@ func clear() -> void:
 
 	_total_animation = 0.0
 	_last_animation_duration = 0.0
-	set_visibility_strategy(AnimaConstants.VISIBILITY.IGNORE)
+	set_visibility_strategy(Anima.VISIBILITY.IGNORE)
 
 func play() -> void:
 	_play(AnimaTween.PLAY_MODE.NORMAL)
@@ -186,12 +186,12 @@ func loop_with_delay(delay: float, times: int = -1) -> void:
 func loop_times_with_delay(times: float, delay: float) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
 
-func _do_loop(times: int, mode: int, delay: float = AnimaConstants.MINIMUM_DURATION) -> void:
+func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION) -> void:
 	_loop_times = times
 	_should_loop = times == -1
 	_play_mode = mode
 
-	_timer.wait_time = max(AnimaConstants.MINIMUM_DURATION, delay)
+	_timer.wait_time = max(Anima.MINIMUM_DURATION, delay)
 
 	# Can't use _anima_tween.repeat
 	# as the tween_all_completed is never called :(
@@ -249,7 +249,7 @@ func _setup_animation(data: Dictionary) -> float:
 func _setup_node_animation(data: Dictionary) -> float:
 	var node = data.node
 	var delay = data.delay if data.has('delay') else 0.0
-	var duration = data.duration if data.has('duration') else AnimaConstants.DEFAULT_DURATION
+	var duration = data.duration if data.has('duration') else Anima.DEFAULT_DURATION
 
 	data._wait_time = max(0.0, data._wait_time + delay)
 
@@ -258,7 +258,7 @@ func _setup_node_animation(data: Dictionary) -> float:
 		data._is_last_frame = true
 
 	if data.has('animation'):
-		var script = AnimaConstants.get_animation_script(data.animation)
+		var script = Anima.get_animation_script(data.animation)
 
 		if not script:
 			printerr('animation not found: %s' % data.animation)
@@ -279,13 +279,13 @@ func _setup_node_animation(data: Dictionary) -> float:
 	return duration
 
 func _setup_grid_animation(animation_data: Dictionary) -> float:
-	var animation_type = AnimaConstants.GRID.SEQUENCE_TOP_LEFT
+	var animation_type = Anima.GRID.SEQUENCE_TOP_LEFT
 	
 	if animation_data.has('animation_type'):
 		animation_type = animation_data.animation_type
 
 	if not animation_data.has('items_delay'):
-		animation_data.items_delay = AnimaConstants.DEFAULT_ITEMS_DELAY
+		animation_data.items_delay = Anima.DEFAULT_ITEMS_DELAY
 
 	if animation_data.has('grid'):
 		animation_data._grid_node = animation_data.grid
@@ -298,19 +298,19 @@ func _setup_grid_animation(animation_data: Dictionary) -> float:
 	var duration: float
 
 	match animation_type:
-		AnimaConstants.GRID.TOGETHER:
+		Anima.GRID.TOGETHER:
 			duration = _generate_animation_all_together(animation_data)
-		AnimaConstants.GRID.COLUMNS_EVEN:
+		Anima.GRID.COLUMNS_EVEN:
 			duration = _generate_animation_for_even_columns(animation_data)
-		AnimaConstants.GRID.COLUMNS_ODD:
+		Anima.GRID.COLUMNS_ODD:
 			duration = _generate_animation_for_odd_columns(animation_data)
-		AnimaConstants.GRID.ROWS_ODD:
+		Anima.GRID.ROWS_ODD:
 			duration = _generate_animation_for_odd_rows(animation_data)
-		AnimaConstants.GRID.ROWS_EVEN:
+		Anima.GRID.ROWS_EVEN:
 			duration = _generate_animation_for_even_rows(animation_data)
-		AnimaConstants.GRID.ODD:
+		Anima.GRID.ODD:
 			duration = _generate_animation_for_odd_items(animation_data)
-		AnimaConstants.GRID.EVEN:
+		Anima.GRID.EVEN:
 			duration = _generate_animation_for_even_items(animation_data)
 		_:
 			duration = _generate_animation_sequence(animation_data, animation_type)
@@ -357,7 +357,7 @@ func _get_children(animation_data: Dictionary, shuffle := false) -> Array:
 
 func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -> float:
 	var nodes := []
-	var children := _get_children(animation_data, start_from == AnimaConstants.GRID.RANDOM)
+	var children := _get_children(animation_data, start_from == Anima.GRID.RANDOM)
 	var is_grid: bool = animation_data.grid_size.x > 1
 	var grid_size: Vector2 = animation_data.grid_size
 	var from_x: int
@@ -366,18 +366,18 @@ func _generate_animation_sequence(animation_data: Dictionary, start_from: int) -
 	from_y = grid_size.y / 2
 	from_x = grid_size.x / 2
 
-	if start_from == AnimaConstants.GRID.FROM_POINT and not animation_data.has('point'):
-		start_from = AnimaConstants.GRID.FROM_CENTER
+	if start_from == Anima.GRID.FROM_POINT and not animation_data.has('point'):
+		start_from = Anima.GRID.FROM_CENTER
 
 	for row_index in children.size():
 		var row: Array = children[row_index]
 		var from_index = 0
 
-		if start_from == AnimaConstants.GRID.SEQUENCE_BOTTOM_RIGHT:
+		if start_from == Anima.GRID.SEQUENCE_BOTTOM_RIGHT:
 			from_index = row.size() - 1
-		elif start_from == AnimaConstants.GRID.FROM_CENTER:
+		elif start_from == Anima.GRID.FROM_CENTER:
 			from_index = (row.size() - 1) / 2
-		elif start_from == AnimaConstants.GRID.FROM_POINT:
+		elif start_from == Anima.GRID.FROM_POINT:
 			if is_grid:
 				from_y = animation_data.point.y
 				from_x = animation_data.point.x

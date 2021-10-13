@@ -1,6 +1,8 @@
 tool
 extends "./_base_signals.gd"
 
+const uuid = preload("res://addons/anima/core/uuid.gd")
+
 signal node_updated
 
 var _node_body_data := []
@@ -39,7 +41,7 @@ func register_node(node_data: Dictionary) -> void:
 		set_category(node_data.category)
 
 	if node_data.has('name'):
-		self.set_name(title)
+		self.set_name(title + "-" + uuid.v4())
 		set_title(node_data.name)
 
 	if node_data.has('category') and node_data.has('name'):
@@ -295,4 +297,4 @@ func _on_offset_changed() -> void:
 	_old_offset = offset
 
 func _on_remove_node() -> void:
-	queue_free()
+	remove()

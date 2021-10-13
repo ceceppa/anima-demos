@@ -13,10 +13,6 @@ onready var _graph_edit: GraphEdit = find_node("AnimaNodeEditor")
 onready var _nodes_popup: PopupPanel = find_node("NodesPopup")
 onready var _warning_label = find_node("WarningLabel")
 
-func _ready():
-	_graph_edit.connect("node_connected", self, '_on_node_connected')
-	_graph_edit.connect("node_updated", self, '_on_node_updated')
-
 func edit(node: AnimaNode) -> void:
 	_is_restoring_data = true
 
@@ -98,12 +94,6 @@ func _maybe_show_graph_edit() -> bool:
 	
 	return is_graph_edit_visible
 
-func _on_node_connected(connection_list: Array) -> void:
-	_update_anima_node_data()
-
-func _on_node_updated() -> void:
-	_update_anima_node_data()
-
 func _on_Right_pressed():
 	emit_signal("switch_position")
 
@@ -147,6 +137,9 @@ func _update_anima_node_data() -> void:
 	}
 
 	for child in _graph_edit.get_children():
+		if child.is_queued_for_deletion():
+			continue
+
 		if child is GraphNode:
 			var node_to_animate = null
 
@@ -176,3 +169,9 @@ func _on_AnimaNodeEditor_show_nodes_list(offset: Vector2, position: Vector2):
 
 func _on_AnimaNodeEditor_hide_nodes_list():
 	_nodes_popup.hide()
+
+func _on_AnimaNodeEditor_node_connected():
+	_update_anima_node_data()
+
+func _on_AnimaNodeEditor_node_updated():
+	_update_anima_node_data()

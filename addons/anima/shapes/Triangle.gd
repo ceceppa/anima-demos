@@ -19,7 +19,7 @@ const BorderType := {
 export (Vector2) var point1 setget set_point1
 export (Vector2) var point2 setget set_point2
 export (Vector2) var point3 setget set_point3
-export (AnimaConstants.VALUES_IN) var values_in setget set_values_in
+export (Anima.VALUES_IN) var values_in setget set_values_in
 export (Color) var color setget set_color
 export (bool) var is_filled = true setget set_is_filled
 export (float) var border_width = 0.0 setget set_border_width
@@ -59,7 +59,7 @@ func _draw() -> void:
 		_border_line.hide()
 
 func _maybe_to_percentage(position: Vector2) -> Vector2:
-	if values_in == AnimaConstants.VALUES_IN.PIXELS:
+	if values_in == Anima.VALUES_IN.PIXELS:
 		return position
 
 	position.x = rect_size.x * (position.x / 100)

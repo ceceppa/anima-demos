@@ -53,3 +53,6 @@ func output_connected(slot: int) -> void:
 
 	if not connected_outputs.has(slot):
 		connected_outputs.push_back(slot)
+
+func remove() -> void:
+	emit_signal("close_request")

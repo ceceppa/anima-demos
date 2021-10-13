@@ -93,4 +93,5 @@ size_flags_vertical = 3
 
 [node name="AnimationsWindow" parent="." instance=ExtResource( 2 )]
 
+[connection signal="property_selected" from="PropertiesWindow" to="." method="_on_PropertiesWindow_property_selected"]
 [connection signal="animation_selected" from="AnimationsWindow" to="." method="_on_AnimationsWindow_animation_selected"]
