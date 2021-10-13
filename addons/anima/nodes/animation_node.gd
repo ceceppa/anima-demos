@@ -20,21 +20,30 @@ func setup():
 	add_slot({
 		input = {
 			label = "animate",
-			type = AnimaUI.PORT_TYPE.ANIMATION
+			type = AnimaUI.PORT_TYPE.ANIMATION,
 		},
 		output = {
 			label = "then",
-			type = AnimaUI.PORT_TYPE.ANIMATION
+			type = AnimaUI.PORT_TYPE.ANIMATION,
+			tooltip = tr("Animates the next node when this one has been completed")
 		}
 	})
 
 	add_slot({
 		output = {
 			label = "with",
-			type = AnimaUI.PORT_TYPE.ANIMATION
+			type = AnimaUI.PORT_TYPE.ANIMATION,
+			tooltip = tr("Animates the next node at the same time of this one")
 		}
 	})
 
+	add_slot({
+		output = {
+			label = "also",
+			type = AnimaUI.PORT_TYPE.ANIMATION,
+			tooltip = tr("This is used to animate a different property for this node")
+		}
+	})
 
 	_animation_control = ANIMATION_CONTROL.instance()
 	_animation_control.populate_animatable_properties_list(_node_to_animate)

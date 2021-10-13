@@ -3,10 +3,9 @@ extends WindowDialog
 
 signal property_selected(property_name, property_type)
 
-var _animatable_properties := []
+var _animatable_properties := [{name = 'opacity', type = TYPE_REAL}]
 
 func populate_animatable_properties_list(source_node: Node) -> void:
-
 	var properties = source_node.get_property_list()
 	var properties_to_ignore := [
 		'pause_mode',

@@ -1,5 +1,5 @@
 tool
-extends PanelContainer
+extends VBoxContainer
 
 signal select_property
 signal select_animation

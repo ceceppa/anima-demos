@@ -84,7 +84,7 @@ func begin(node: Node, name: String = 'anima'):
 			return anima_node
 
 	if anima_node == null:
-		anima_node = load('./anima.gd').new()
+		anima_node = load('res://addons/anima/core/node.gd').new()
 		anima_node.name = node_name
 
 		anima_node._init_node(node)

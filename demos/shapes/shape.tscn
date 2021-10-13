@@ -24,15 +24,10 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-point1 = Vector2( 0, 0 )
 point2 = Vector2( 100, 100 )
 point3 = Vector2( 0, 100 )
 values_in = 1
-color = Color( 0, 0, 0, 1 )
-is_filled = true
-border_width = 0.0
 border_color = Color( 1, 1, 1, 1 )
-border_type = 0
 
 [node name="Opening2" type="Control" parent="."]
 anchor_right = 1.0
@@ -43,21 +38,21 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-point1 = Vector2( 0, 0 )
 point2 = Vector2( 100, 0 )
 point3 = Vector2( 100, 100 )
 values_in = 1
-color = Color( 0, 0, 0, 1 )
-is_filled = true
-border_width = 0.0
 border_color = Color( 1, 1, 1, 1 )
-border_type = 0
 
 [node name="AnimaNode" type="Node" parent="."]
 script = ExtResource( 2 )
 __anima_visual_editor_data = {
 "animations_slots": [ "default" ],
-"connection_list": [  ],
+"connection_list": [ {
+"from": "AnimaNode",
+"from_port": 0,
+"to": "Opening1",
+"to_port": 0
+} ],
 "events_slots": [ "visibility_visible" ],
 "nodes": [ {
 "data": {
@@ -67,8 +62,25 @@ __anima_visual_editor_data = {
 "node_to_animate": null,
 "position": Vector2( 1440, 0 ),
 "title": "AnimaNode"
+}, {
+"data": {
+"animations": [ {
+"property": {
+"name": "opacity",
+"type": 3
+},
+"type": 1
 } ],
-"scroll_offset": Vector2( 978, -196.938 ),
+"delay": 0.0,
+"duration": 0.5
+},
+"id": "Animation",
+"name": "Opening1",
+"node_to_animate": "Opening1",
+"position": Vector2( 1860, -120 ),
+"title": "Opening1"
+} ],
+"scroll_offset": Vector2( 943, -225.514 ),
 "zoom": 1.0
 }
 
