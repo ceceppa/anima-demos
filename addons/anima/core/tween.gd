@@ -242,7 +242,7 @@ func _flip_animations(data: Array, animation_length) -> Array:
 		if animation_data.has('to') and is_relative:
 			animation_data.to += animation_data.from
 		elif not animation_data.has('to'):
-			animation_data.to = animation_data.from
+			animation_data.to = AnimaNodesProperties.get_property_initial_value(node, property)
 
 		animation_data.relative = false
 
@@ -278,7 +278,7 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anim
 	elif strategy == Anima.VISIBILITY.TRANSPARENT_ONLY:
 		should_make_nodes_transparent = true
 
-	var node = animation_data.node
+	var node: Node = animation_data.node
 
 	if should_hide_nodes:
 		node.show()
@@ -291,6 +291,9 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anim
 		node.set_meta('_old_modulate', modulate)
 
 		node.modulate = transparent
+
+		if animation_data.has('property') and animation_data.property == 'opacity':
+			node.remove_meta('_old_modulate')
 
 func _on_tween_step_with_easing(object: Object, key: NodePath, _time: float, elapsed: float):
 	var index := _get_animation_data_index(key)
@@ -394,7 +397,7 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 		to = _maybe_convert_from_deg_to_rad(node, animation_data, animation_data.to)
 		to = _maybe_calculate_relative_value(relative, to, from)
 	else:
-		to = from
+		to = AnimaNodesProperties.get_property_initial_value(node, animation_data.property)
 		animation_data.__to = to
 
 	if animation_data.has('pivot'):
@@ -506,7 +509,7 @@ func _on_tween_started(_ignore, key) -> void:
 	if animation_data.has('hide_strategy'):
 		hide_strategy = animation_data.hide_strategy
 
-	var node = animation_data.node
+	var node: Node = animation_data.node
 	var should_restore_visibility := false
 	var should_restore_modulate := false
 
@@ -519,7 +522,10 @@ func _on_tween_started(_ignore, key) -> void:
 		should_restore_modulate = true
 
 	if should_restore_modulate:
-		var old_modulate = node.get_meta('_old_modulate')
+		var old_modulate
+		
+		if node.has_meta('_old_modulate'):
+			old_modulate = node.get_meta('_old_modulate')
 
 		if old_modulate:
 			node.modulate = old_modulate

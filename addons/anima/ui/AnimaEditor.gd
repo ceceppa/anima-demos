@@ -22,7 +22,7 @@ func edit(node: AnimaNode) -> void:
 	clear_all_nodes()
 
 	var data = node.__anima_visual_editor_data
-	printt('restoring visual editor data', data)
+	AnimaUI.debug(self, 'restoring visual editor data', data)
 
 	if data == null || not data.has('nodes') || data.nodes.size() == 0:
 		var start_node = _graph_edit.get_anima_start_node(node, [], [])
@@ -44,7 +44,7 @@ func clear_all_nodes() -> void:
 			node.free()
 
 func _add_nodes(nodes_data: Array, animations_slots: Array, events_slots: Array) -> void:
-	print_debug('adding nodes: ', nodes_data.size())
+	AnimaUI.debug(self, 'adding nodes: ', nodes_data.size())
 
 	for node_data in nodes_data:
 		var node: Node
@@ -59,7 +59,7 @@ func _add_nodes(nodes_data: Array, animations_slots: Array, events_slots: Array)
 
 			var node_to_animate = root.find_node(node_data.node_to_animate, false)
 
-			print('node to animate', node_to_animate)
+			AnimaUI.debug(self, 'set node to animate', node_to_animate)
 			node = _graph_edit.add_node(node_data.id, node_to_animate, false)
 
 		node.name = node_data.name
@@ -158,7 +158,7 @@ func _update_anima_node_data() -> void:
 	data.animations_slots = _graph_edit.get_animations_slots()
 	data.events_slots = _graph_edit.get_events_slots()
 
-	printt('updating visual editor data', data)
+	AnimaUI.debug(self, 'updating visual editor data', data)
 
 	emit_signal("connections_updated", data)
 

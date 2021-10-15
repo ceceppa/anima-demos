@@ -53,9 +53,11 @@ func setup():
 
 func _after_render() -> void:
 	_animation_control.restore_data(_animation_control_data)
+	
+	._after_render()
 
 func set_node_to_animate(node: Node) -> void:
-	print_debug('set node to animate', node)
+	AnimaUI.debug(self, 'set node to animate', node)
 
 	_node_to_animate = node
 

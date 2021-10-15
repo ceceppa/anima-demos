@@ -98,6 +98,9 @@ func player(node: Node):
 
 	return player
 
+func get_animation_path() -> String:
+	return BASE_PATH
+
 func register_animation(script, animation_name: String) -> void:
 	_deregister_animation(animation_name)
 

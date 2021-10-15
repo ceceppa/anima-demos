@@ -8,8 +8,10 @@ signal delete_animation
 onready var _animation_type: OptionButton = find_node('AnimationTypeButton')
 onready var _animation_container: GridContainer = find_node('AnimationContainer')
 onready var _animation_button: Button = find_node('AnimationButton')
-onready var _property_container: GridContainer = find_node('PropertyContainer')
+onready var _property_container: VBoxContainer = find_node('PropertyContainer')
 onready var _property_button: Button = find_node('PropertyButton')
+onready var _from_value: HBoxContainer = find_node('FromValue')
+onready var _to_value: HBoxContainer = find_node('ToValue')
 
 var _animation_name: String
 var _data_to_restore: Dictionary
@@ -43,7 +45,7 @@ func restore_data(data: Dictionary) -> void:
 	_animation_type.selected = data.type
 	_on_AnimationTypeButton_item_selected(data.type)
 	
-	printt('restoring animation data', data, data.type)
+	AnimaUI.debug(self, 'restoring animation data', data, data.type)
 
 	if data.type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
 		_animation_button.text = data.animation.label
@@ -53,6 +55,8 @@ func restore_data(data: Dictionary) -> void:
 
 	_property_button.text = data.property.name
 	_property_type = data.property.type
+	_from_value.set_type(data.property.type)
+	_to_value.set_type(data.property.type)
 
 func set_animation_data(label: String, name: String) -> void:
 	_animation_button.text = label
@@ -71,6 +75,8 @@ func _maybe_find_fields() -> void:
 	_animation_container = find_node('AnimationContainer')
 	_property_container = find_node('PropertyContainer')
 	_property_button = find_node('PropertyButton')
+	_from_value = find_node('FromValue')
+	_to_value = find_node('ToValue')
 
 	_ready()
 

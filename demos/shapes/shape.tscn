@@ -56,14 +56,6 @@ __anima_visual_editor_data = {
 "events_slots": [ "visibility_visible" ],
 "nodes": [ {
 "data": {
-},
-"id": "AnimaNode",
-"name": "AnimaNode",
-"node_to_animate": null,
-"position": Vector2( 1440, 0 ),
-"title": "AnimaNode"
-}, {
-"data": {
 "animations": [ {
 "property": {
 "name": "opacity",
@@ -77,10 +69,18 @@ __anima_visual_editor_data = {
 "id": "Animation",
 "name": "Opening1",
 "node_to_animate": "Opening1",
-"position": Vector2( 1860, -120 ),
+"position": Vector2( 1960, -100 ),
 "title": "Opening1"
+}, {
+"data": {
+},
+"id": "AnimaNode",
+"name": "AnimaNode",
+"node_to_animate": null,
+"position": Vector2( 1400, 100 ),
+"title": "AnimaNode"
 } ],
-"scroll_offset": Vector2( 943, -225.514 ),
+"scroll_offset": Vector2( 864, -147 ),
 "zoom": 1.0
 }
 

@@ -67,6 +67,8 @@ const CONNECTED_LABEL_COLOR = Color.white
 # Used to get Godot Icons
 var _godot_base_control: Control
 
+const _is_debug_enabled := false
+
 func create_row_for_node(index: int, input_label_text: String, input_tooltip: String, output_label_text: String, output_tooltip: String, input_default_value = null) -> PanelContainer:
 	var row_container = load("res://addons/anima/ui/AnimaNodeRowContainer.tscn")
 	var row = row_container.instance()
@@ -215,3 +217,9 @@ func get_node_icon(node: Node) -> Texture:
 		node_icon = node.get_editor_icon()
 
 	return node_icon
+
+func debug(caller: Node, v1: String, v2 = null, v3 = null) -> void:
+	if not _is_debug_enabled:
+		return
+
+	printt(caller, v1, v2, v3)

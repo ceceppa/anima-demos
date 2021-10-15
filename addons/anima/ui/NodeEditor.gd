@@ -87,8 +87,7 @@ func _on_node_updated():
 	emit_signal('node_updated')
 
 func _on_GraphEdit_gui_input(event):
-	
-	if event is InputEventMouseButton:
+	if event is InputEventMouseButton and event.pressed == true:
 		if event.button_index == BUTTON_RIGHT:
 			emit_signal("show_nodes_list", event.position + scroll_offset, event.global_position)
 		else:

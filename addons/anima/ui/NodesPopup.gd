@@ -11,12 +11,19 @@ var _start_node: Node
 var _search_text: String
 
 func show() -> void:
+	var anima: AnimaNode = Anima.begin(self)
+	anima.then({ property = "scale", from = Vector2.ZERO, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK })
+	anima.also({ property = "opacity", from = 0, to = 1 })
+	anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
+
 	.show()
 
 	_retrieves_list_of_nodes()
 
 	_search_filed.clear()
 	_search_filed.grab_focus()
+
+	anima.play()
 
 func set_source_node(node: AnimaNode) -> void:
 	_anima_node = node

@@ -29,7 +29,7 @@ func _ready():
 
 func _setup_list() -> void:
 	var animations = Anima.get_available_animations()
-	var base = Anima.BASE_PATH
+	var base = Anima.get_animation_path()
 	var old_category := ''
 	var group = ButtonGroup.new()
 

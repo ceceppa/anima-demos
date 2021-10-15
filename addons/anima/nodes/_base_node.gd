@@ -7,6 +7,7 @@ var _node_body_data := []
 var _node_id: String
 var _node_to_animate: Node
 var _old_offset: Vector2
+var _anima: AnimaNode
 
 enum BodyDataType {
 	SLOT,
@@ -14,6 +15,11 @@ enum BodyDataType {
 }
 
 func _init():
+	_anima = Anima.begin(self)
+	_anima.then({ property = "scale", from = Vector2.ZERO, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK, pivot = Anima.PIVOT.CENTER })
+	_anima.also({ property = "opacity", from = 0, to = 1 })
+	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
+
 	_custom_title = load('res://addons/anima/ui/CustomNodeTitle.tscn').instance()
 	add_child(_custom_title)
 
@@ -32,7 +38,9 @@ func _ready():
 	_after_render()
 
 func _after_render() -> void:
-	pass
+	var position = get_position_in_parent() - 3
+
+	_anima.play_with_delay(0.05 * position)
 
 func register_node(node_data: Dictionary) -> void:
 	if node_data.has('category'):
