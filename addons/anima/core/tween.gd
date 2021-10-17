@@ -135,7 +135,7 @@ func _add_frames(data: Dictionary, property: String, frames: Array, relative: bo
 			duration = diff,
 			_wait_time = _wait_time
 		}
-
+		
 		# We need to restore the animation just before the node is animated
 		# but we also need to consider that a node can have multiple
 		# properties animated, so we need to restore it only before the first
@@ -371,12 +371,14 @@ func _calculate_from_and_to(index: int, value: float) -> void:
 	if do_calculate:
 		_do_calculate_from_to(node, animation_data)
 
+	var callback := '_on_animation_without_key'
+
 	if animation_data._property_data.has('subkey'):
-		animation_data._animation_callback = funcref(self, '_on_animation_with_subkey')
+		callback = '_on_animation_with_subkey'
 	elif animation_data._property_data.has('key'):
-		animation_data._animation_callback = funcref(self, '_on_animation_with_key')
-	else:
-		animation_data._animation_callback = funcref(self, '_on_animation_without_key')
+		callback = '_on_animation_with_key'
+
+	animation_data._animation_callback = funcref(self, callback)
 
 	_animation_data[index]._animation_callback.call_func(index, value)
 
@@ -414,7 +416,7 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 		animation_data._property_data.diff = to - from
 
 	animation_data._property_data.from = from
-	
+
 func _maybe_calculate_relative_value(relative, value, current_node_value):
 	if not relative:
 		return value

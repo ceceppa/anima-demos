@@ -87,7 +87,7 @@ text = "Select animation..."
 [node name="PropertyContainer" type="VBoxContainer" parent="."]
 margin_top = 114.0
 margin_right = 1010.0
-margin_bottom = 388.0
+margin_bottom = 364.0
 custom_constants/separation = 12
 
 [node name="PropertyGrid" type="GridContainer" parent="PropertyContainer"]
@@ -115,22 +115,26 @@ size_flags_horizontal = 3
 custom_fonts/font = SubResource( 1 )
 text = "Select property..."
 
-[node name="Label" type="Label" parent="PropertyContainer"]
+[node name="PropertyValues" type="VBoxContainer" parent="PropertyContainer"]
 margin_top = 40.0
 margin_right = 1010.0
-margin_bottom = 62.0
+margin_bottom = 250.0
+
+[node name="Label1" type="Label" parent="PropertyContainer/PropertyValues"]
+margin_right = 1010.0
+margin_bottom = 22.0
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 text = "Animate property:"
 align = 1
 
-[node name="AnimateGrid" type="GridContainer" parent="PropertyContainer"]
-margin_top = 74.0
+[node name="AnimateGrid" type="GridContainer" parent="PropertyContainer/PropertyValues"]
+margin_top = 26.0
 margin_right = 1010.0
-margin_bottom = 200.0
+margin_bottom = 152.0
 columns = 2
 
-[node name="From" type="Label" parent="PropertyContainer/AnimateGrid"]
+[node name="From" type="Label" parent="PropertyContainer/PropertyValues/AnimateGrid"]
 margin_top = 3.0
 margin_right = 160.0
 margin_bottom = 25.0
@@ -141,7 +145,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FromValue" parent="PropertyContainer/AnimateGrid" instance=ExtResource( 3 )]
+[node name="FromValue" parent="PropertyContainer/PropertyValues/AnimateGrid" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 164.0
@@ -149,7 +153,7 @@ margin_right = 1010.0
 margin_bottom = 28.0
 size_flags_horizontal = 3
 
-[node name="To" type="Label" parent="PropertyContainer/AnimateGrid"]
+[node name="To" type="Label" parent="PropertyContainer/PropertyValues/AnimateGrid"]
 margin_top = 35.0
 margin_right = 160.0
 margin_bottom = 57.0
@@ -160,7 +164,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ToValue" parent="PropertyContainer/AnimateGrid" instance=ExtResource( 3 )]
+[node name="ToValue" parent="PropertyContainer/PropertyValues/AnimateGrid" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 164.0
@@ -168,7 +172,7 @@ margin_top = 32.0
 margin_right = 1010.0
 margin_bottom = 60.0
 
-[node name="Relative" type="Label" parent="PropertyContainer/AnimateGrid"]
+[node name="Relative" type="Label" parent="PropertyContainer/PropertyValues/AnimateGrid"]
 margin_top = 68.0
 margin_right = 160.0
 margin_bottom = 90.0
@@ -179,7 +183,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CheckBox" type="CheckBox" parent="PropertyContainer/AnimateGrid"]
+[node name="RelativeCheck" type="CheckBox" parent="PropertyContainer/PropertyValues/AnimateGrid"]
 margin_left = 164.0
 margin_top = 64.0
 margin_right = 1010.0
@@ -188,7 +192,7 @@ hint_tooltip = "If true, the from and to value are applied according to the curr
 custom_fonts/font = SubResource( 1 )
 text = "Relative value"
 
-[node name="Relative2" type="Label" parent="PropertyContainer/AnimateGrid"]
+[node name="Pivot" type="Label" parent="PropertyContainer/PropertyValues/AnimateGrid"]
 margin_top = 101.0
 margin_right = 160.0
 margin_bottom = 123.0
@@ -199,7 +203,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="OptionButton" type="Button" parent="PropertyContainer/AnimateGrid"]
+[node name="PivotButton" type="Button" parent="PropertyContainer/PropertyValues/AnimateGrid"]
 margin_left = 164.0
 margin_top = 98.0
 margin_right = 1010.0
@@ -208,22 +212,22 @@ hint_tooltip = "The pivot point"
 custom_fonts/font = SubResource( 1 )
 text = "DEFAULT"
 
-[node name="Label2" type="Label" parent="PropertyContainer"]
-margin_top = 212.0
+[node name="Label2" type="Label" parent="PropertyContainer/PropertyValues"]
+margin_top = 156.0
 margin_right = 1010.0
-margin_bottom = 234.0
+margin_bottom = 178.0
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 text = "Easing:"
 align = 1
 
-[node name="Easing" type="GridContainer" parent="PropertyContainer"]
-margin_top = 246.0
+[node name="Easing" type="GridContainer" parent="PropertyContainer/PropertyValues"]
+margin_top = 182.0
 margin_right = 1010.0
-margin_bottom = 274.0
+margin_bottom = 210.0
 columns = 2
 
-[node name="From" type="Label" parent="PropertyContainer/Easing"]
+[node name="From" type="Label" parent="PropertyContainer/PropertyValues/Easing"]
 margin_top = 3.0
 margin_right = 160.0
 margin_bottom = 25.0
@@ -234,10 +238,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="PropertyContainer/Easing"]
+[node name="Button" type="Button" parent="PropertyContainer/PropertyValues/Easing"]
 margin_left = 164.0
 margin_right = 1010.0
 margin_bottom = 28.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 1 )
 text = "Linear"
+
+[connection signal="item_selected" from="GridContainer/AnimationTypeButton" to="." method="_on_AnimationTypeButton_item_selected"]
+[connection signal="pressed" from="AnimationContainer/AnimationButton" to="." method="_on_AnimationButton_pressed"]
+[connection signal="pressed" from="PropertyContainer/PropertyGrid/PropertyButton" to="." method="_on_PropertyButton_pressed"]
+[connection signal="vale_updated" from="PropertyContainer/PropertyValues/AnimateGrid/FromValue" to="." method="_on_FromValue_vale_updated"]
+[connection signal="vale_updated" from="PropertyContainer/PropertyValues/AnimateGrid/ToValue" to="." method="_on_ToValue_vale_updated"]
+[connection signal="pressed" from="PropertyContainer/PropertyValues/AnimateGrid/RelativeCheck" to="." method="_on_CheckBox_pressed"]

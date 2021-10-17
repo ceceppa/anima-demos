@@ -53,34 +53,54 @@ __anima_visual_editor_data = {
 "to": "Opening1",
 "to_port": 0
 } ],
-"events_slots": [ "visibility_visible" ],
+"events_slots": [  ],
 "nodes": [ {
 "data": {
-"animations": [ {
+},
+"id": "AnimaNode",
+"name": "AnimaNode",
+"node_to_animate": null,
+"position": Vector2( 1961, 20 ),
+"title": "AnimaNode"
+}, {
+"data": {
+"animation_data": {
+"animation": {
+"label": "Select animation...",
+"name": ""
+},
+"type": 0
+},
+"delay": 0.0,
+"duration": 0.5
+},
+"id": "Animation",
+"name": "Opening2",
+"node_to_animate": "Opening2",
+"position": Vector2( 3024, 85 ),
+"title": "Opening2"
+}, {
+"data": {
+"animation_data": {
 "property": {
+"from": 0.0,
 "name": "opacity",
+"relative": false,
+"to": 1.0,
 "type": 3
 },
 "type": 1
-} ],
+},
 "delay": 0.0,
 "duration": 0.5
 },
 "id": "Animation",
 "name": "Opening1",
 "node_to_animate": "Opening1",
-"position": Vector2( 1960, -100 ),
+"position": Vector2( 2400, -180 ),
 "title": "Opening1"
-}, {
-"data": {
-},
-"id": "AnimaNode",
-"name": "AnimaNode",
-"node_to_animate": null,
-"position": Vector2( 1400, 100 ),
-"title": "AnimaNode"
 } ],
-"scroll_offset": Vector2( 864, -147 ),
+"scroll_offset": Vector2( 1881, -29.201 ),
 "zoom": 1.0
 }
 

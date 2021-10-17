@@ -10,7 +10,7 @@ size = 18
 use_filter = true
 font_data = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.0980392, 0.113725, 0.156863, 1 )
 
 [sub_resource type="Image" id=5]
@@ -22,7 +22,7 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id=3]
+[sub_resource type="ImageTexture" id=4]
 flags = 0
 flags = 0
 image = SubResource( 5 )
@@ -66,7 +66,7 @@ custom_constants/separation = 0
 margin_right = 24.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 4 )
+custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector3/X/Panel"]
 anchor_right = 1.0
@@ -83,10 +83,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="x" type="LineEdit" parent="CustomValue/Vector3/X"]
-margin_left = 24.0
-margin_right = 82.0
-margin_bottom = 600.0
+[node name="x" parent="CustomValue/Vector3/X" instance=ExtResource( 4 )]
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Vector3"]
 margin_left = 86.0
@@ -98,7 +95,7 @@ custom_constants/separation = 0
 margin_right = 24.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 4 )
+custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector3/Y/Panel"]
 anchor_right = 1.0
@@ -115,10 +112,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="x" type="LineEdit" parent="CustomValue/Vector3/Y"]
-margin_left = 24.0
-margin_right = 82.0
-margin_bottom = 600.0
+[node name="y" parent="CustomValue/Vector3/Y" instance=ExtResource( 4 )]
+margin_left = 360.0
+margin_right = 418.0
 
 [node name="Z" type="HBoxContainer" parent="CustomValue/Vector3"]
 margin_left = 172.0
@@ -130,7 +126,7 @@ custom_constants/separation = 0
 margin_right = 24.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 4 )
+custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector3/Z/Panel"]
 anchor_right = 1.0
@@ -147,10 +143,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="x" type="LineEdit" parent="CustomValue/Vector3/Z"]
-margin_left = 24.0
-margin_right = 82.0
-margin_bottom = 600.0
+[node name="z" parent="CustomValue/Vector3/Z" instance=ExtResource( 4 )]
+margin_left = 274.0
+margin_right = 332.0
 
 [node name="Vector2" type="HBoxContainer" parent="CustomValue"]
 margin_left = 266.0
@@ -166,7 +161,7 @@ custom_constants/separation = 0
 margin_right = 24.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 4 )
+custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector2/X/Panel"]
 anchor_right = 1.0
@@ -183,10 +178,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="x" type="LineEdit" parent="CustomValue/Vector2/X"]
-margin_left = 24.0
-margin_right = 82.0
-margin_bottom = 600.0
+[node name="x" parent="CustomValue/Vector2/X" instance=ExtResource( 4 )]
+margin_left = 180.0
+margin_right = 238.0
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Vector2"]
 margin_left = 86.0
@@ -198,7 +192,7 @@ custom_constants/separation = 0
 margin_right = 24.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 24, 0 )
-custom_styles/panel = SubResource( 4 )
+custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="CustomValue/Vector2/Y/Panel"]
 anchor_right = 1.0
@@ -215,10 +209,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="x" type="LineEdit" parent="CustomValue/Vector2/Y"]
-margin_left = 24.0
-margin_right = 82.0
-margin_bottom = 600.0
+[node name="y" parent="CustomValue/Vector2/Y" instance=ExtResource( 4 )]
+margin_left = 94.0
+margin_right = 152.0
 
 [node name="Number" parent="CustomValue" instance=ExtResource( 4 )]
 
@@ -239,7 +232,15 @@ margin_left = 656.0
 margin_right = 684.0
 margin_bottom = 600.0
 hint_tooltip = "delete custom value"
-icon = SubResource( 3 )
+icon = SubResource( 4 )
 
 [connection signal="pressed" from="CurrentValue" to="." method="_on_CurrentValue_pressed"]
+[connection signal="changed" from="CustomValue/Vector3/X/x" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Vector3/Y/y" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Vector3/Z/z" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Vector2/X/x" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Vector2/Y/y" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Number" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Real" to="." method="_on_input_changed"]
+[connection signal="text_changed" from="CustomValue/FreeText" to="." method="_on_FreeText_text_changed"]
 [connection signal="pressed" from="CustomValue/DeleteButton" to="." method="_on_DeleteButton_pressed"]

@@ -4,6 +4,16 @@ extends WindowDialog
 signal property_selected(property_name, property_type)
 
 var _animatable_properties := [{name = 'opacity', type = TYPE_REAL}]
+var _anima: AnimaNode
+
+func _init() -> void:
+	_anima = Anima.begin(self)
+	_anima.then({ animation = "zoomIn", duration = 0.3 })
+	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)
+
+func popup_centered(size: Vector2 = Vector2.ZERO) -> void:
+	_anima.play()
+	.popup_centered(size)
 
 func populate_animatable_properties_list(source_node: Node) -> void:
 	var properties = source_node.get_property_list()

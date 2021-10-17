@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://addons/anima/nodes/AnimationControl.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/ui/AnimationsWindow.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/anima/ui/PropertiesWindow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://addons/anima/ui/AnimationData.tscn" type="PackedScene" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 size = 18
@@ -56,9 +57,9 @@ custom_constants/hseparation = 12
 columns = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/GridContainer2"]
-margin_top = 5.0
+margin_top = 1.0
 margin_right = 120.0
-margin_bottom = 19.0
+margin_bottom = 23.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "duration (s):"
@@ -71,9 +72,9 @@ size_flags_horizontal = 3
 align = 2
 
 [node name="Label2" type="Label" parent="VBoxContainer/GridContainer2"]
-margin_top = 37.0
+margin_top = 33.0
 margin_right = 120.0
-margin_bottom = 51.0
+margin_bottom = 55.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "delay (s):"
@@ -87,23 +88,20 @@ hint_tooltip = "Use a negative value to anticipate the start time of this animat
 size_flags_horizontal = 3
 align = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+[node name="AnimationData" parent="VBoxContainer" instance=ExtResource( 5 )]
+margin_left = 0.0
 margin_top = 94.0
 margin_right = 1008.0
-margin_bottom = 584.0
-rect_min_size = Vector2( 0, 400 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="AnimationsContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
-margin_right = 1008.0
-margin_bottom = 490.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+margin_bottom = 458.0
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
+modulate = Color( 1, 1, 1, 0 )
+rect_pivot_offset = Vector2( 504, 292 )
 
 [node name="AnimationsWindow" parent="." instance=ExtResource( 2 )]
 
+[connection signal="select_animation" from="VBoxContainer/AnimationData" to="." method="_on_AnimationData_select_animation"]
+[connection signal="select_property" from="VBoxContainer/AnimationData" to="." method="_on_AnimationData_select_property"]
+[connection signal="value_updated" from="VBoxContainer/AnimationData" to="." method="_on_AnimationData_value_updated"]
 [connection signal="property_selected" from="PropertiesWindow" to="." method="_on_PropertiesWindow_property_selected"]
 [connection signal="animation_selected" from="AnimationsWindow" to="." method="_on_AnimationsWindow_animation_selected"]

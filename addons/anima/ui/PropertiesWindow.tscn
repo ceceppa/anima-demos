@@ -19,10 +19,12 @@ image = SubResource( 3 )
 size = Vector2( 16, 16 )
 
 [node name="PropertiesWindow" type="WindowDialog"]
+modulate = Color( 1, 1, 1, 0 )
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 1016.0
 margin_bottom = 592.0
+rect_pivot_offset = Vector2( 504, 292 )
 window_title = "Select the property to animate"
 script = ExtResource( 1 )
 

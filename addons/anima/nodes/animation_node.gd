@@ -13,7 +13,7 @@ func _init():
 		name = 'Animation',
 #		icon = 'res://addons/anima/icons/node.svg',
 		type = AnimaUI.NODE_TYPE.ANIMATION,
-		min_size = Vector2(350, 150)
+		min_size = Vector2(350, 0)
 	})
 
 func setup():
