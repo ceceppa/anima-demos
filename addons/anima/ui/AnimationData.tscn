@@ -227,7 +227,7 @@ margin_right = 1010.0
 margin_bottom = 210.0
 columns = 2
 
-[node name="From" type="Label" parent="PropertyContainer/PropertyValues/Easing"]
+[node name="Easing" type="Label" parent="PropertyContainer/PropertyValues/Easing"]
 margin_top = 3.0
 margin_right = 160.0
 margin_bottom = 25.0

@@ -8,11 +8,12 @@ var _anima: AnimaNode
 
 func _init() -> void:
 	_anima = Anima.begin(self)
-	_anima.then({ animation = "zoomIn", duration = 0.3 })
+	_anima.then({ animation = "zoomInUp", duration = 0.3 })
 	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)
 
 func popup_centered(size: Vector2 = Vector2.ZERO) -> void:
 	_anima.play()
+
 	.popup_centered(size)
 
 func populate_animatable_properties_list(source_node: Node) -> void:
@@ -66,6 +67,7 @@ func populate_tree(filter: String = '') -> void:
 
 		item.set_text(0, animatable_property.name)
 		item.set_metadata(0, { type = animatable_property.type })
+		item.set_icon(0, AnimaUI.get_godot_icon_for_type(animatable_property.type))
 
 		var sub_properties := []
 		if animatable_property.type == TYPE_VECTOR2:
@@ -79,6 +81,7 @@ func populate_tree(filter: String = '') -> void:
 			var sub = tree.create_item(item)
 
 			sub.set_text(0, sub_property)
+			sub.set_icon(0, AnimaUI.get_godot_icon_for_type(TYPE_REAL))
 
 class PropertiesSorter:
 	static func sort_by_name(a: Dictionary, b: Dictionary) -> bool:
@@ -104,3 +107,12 @@ func _on_PropertiesTree_item_double_clicked():
 
 func _on_PropertiesTree_item_activated():
 	_on_PropertiesTree_item_double_clicked()
+
+func _on_PropertiesWindow_popup_hide():
+	show()
+	
+	_anima.play_backwards()
+
+	yield(_anima, 'animation_completed')
+
+	hide()

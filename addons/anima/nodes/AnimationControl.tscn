@@ -95,8 +95,6 @@ margin_right = 1008.0
 margin_bottom = 458.0
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
-modulate = Color( 1, 1, 1, 0 )
-rect_pivot_offset = Vector2( 504, 292 )
 
 [node name="AnimationsWindow" parent="." instance=ExtResource( 2 )]
 

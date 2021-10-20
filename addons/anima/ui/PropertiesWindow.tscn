@@ -27,6 +27,9 @@ margin_bottom = 592.0
 rect_pivot_offset = Vector2( 504, 292 )
 window_title = "Select the property to animate"
 script = ExtResource( 1 )
+__meta__ = {
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
@@ -70,6 +73,7 @@ margin_bottom = 552.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[connection signal="popup_hide" from="." to="." method="_on_PropertiesWindow_popup_hide"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/HBoxContainer/LineEdit" to="." method="_on_LineEdit_text_changed"]
 [connection signal="item_activated" from="MarginContainer/VBoxContainer/PropertiesTree" to="." method="_on_PropertiesTree_item_activated"]
 [connection signal="item_double_clicked" from="MarginContainer/VBoxContainer/PropertiesTree" to="." method="_on_PropertiesTree_item_double_clicked"]

@@ -69,6 +69,14 @@ var _godot_base_control: Control
 
 const _is_debug_enabled := false
 
+const MAPPED_ICONS := {
+	TYPE_REAL: 'float',
+	TYPE_INT: 'int',
+	TYPE_VECTOR2: 'Vector2',
+	TYPE_VECTOR3: 'Vector3',
+	TYPE_COLOR: 'Color'
+}
+
 func create_row_for_node(index: int, input_label_text: String, input_tooltip: String, output_label_text: String, output_tooltip: String, input_default_value = null) -> PanelContainer:
 	var row_container = load("res://addons/anima/ui/AnimaNodeRowContainer.tscn")
 	var row = row_container.instance()
@@ -223,3 +231,10 @@ func debug(caller: Node, v1: String, v2 = null, v3 = null) -> void:
 		return
 
 	printt(caller, v1, v2, v3)
+
+func get_godot_icon_for_type(type: int) -> Texture:
+	if MAPPED_ICONS.has(type):
+		return get_godot_icon(MAPPED_ICONS[type])
+
+	return get_godot_icon('KeyValue')
+	

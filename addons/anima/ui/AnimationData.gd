@@ -119,16 +119,17 @@ func _on_AnimationTypeButton_item_selected(index):
 	_maybe_init_anima_node()
 
 	if _property_type != 0:
+		if animation_container_visible:
+			_property_values_anima.play_backwards()
+
+			yield(_property_values_anima, "animation_completed")
+		else:
+			_property_values_anima.play()
+	else:
 		_property_values_anima.play()
 
-		_show_content(animation_container_visible)
-	else:
-		_property_values_anima.play_backwards()
 		yield(_property_values_anima, "animation_completed")
 
-		_show_content(animation_container_visible)
-
-func _show_content(animation_container_visible: bool) -> void:
 	_animation_container.visible = animation_container_visible
 	_property_container.visible = not animation_container_visible
 

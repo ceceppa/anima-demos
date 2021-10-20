@@ -10,7 +10,7 @@ signal loop_completed
 
 var _anima_tween := AnimaTween.new()
 
-var _total_animation := 0.0
+var _total_animation_length := 0.0
 var _last_animation_duration := 0.0
 
 var _timer := Timer.new()
@@ -20,7 +20,7 @@ var _should_loop := false
 var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
 var _play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 var _default_duration = Anima.DEFAULT_DURATION
-var _apply_visibility_strategy_on_play := false
+var _apply_visibility_strategy_on_play := true
 
 var __do_nothing := 0.0
 export (Dictionary) var __anima_visual_editor_data
@@ -72,12 +72,12 @@ func generate_from_visual_data(node: Node, visual_data: Dictionary) -> void:
 		is_first = false
 
 func then(data: Dictionary) -> float:
-	data._wait_time = _total_animation
+	data._wait_time = _total_animation_length
 
 	_last_animation_duration = _setup_animation(data)
 
 	var delay = data.delay if data.has('delay') else 0.0
-	_total_animation += _last_animation_duration + delay
+	_total_animation_length += _last_animation_duration + delay
 
 	return _last_animation_duration
 
@@ -85,7 +85,7 @@ func with(data: Dictionary) -> float:
 	var start_time := 0.0
 	var delay = data.delay if data.has('delay') else 0.0
 
-	start_time = max(0, _total_animation - _last_animation_duration)
+	start_time = max(0, _total_animation_length - _last_animation_duration)
 
 	if not data.has('duration'):
 		if _last_animation_duration > 0:
@@ -131,11 +131,13 @@ func also(data: Dictionary, extra_keys_to_ignore := []) -> float:
 func group(group_data: Array, animation_data: Dictionary) -> void:
 	var delay_index := 0
 
+	_total_animation_length += animation_data.duration
+
 	for index in group_data.size():
 		var group_item: Dictionary = group_data[index]
 		var data = animation_data.duplicate()
 
-		data.delay = animation_data.items_delay * (delay_index)
+		data._wait_time = animation_data.items_delay * delay_index
 
 		if group_item.has('node'):
 			data.node = group_item.node
@@ -146,6 +148,8 @@ func group(group_data: Array, animation_data: Dictionary) -> void:
 
 		with(data)
 
+	_total_animation_length += animation_data.items_delay * (delay_index - 1)
+
 func wait(seconds: float) -> void:
 	then({
 		node = self,
@@ -155,7 +159,7 @@ func wait(seconds: float) -> void:
 		duration = seconds,
 	})
 
-func set_visibility_strategy(strategy: int, always_apply_on_play := false) -> void:
+func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> void:
 	_anima_tween.set_visibility_strategy(strategy)
 
 	if always_apply_on_play:
@@ -166,7 +170,7 @@ func clear() -> void:
 
 	_anima_tween.clear_animations()
 
-	_total_animation = 0.0
+	_total_animation_length = 0.0
 	_last_animation_duration = 0.0
 	set_visibility_strategy(Anima.VISIBILITY.IGNORE)
 
@@ -186,7 +190,7 @@ func _play(mode: int, delay: float = 0) -> void:
 	_loop_times = 1
 	_play_mode = mode
 
-	if _apply_visibility_strategy_on_play:
+	if _apply_visibility_strategy_on_play and mode == AnimaTween.PLAY_MODE.NORMAL:
 		set_visibility_strategy(_anima_tween._visibility_strategy)
 
 	_timer.one_shot = true
@@ -225,12 +229,12 @@ func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION) -> v
 	_do_play()
 
 func get_length() -> float:
-	return _total_animation
+	return _total_animation_length
 
 func _do_play() -> void:
 	# Allows to reset the "relative" properties to the value of the 1st loop
 	# before doing another loop
-	_anima_tween.reset_data(_loop_strategy, _play_mode, _total_animation)
+	_anima_tween.reset_data(_loop_strategy, _play_mode, _total_animation_length)
 
 	_loop_count += 1
 

@@ -163,6 +163,9 @@ func _add_frames(data: Dictionary, property: String, frames: Array, relative: bo
 			elif keys_to_ignore.find(key) < 0:
 				animation_data[key] = data[key]
 
+		if relative and frames.size() > 1 and animation_data.has('from') and not animation_data.has('to'):
+			animation_data.__to = true
+
 		add_animation_data(animation_data)
 
 		last_duration = frame_duration
@@ -219,7 +222,7 @@ func reset_data(strategy: int, play_mode: int, animation_length: float):
 # the correct relative positions, by also looking at the previous frames.
 # Otherwise we would end up with broken animations when animating the same property more than
 # once 
-func _flip_animations(data: Array, animation_length) -> Array:
+func _flip_animations(data: Array, animation_length: float) -> Array:
 	var new_data := []
 	var previous_frames := {}
 
@@ -301,7 +304,8 @@ func _on_tween_step_with_easing(object: Object, key: NodePath, _time: float, ela
 	if _animation_data[index]._use_step_callback != '_on_tween_step_with_easing':
 		return
 
-	var easing_points = _animation_data[index]._easing_points
+	var animation_data = _animation_data[index]
+	var easing_points = animation_data._easing_points
 	var p1 = easing_points[0]
 	var p2 = easing_points[1]
 	var p3 = easing_points[2]
@@ -309,7 +313,7 @@ func _on_tween_step_with_easing(object: Object, key: NodePath, _time: float, ela
 
 	var easing_elapsed = _cubic_bezier(Vector2.ZERO, Vector2(p1, p2), Vector2(p3, p4), Vector2(1, 1), elapsed)
 
-	_animation_data[index]._animation_callback.call_func(index, easing_elapsed)
+	animation_data._animation_callback.call_func(index, easing_elapsed)
 
 func _on_tween_step_with_easing_callback(object: Object, key: NodePath, _time: float, elapsed: float):
 	var index := _get_animation_data_index(key)
@@ -398,9 +402,10 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 	if animation_data.has('to'):
 		to = _maybe_convert_from_deg_to_rad(node, animation_data, animation_data.to)
 		to = _maybe_calculate_relative_value(relative, to, from)
+	elif animation_data.has('__to'):
+		to = from
 	else:
 		to = AnimaNodesProperties.get_property_initial_value(node, animation_data.property)
-		animation_data.__to = to
 
 	if animation_data.has('pivot'):
 		if node is Spatial:
