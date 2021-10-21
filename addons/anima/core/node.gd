@@ -21,6 +21,7 @@ var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
 var _play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 var _default_duration = Anima.DEFAULT_DURATION
 var _apply_visibility_strategy_on_play := true
+var _play_speed := 1.0
 
 var __do_nothing := 0.0
 export (Dictionary) var __anima_visual_editor_data
@@ -180,15 +181,22 @@ func play() -> void:
 func play_with_delay(delay: float) -> void:
 	_play(AnimaTween.PLAY_MODE.NORMAL, delay)
 
+func play_with_speed(speed: float) -> void:
+	_play(AnimaTween.PLAY_MODE.NORMAL, 0.0, speed)
+
 func play_backwards() -> void:
 	_play(AnimaTween.PLAY_MODE.BACKWARDS)
 
 func play_backwards_with_delay(delay: float) -> void:
 	_play(AnimaTween.PLAY_MODE.BACKWARDS, delay)
 
-func _play(mode: int, delay: float = 0) -> void:
+func play_backwards_with_speed(speed: float) -> void:
+	_play(AnimaTween.PLAY_MODE.BACKWARDS, 0.0, speed)
+
+func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
 	_loop_times = 1
 	_play_mode = mode
+	_play_speed = speed
 
 	if _apply_visibility_strategy_on_play and mode == AnimaTween.PLAY_MODE.NORMAL:
 		set_visibility_strategy(_anima_tween._visibility_strategy)
@@ -234,7 +242,7 @@ func get_length() -> float:
 func _do_play() -> void:
 	# Allows to reset the "relative" properties to the value of the 1st loop
 	# before doing another loop
-	_anima_tween.reset_data(_loop_strategy, _play_mode, _total_animation_length)
+	_anima_tween.reset_data(_loop_strategy, _play_mode, _total_animation_length, _play_speed)
 
 	_loop_count += 1
 

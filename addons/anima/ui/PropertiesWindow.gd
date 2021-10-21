@@ -12,9 +12,11 @@ func _init() -> void:
 	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)
 
 func popup_centered(size: Vector2 = Vector2.ZERO) -> void:
-	_anima.play()
-
+	# We need to reset the scale otherwise the window position will be wrong!
+	rect_scale = Vector2(1, 1)
+	
 	.popup_centered(size)
+	_anima.play()
 
 func populate_animatable_properties_list(source_node: Node) -> void:
 	var properties = source_node.get_property_list()
@@ -111,7 +113,7 @@ func _on_PropertiesTree_item_activated():
 func _on_PropertiesWindow_popup_hide():
 	show()
 	
-	_anima.play_backwards()
+	_anima.play_backwards_with_speed(0.5)
 
 	yield(_anima, 'animation_completed')
 

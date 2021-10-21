@@ -20,6 +20,6 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 
 	AnimaNodesProperties.set_2D_pivot(data.node, Anima.PIVOT.CENTER)
 
-	anima_tween.add_frames(data, "opacity", opacity_frames)
-	anima_tween.add_frames(data, "scale", zoom_frames)
+#	anima_tween.add_frames(data, "opacity", opacity_frames)
+#	anima_tween.add_frames(data, "scale", zoom_frames)
 	anima_tween.add_relative_frames(data, "y", position_frames)
