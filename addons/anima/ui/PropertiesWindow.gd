@@ -113,7 +113,7 @@ func _on_PropertiesTree_item_activated():
 func _on_PropertiesWindow_popup_hide():
 	show()
 	
-	_anima.play_backwards_with_speed(0.5)
+	_anima.play_backwards_with_speed(1.5)
 
 	yield(_anima, 'animation_completed')
 

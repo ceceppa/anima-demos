@@ -12,6 +12,7 @@ var _fake_property: Dictionary = {}
 var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
 var _callbacks := {}
 var _is_resetting_data := false
+var _is_backwards_animation := false
 
 enum PLAY_MODE {
 	NORMAL,
@@ -82,6 +83,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	if animation_data.has('hide_strategy'):
 		_apply_visibility_strategy(animation_data)
 
+	_is_backwards_animation = play_mode != PLAY_MODE.NORMAL
 	var from := 0.0 if play_mode == PLAY_MODE.NORMAL else 1.0
 	var to := 1.0 - from
 
@@ -274,7 +276,6 @@ func _flip_animations(data: Array, animation_length: float, play_speed: float) -
 
 		animation_data._wait_time = max(Anima.MINIMUM_DURATION, new_wait_time)
 
-		print(animation_data)
 		new_data.push_back(animation_data)
 
 	return new_data
@@ -416,8 +417,10 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 		animation_data.__from = from
 
 	if animation_data.has('to'):
+		var start = node_from if _is_backwards_animation else from
+
 		to = _maybe_convert_from_deg_to_rad(node, animation_data, animation_data.to)
-		to = _maybe_calculate_relative_value(relative, to, from)
+		to = _maybe_calculate_relative_value(relative, to, start)
 	else:
 		to = AnimaNodesProperties.get_property_initial_value(node, animation_data.property)
 
@@ -436,6 +439,9 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 
 	animation_data._property_data.from = from
 	animation_data._property_data.to = to
+
+	if _is_backwards_animation:
+		printt(animation_data.from, animation_data._property_data)
 
 func _maybe_calculate_relative_value(relative, value, current_node_value):
 	if not relative:
@@ -459,12 +465,6 @@ func _on_animation_with_key(index: int, elapsed: float) -> void:
 	var value = property_data.from + (property_data.diff * elapsed)
 
 	node[property_data.property_name][property_data.key] = value
-
-	if property_data.key == 'y':
-		printt(index, elapsed, property_data.from, property_data.to, value)
-
-		if elapsed >= 1.0:
-			print('\n\n\n\n\n')
 
 func _on_animation_with_subkey(index: int, elapsed: float) -> void:
 	var animation_data = _current_animation_data[index]
