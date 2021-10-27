@@ -1,8 +1,16 @@
 extends Control
 
-func _ready():
-	var anima: AnimaNode = Anima.begin(self)
-	anima.then({ node = $icon, property = "opacity", from = 0.0, to = 1.0, duration = 1.0 })
-	anima.also({ property = "x", to = 100.0, relative = true, easing = Anima.EASING.EASE_OUT_BACK })
+var _anima: AnimaNode
 
-	anima.play_with_delay(0.5)
+func _ready() -> void:
+	_anima = Anima.begin($icon)
+	_anima.then({ property = "x", from = -100.0, relative = true, duration = 0.3 })
+
+func _on_Button_pressed():
+	_anima.play()
+
+func _on_Button2_pressed():
+	_anima.play_backwards()
+
+func _on_Button3_pressed():
+	_anima.loop_in_circle_with_speed(1.0)

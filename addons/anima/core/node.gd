@@ -22,6 +22,7 @@ var _play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 var _default_duration = Anima.DEFAULT_DURATION
 var _apply_visibility_strategy_on_play := true
 var _play_speed := 1.0
+var _current_play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 
 var __do_nothing := 0.0
 export (Dictionary) var __anima_visual_editor_data
@@ -169,7 +170,7 @@ func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> voi
 func clear() -> void:
 	stop()
 
-	_anima_tween.clear_animations()
+	_anima_tween.clear_animations(true)
 
 	_total_animation_length = 0.0
 	_last_animation_duration = 0.0
@@ -196,13 +197,14 @@ func play_backwards_with_speed(speed: float) -> void:
 func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
 	_loop_times = 1
 	_play_mode = mode
+	_current_play_mode = mode
 	_play_speed = speed
 
 	if _apply_visibility_strategy_on_play and mode == AnimaTween.PLAY_MODE.NORMAL:
 		set_visibility_strategy(_anima_tween._visibility_strategy)
 
 	_timer.one_shot = true
-	_timer.wait_time = max(0.00001, delay)
+	_timer.wait_time = max(Anima.MINIMUM_DURATION, delay)
 	_timer.start()
 
 func stop() -> void:
@@ -212,22 +214,53 @@ func stop() -> void:
 func loop(times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL)
 
+func loop_in_circle(times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE)
+
+func loop_in_circle_with_delay(delay: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE, delay)
+
+func loop_in_circle_with_speed(speed: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE, Anima.MINIMUM_DURATION, speed)
+
+func loop_in_circle_with_delay_and_speed(delay: float, speed: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE, delay, speed)
+
 func loop_backwards(times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.BACKWARDS)
+
+func loop_backwards_with_speed(speed: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.BACKWARDS, Anima.MINIMUM_DURATION, speed)
 
 func loop_backwards_with_delay(delay: float, times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
 
+func loop_backwards_with_delay_and_speed(delay: float, speed: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay, speed)
+
 func loop_with_delay(delay: float, times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
+
+func loop_with_speed(speed: float, times: int = -1) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, Anima.MINIMUM_DURATION, speed)
 
 func loop_times_with_delay(times: float, delay: float) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay)
 
-func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION) -> void:
+func loop_times_with_delay_and_speed(times: int, delay: float, speed: float) -> void:
+	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL, delay, speed)
+
+func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION, speed := 1.0) -> void:
 	_loop_times = times
 	_should_loop = times == -1
 	_play_mode = mode
+
+	if mode != AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE:
+		_current_play_mode = mode
+	else:
+		_current_play_mode = AnimaTween.PLAY_MODE.NORMAL
+
+	_play_speed = speed
 
 	_timer.wait_time = max(Anima.MINIMUM_DURATION, delay)
 
@@ -240,9 +273,16 @@ func get_length() -> float:
 	return _total_animation_length
 
 func _do_play() -> void:
+	var play_mode: int = _play_mode
+	var is_loop_in_circle = _play_mode == AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE
+
+	if is_loop_in_circle:
+		play_mode = _current_play_mode
+
 	# Allows to reset the "relative" properties to the value of the 1st loop
 	# before doing another loop
-	_anima_tween.reset_data(_loop_strategy, _play_mode, _total_animation_length, _play_speed)
+	printt(play_mode, is_loop_in_circle)
+	_anima_tween.reset_data(_loop_strategy, play_mode, _total_animation_length, _play_speed)
 
 	_loop_count += 1
 
@@ -250,6 +290,14 @@ func _do_play() -> void:
 
 	emit_signal("animation_started")
 	emit_signal("loop_started", _loop_count)
+
+	if not is_loop_in_circle:
+		return
+
+	if _current_play_mode == AnimaTween.PLAY_MODE.NORMAL:
+		_current_play_mode = AnimaTween.PLAY_MODE.BACKWARDS
+	else:
+		_current_play_mode = AnimaTween.PLAY_MODE.NORMAL
 
 func set_loop_strategy(strategy: int):
 	_loop_strategy = strategy
@@ -315,7 +363,7 @@ func _setup_node_animation(data: Dictionary) -> float:
 		if real_duration is float:
 			duration = real_duration
 	else:
-		_anima_tween.add_animation_data(data)
+		_anima_tween.add_animation_data(data, true)
 
 	return duration
 
@@ -575,7 +623,9 @@ func _create_grid_animation_with(nodes: Array, animation_data: Dictionary) -> fl
 
 func _on_timer_timeout() -> void:
 	_do_play()
+	_maybe_play()
 
+func _maybe_play() -> void:
 	_loop_times -= 1
 
 	if _loop_times > 0 or _should_loop:
@@ -586,4 +636,4 @@ func _on_all_tween_completed() -> void:
 	emit_signal("loop_completed", _loop_count)
 
 	if _should_loop:
-		_timer.start()
+		_maybe_play()

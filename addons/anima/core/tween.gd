@@ -11,12 +11,12 @@ var _fake_property: Dictionary = {}
 
 var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
 var _callbacks := {}
-var _is_resetting_data := false
 var _is_backwards_animation := false
 
 enum PLAY_MODE {
 	NORMAL,
-	BACKWARDS
+	BACKWARDS,
+	LOOP_IN_CIRCLE
 }
 
 func _ready():
@@ -62,15 +62,15 @@ func play():
 	if not started:
 		printerr('something went wrong while trying to start the tween')
 
-func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.NORMAL) -> void:
+func add_animation_data(animation_data: Dictionary, main_animation := false, play_mode: int = PLAY_MODE.NORMAL) -> void:
 	var index: String
 
-	if _is_resetting_data:
-		_current_animation_data.push_back(animation_data)
-		index = str(_current_animation_data.size())
-	else:
+	if main_animation:
 		_animation_data.push_back(animation_data)
 		index = str(_animation_data.size())
+	else:
+		_current_animation_data.push_back(animation_data)
+		index = str(_current_animation_data.size())
 
 	var duration = animation_data.duration if animation_data.has('duration') else Anima.DEFAULT_DURATION
 	var property_key = 'p' + index
@@ -201,6 +201,9 @@ func clear_animations(clear_data := false) -> void:
 	_fake_property = {}
 	_callbacks = {}
 	_current_animation_data.clear()
+	
+	if clear_data:
+		_animation_data.clear()
 
 func set_visibility_strategy(strategy: int) -> void:
 	for animation_data in _current_animation_data:
@@ -209,8 +212,6 @@ func set_visibility_strategy(strategy: int) -> void:
 	_visibility_strategy = strategy
 
 func reset_data(strategy: int, play_mode: int, animation_length: float, play_speed: float):
-	_is_resetting_data = true
-
 	clear_animations()
 
 	var data: Array = _animation_data.duplicate(true)
@@ -222,9 +223,7 @@ func reset_data(strategy: int, play_mode: int, animation_length: float, play_spe
 		animation_data.duration = float(animation_data.duration) / play_speed
 		animation_data._recalculate_from_to = strategy == Anima.LOOP.RECALCULATE_RELATIVE_DATA and animation_data.has('relative')
 
-		add_animation_data(animation_data, play_mode)
-
-	_is_resetting_data = false
+		add_animation_data(animation_data, false, play_mode)
 
 #
 # In order to flip "nested relative" animations we need to calculate what all the
@@ -258,8 +257,7 @@ func _flip_animations(data: Array, animation_length: float, play_speed: float) -
 			animation_data.to += animation_data.from
 		elif not animation_data.has('to'):
 			animation_data.to = AnimaNodesProperties.get_property_initial_value(node, property)
-
-#		animation_data.relative = false
+			animation_data.__ignore_to_relative = false
 
 		if not previous_frames.has(node):
 			previous_frames[node] = {}
@@ -418,11 +416,12 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 
 	if animation_data.has('to'):
 		var start = node_from if _is_backwards_animation else from
+		var to_relative = false if animation_data.has('__ignore_to_relative') else relative
 
 		to = _maybe_convert_from_deg_to_rad(node, animation_data, animation_data.to)
-		to = _maybe_calculate_relative_value(relative, to, start)
+		to = _maybe_calculate_relative_value(to_relative, to, start)
 	else:
-		to = AnimaNodesProperties.get_property_initial_value(node, animation_data.property)
+		to = node_from
 
 	if animation_data.has('pivot'):
 		if node is Spatial:
@@ -440,8 +439,8 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 	animation_data._property_data.from = from
 	animation_data._property_data.to = to
 
-	if _is_backwards_animation:
-		printt(animation_data.from, animation_data._property_data)
+#	if _is_backwards_animation:
+#		printt(node.position, node_from, animation_data.from, animation_data._property_data)
 
 func _maybe_calculate_relative_value(relative, value, current_node_value):
 	if not relative:
