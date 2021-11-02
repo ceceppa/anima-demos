@@ -78,8 +78,6 @@ func _connect_nodes(connection_list: Array) -> void:
 func set_anima_node(node) -> void:
 	_anima_node = node
 
-	visible = _maybe_show_graph_edit()
-
 func show() -> void:
 	.show()
 	_maybe_show_graph_edit()

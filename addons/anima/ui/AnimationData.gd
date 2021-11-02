@@ -120,7 +120,7 @@ func _on_AnimationTypeButton_item_selected(index):
 
 	if _property_type != 0:
 		if animation_container_visible:
-			_property_values_anima.play_backwards_with_speed(0.1)
+			_property_values_anima.play_backwards_with_speed(2.0)
 
 			yield(_property_values_anima, "animation_completed")
 		else:
@@ -148,7 +148,7 @@ func _maybe_init_anima_node() -> void:
 		],
 		{
 			duration = 0.15,
-			items_delay = 0.05,
+			items_delay = 0.015,
 			animation = 'fadeInLeft',
 		}
 	)

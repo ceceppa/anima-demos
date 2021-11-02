@@ -3,8 +3,10 @@ tool
 class_name AnimaTween
 extends Tween
 
+signal animation_completed
+
 var _animation_data := []
-var _current_animation_data := []
+var _backwards_animation_data := []
 
 # Needed to use interpolate_property
 var _fake_property: Dictionary = {}
@@ -12,6 +14,8 @@ var _fake_property: Dictionary = {}
 var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
 var _callbacks := {}
 var _is_backwards_animation := false
+var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
+var _tween_completed := 0
 
 enum PLAY_MODE {
 	NORMAL,
@@ -27,50 +31,33 @@ func _ready():
 	connect("tween_step", self, '_on_tween_step_without_easing')
 	connect("tween_completed", self, '_on_tween_completed')
 
-func play():
-	var index := 0
+	#
+	# By default Godot runs interpolate_property animation runs only once
+	# this means that if you try to play again it won't work.
+	# Possible solutions are:
+	# - resetting the tween data and recreating all over again before starting the animation
+	# - recreating the anima animation again before playing
+	# - cheat
+	#
+	# Of the 3 I did prefer "chating" making belive Godot that this tween is in a
+	# repeat loop.
+	# So, once all the animations are completed (_tween_completed == _animation_data.size())
+	# we pause the tween, and next time we call play again we resume it and it works...
+	# There is no need to recreating anything on each "loop"
+	set_repeat(true)
 
-	for animation_data in _current_animation_data:
-		var easing_points
+func play(play_speed: float):
+	set_speed_scale(play_speed)
 
-		if animation_data.has('easing'):
-			if animation_data.easing is FuncRef:
-				easing_points = animation_data.easing
-			else:
-				easing_points = AnimaEasing.get_easing_points(animation_data.easing)
+	_tween_completed = 0
 
-		if animation_data.has('easing_points'):
-			easing_points = animation_data.easing_points
+	resume_all()
 
-		animation_data._easing_points = easing_points
-
-		animation_data._animation_callback = funcref(self, '_calculate_from_and_to')
-
-		if easing_points is Array:
-			animation_data._use_step_callback = '_on_tween_step_with_easing'
-		elif easing_points is String:
-			animation_data._use_step_callback = '_on_tween_step_with_easing_callback'
-		elif easing_points is FuncRef:
-			animation_data._use_step_callback = '_on_tween_step_with_easing_funcref'
-		else:
-			animation_data._use_step_callback = '_on_tween_step_without_easing'
-
-		index += 1
-
-	var started := start()
-
-	if not started:
-		printerr('something went wrong while trying to start the tween')
-
-func add_animation_data(animation_data: Dictionary, main_animation := false, play_mode: int = PLAY_MODE.NORMAL) -> void:
+func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.NORMAL) -> void:
 	var index: String
 
-	if main_animation:
-		_animation_data.push_back(animation_data)
-		index = str(_animation_data.size())
-	else:
-		_current_animation_data.push_back(animation_data)
-		index = str(_current_animation_data.size())
+	_animation_data.push_back(animation_data)
+	index = str(_animation_data.size())
 
 	var duration = animation_data.duration if animation_data.has('duration') else Anima.DEFAULT_DURATION
 	var property_key = 'p' + index
@@ -83,7 +70,32 @@ func add_animation_data(animation_data: Dictionary, main_animation := false, pla
 	if animation_data.has('hide_strategy'):
 		_apply_visibility_strategy(animation_data)
 
+	var easing_points
+
+	if animation_data.has('easing'):
+		if animation_data.easing is FuncRef:
+			easing_points = animation_data.easing
+		else:
+			easing_points = AnimaEasing.get_easing_points(animation_data.easing)
+
+	if animation_data.has('easing_points'):
+		easing_points = animation_data.easing_points
+
+	animation_data._easing_points = easing_points
+
+	animation_data._animation_callback = funcref(self, '_calculate_from_and_to')
+
+	if easing_points is Array:
+		animation_data._use_step_callback = '_on_tween_step_with_easing'
+	elif easing_points is String:
+		animation_data._use_step_callback = '_on_tween_step_with_easing_callback'
+	elif easing_points is FuncRef:
+		animation_data._use_step_callback = '_on_tween_step_with_easing_funcref'
+	else:
+		animation_data._use_step_callback = '_on_tween_step_without_easing'
+
 	_is_backwards_animation = play_mode != PLAY_MODE.NORMAL
+
 	var from := 0.0 if play_mode == PLAY_MODE.NORMAL else 1.0
 	var to := 1.0 - from
 
@@ -149,7 +161,7 @@ func _add_frames(data: Dictionary, property: String, frames: Array, relative: bo
 		# but we also need to consider that a node can have multiple
 		# properties animated, so we need to restore it only before the first
 		# animation starts
-		for animation in _current_animation_data:
+		for animation in _animation_data:
 			if animation.node == data.node:
 				is_first_frame = false
 
@@ -189,41 +201,40 @@ func _add_frames(data: Dictionary, property: String, frames: Array, relative: bo
 	return _wait_time
 
 func get_animation_data() -> Array:
-	return _animation_data
+	return _animation_data.duplicate(true)
 
 func get_animations_count() -> int:
 	return _animation_data.size()
 
-func clear_animations(clear_data := false) -> void:
+func has_data() -> bool:
+	return _animation_data.size() > 0
+
+func clear_animations() -> void:
 	remove_all()
 	reset_all()
 
 	_fake_property = {}
 	_callbacks = {}
-	_current_animation_data.clear()
-	
-	if clear_data:
-		_animation_data.clear()
+	_animation_data.clear()
 
 func set_visibility_strategy(strategy: int) -> void:
-	for animation_data in _current_animation_data:
+	for animation_data in _animation_data:
 		_apply_visibility_strategy(animation_data, strategy)
 
 	_visibility_strategy = strategy
 
-func reset_data(strategy: int, play_mode: int, animation_length: float, play_speed: float):
+func set_loop_strategy(strategy: int) -> void:
+	_loop_strategy = strategy
+
+func reverse_animation(animation_data: Array, animation_length: float):
 	clear_animations()
 
-	var data: Array = _animation_data.duplicate(true)
+	var data: Array = animation_data.duplicate(true)
 
-	if play_mode == PLAY_MODE.BACKWARDS:
-		data = _flip_animations(data, animation_length, play_speed)
+	data = _flip_animations(data, animation_length)
 
 	for animation_data in data:
-		animation_data.duration = float(animation_data.duration) / play_speed
-		animation_data._recalculate_from_to = strategy == Anima.LOOP.RECALCULATE_RELATIVE_DATA and animation_data.has('relative')
-
-		add_animation_data(animation_data, false, play_mode)
+		add_animation_data(animation_data, PLAY_MODE.BACKWARDS)
 
 #
 # In order to flip "nested relative" animations we need to calculate what all the
@@ -231,15 +242,15 @@ func reset_data(strategy: int, play_mode: int, animation_length: float, play_spe
 # the correct relative positions, by also looking at the previous frames.
 # Otherwise we would end up with broken animations when animating the same property more than
 # once 
-func _flip_animations(data: Array, animation_length: float, play_speed: float) -> Array:
+func _flip_animations(data: Array, animation_length: float) -> Array:
 	var new_data := []
 	var previous_frames := {}
-	var length: float = animation_length / play_speed
+	var length: float = animation_length
 
 	for animation in data:
 		var animation_data = animation.duplicate(true)
-		var duration: float = float(animation_data.duration) / play_speed
-		var wait_time: float = animation_data._wait_time / play_speed
+		var duration: float = float(animation_data.duration)
+		var wait_time: float = animation_data._wait_time
 		var node = animation_data.node
 		var new_wait_time: float = length - duration - wait_time
 		var property = animation_data.property
@@ -266,11 +277,6 @@ func _flip_animations(data: Array, animation_length: float, play_speed: float) -
 			previous_frames[node][property] = animation_data.to
 		else:
 			previous_frames[node][property] = animation_data.from
-
-#		if is_relative:
-#			var temp = animation_data.to
-#			animation_data.to = animation_data.from
-#			animation_data.from = temp
 
 		animation_data._wait_time = max(Anima.MINIMUM_DURATION, new_wait_time)
 
@@ -316,10 +322,10 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anim
 func _on_tween_step_with_easing(object: Object, key: NodePath, _time: float, elapsed: float):
 	var index := _get_animation_data_index(key)
 
-	if _current_animation_data[index]._use_step_callback != '_on_tween_step_with_easing':
+	if _animation_data[index]._use_step_callback != '_on_tween_step_with_easing':
 		return
 
-	var animation_data = _current_animation_data[index]
+	var animation_data = _animation_data[index]
 	var easing_points = animation_data._easing_points
 	var p1 = easing_points[0]
 	var p2 = easing_points[1]
@@ -333,33 +339,33 @@ func _on_tween_step_with_easing(object: Object, key: NodePath, _time: float, ela
 func _on_tween_step_with_easing_callback(object: Object, key: NodePath, _time: float, elapsed: float):
 	var index := _get_animation_data_index(key)
 
-	if _current_animation_data[index]._use_step_callback != '_on_tween_step_with_easing_callback':
+	if _animation_data[index]._use_step_callback != '_on_tween_step_with_easing_callback':
 		return
 
-	var easing_points_function = _current_animation_data[index]._easing_points
+	var easing_points_function = _animation_data[index]._easing_points
 	var easing_callback = funcref(AnimaEasing, easing_points_function)
 	var easing_elapsed = easing_callback.call_func(elapsed)
 
-	_current_animation_data[index]._animation_callback.call_func(index, easing_elapsed)
+	_animation_data[index]._animation_callback.call_func(index, easing_elapsed)
 
 func _on_tween_step_with_easing_funcref(object: Object, key: NodePath, _time: float, elapsed: float):
 	var index := _get_animation_data_index(key)
 
-	if _current_animation_data[index]._use_step_callback != '_on_tween_step_with_easing_funcref':
+	if _animation_data[index]._use_step_callback != '_on_tween_step_with_easing_funcref':
 		return
 
-	var easing_callback = _current_animation_data[index]._easing_points
+	var easing_callback = _animation_data[index]._easing_points
 	var easing_elapsed = easing_callback.call_func(elapsed)
 
-	_current_animation_data[index]._animation_callback.call_func(index, easing_elapsed)
+	_animation_data[index]._animation_callback.call_func(index, easing_elapsed)
 
 func _on_tween_step_without_easing(object: Object, key: NodePath, _time: float, elapsed: float):
 	var index := _get_animation_data_index(key)
 
-	if _current_animation_data[index]._use_step_callback != '_on_tween_step_without_easing':
+	if _animation_data[index]._use_step_callback != '_on_tween_step_without_easing':
 		return
 
-	_current_animation_data[index]._animation_callback.call_func(index, elapsed)
+	_animation_data[index]._animation_callback.call_func(index, elapsed)
 
 func _get_animation_data_index(key: NodePath) -> int:
 	var s = str(key)
@@ -379,12 +385,14 @@ func _cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float)
 	return s.y
 
 func _calculate_from_and_to(index: int, value: float) -> void:
-	var animation_data = _current_animation_data[index]
+	var animation_data = _animation_data[index]
 	var node = animation_data.node
 
-	var do_calculate = true
+	var do_calculate := true
 
-	if animation_data.has('_recalculate_from_to') and not animation_data._recalculate_from_to and animation_data.has('_property_data'):
+	var recalculate_from_to = _loop_strategy == Anima.LOOP.RECALCULATE_RELATIVE_DATA and animation_data.has('relative')
+	
+	if recalculate_from_to == false and animation_data.has('_property_data'):
 		do_calculate = false
 
 	if do_calculate:
@@ -399,7 +407,7 @@ func _calculate_from_and_to(index: int, value: float) -> void:
 
 	animation_data._animation_callback = funcref(self, callback)
 
-	_current_animation_data[index]._animation_callback.call_func(index, value)
+	_animation_data[index]._animation_callback.call_func(index, value)
 
 func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 	var from
@@ -439,9 +447,6 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 	animation_data._property_data.from = from
 	animation_data._property_data.to = to
 
-#	if _is_backwards_animation:
-#		printt(node.position, node_from, animation_data.from, animation_data._property_data)
-
 func _maybe_calculate_relative_value(relative, value, current_node_value):
 	if not relative:
 		return value
@@ -458,24 +463,32 @@ func _maybe_convert_from_deg_to_rad(node: Node, animation_data: Dictionary, valu
 	return deg2rad(value)
 
 func _on_animation_with_key(index: int, elapsed: float) -> void:
-	var animation_data = _current_animation_data[index]
-	var property_data = _current_animation_data[index]._property_data
-	var node = animation_data.node
-	var value = property_data.from + (property_data.diff * elapsed)
+	var data = _calculate_value(index, elapsed)
 
-	node[property_data.property_name][property_data.key] = value
+	data.node[data.property_name][data.key] = data.value
 
 func _on_animation_with_subkey(index: int, elapsed: float) -> void:
-	var animation_data = _current_animation_data[index]
-	var property_data = _current_animation_data[index]._property_data
+	var data = _calculate_value(index, elapsed)
+
+	data.node[data.property_name][data.key][data.subkey] = data.value
+
+func _calculate_value(index: int, elapsed: float) -> Dictionary:
+	var animation_data = _animation_data[index]
+	var property_data = _animation_data[index]._property_data
 	var node = animation_data.node
 	var value = property_data.from + (property_data.diff * elapsed)
 
-	node[property_data.property_name][property_data.key][property_data.subkey] = value
+	return {
+		node = node,
+		property_name = property_data.property_name,
+		key = property_data.key,
+		subkey = property_data.subkey if property_data.has('subkey') else null,
+		value = value
+	}
 
 func _on_animation_without_key(index: int, elapsed: float) -> void:
-	var animation_data = _current_animation_data[index]
-	var property_data = _current_animation_data[index]._property_data
+	var animation_data = _animation_data[index]
+	var property_data = _animation_data[index]._property_data
 	var node = animation_data.node
 	var is_rect2 = property_data.from is Rect2
 	var value
@@ -527,10 +540,17 @@ func _on_tween_completed(_ignore, property_name: String) -> void:
 		else:
 			callback[0].call_funcv(callback[1])
 
+	_tween_completed += 1
+
+	if _tween_completed >= _animation_data.size():
+		emit_signal("animation_completed")
+
+		stop_all()
+
 func _on_tween_started(_ignore, key) -> void:
 	var index := _get_animation_data_index(key)
 	var hide_strategy = _visibility_strategy
-	var animation_data = _current_animation_data[index]
+	var animation_data = _animation_data[index]
 
 	if animation_data.has('hide_strategy'):
 		hide_strategy = animation_data.hide_strategy

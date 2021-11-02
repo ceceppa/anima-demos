@@ -40,7 +40,7 @@ func _set_bg_rect_size(size: Vector2) -> void:
 	update()
 
 func _get_anima() -> AnimaNode:
-	var anima := Anima.begin(self)
+	var anima: AnimaNode = Anima.begin(self)
 
 	anima.then({ property = "_bg_rect_size", from = Vector2(0, 0), to = Vector2(300, 2), duration = 0.2})
 	anima.then({ property = "_bg_rect_size", to = Vector2(300, 100), duration = 0.3})

@@ -9,6 +9,7 @@ signal loop_started
 signal loop_completed
 
 var _anima_tween := AnimaTween.new()
+var _anima_backwards_tween := AnimaTween.new()
 
 var _total_animation_length := 0.0
 var _last_animation_duration := 0.0
@@ -17,7 +18,6 @@ var _timer := Timer.new()
 var _loop_times := 0
 var _loop_count := 0
 var _should_loop := false
-var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
 var _play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 var _default_duration = Anima.DEFAULT_DURATION
 var _apply_visibility_strategy_on_play := true
@@ -36,19 +36,23 @@ func _exit_tree():
 		_timer.stop()
 
 	_anima_tween.stop_all()
+	_anima_backwards_tween.stop_all()
 
 	_timer.queue_free()
 	_anima_tween.queue_free()
+	_anima_backwards_tween.queue_free()
 
 func _init_node(node: Node):
 	_timer.one_shot = true
 	_timer.autostart = false
 	_timer.connect("timeout", self, '_on_timer_timeout')
 
-	_anima_tween.connect("tween_all_completed", self, '_on_all_tween_completed')
+	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
+	_anima_backwards_tween.connect("animation_completed", self, '_on_all_tween_completed')
 
 	add_child(_timer)
 	add_child(_anima_tween)
+	add_child(_anima_backwards_tween)
 
 	if node != self:
 		node.add_child(self)
@@ -163,6 +167,7 @@ func wait(seconds: float) -> void:
 
 func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> void:
 	_anima_tween.set_visibility_strategy(strategy)
+	_anima_backwards_tween.set_visibility_strategy(strategy)
 
 	if always_apply_on_play:
 		_apply_visibility_strategy_on_play = true
@@ -170,10 +175,12 @@ func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> voi
 func clear() -> void:
 	stop()
 
-	_anima_tween.clear_animations(true)
+	_anima_tween.clear_animations()
+	_anima_backwards_tween.clear_animations()
 
 	_total_animation_length = 0.0
 	_last_animation_duration = 0.0
+
 	set_visibility_strategy(Anima.VISIBILITY.IGNORE)
 
 func play() -> void:
@@ -210,6 +217,7 @@ func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
 func stop() -> void:
 	_timer.stop()
 	_anima_tween.stop_all()
+	_anima_backwards_tween.stop_all()
 
 func loop(times: int = -1) -> void:
 	_do_loop(times, AnimaTween.PLAY_MODE.NORMAL)
@@ -263,10 +271,6 @@ func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION, spee
 	_play_speed = speed
 
 	_timer.wait_time = max(Anima.MINIMUM_DURATION, delay)
-
-	# Can't use _anima_tween.repeat
-	# as the tween_all_completed is never called :(
-	# But we need it to reset some stuff
 	_do_play()
 
 func get_length() -> float:
@@ -279,14 +283,16 @@ func _do_play() -> void:
 	if is_loop_in_circle:
 		play_mode = _current_play_mode
 
-	# Allows to reset the "relative" properties to the value of the 1st loop
-	# before doing another loop
-	printt(play_mode, is_loop_in_circle)
-	_anima_tween.reset_data(_loop_strategy, play_mode, _total_animation_length, _play_speed)
-
 	_loop_count += 1
 
-	_anima_tween.play()
+	var tween: AnimaTween = _anima_tween
+	if play_mode == AnimaTween.PLAY_MODE.BACKWARDS:
+		if not _anima_backwards_tween.has_data():
+			_anima_backwards_tween.reverse_animation(_anima_tween.get_animation_data(), _total_animation_length)
+
+		tween = _anima_backwards_tween
+
+	tween.play(_play_speed)
 
 	emit_signal("animation_started")
 	emit_signal("loop_started", _loop_count)
@@ -300,7 +306,8 @@ func _do_play() -> void:
 		_current_play_mode = AnimaTween.PLAY_MODE.NORMAL
 
 func set_loop_strategy(strategy: int):
-	_loop_strategy = strategy
+	_anima_tween.set_loop_strategy(strategy)
+	_anima_backwards_tween.set_loop_strategy(strategy)
 
 #
 # Returns the node that Anima will use when handling the animations
@@ -363,7 +370,7 @@ func _setup_node_animation(data: Dictionary) -> float:
 		if real_duration is float:
 			duration = real_duration
 	else:
-		_anima_tween.add_animation_data(data, true)
+		_anima_tween.add_animation_data(data)
 
 	return duration
 
