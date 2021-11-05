@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://addons/anima/fonts/Lato-Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://addons/anima/ui/DeleteButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/anima/ui/PropertyFromTo.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/ui/NumberEdit.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/anima/core/node.gd" type="Script" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 size = 18
@@ -28,9 +29,10 @@ flags = 0
 image = SubResource( 5 )
 size = Vector2( 16, 16 )
 
-[node name="PropertyFromTo" type="HBoxContainer"]
+[node name="PropertyFromTo" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_bottom = -570.0
 rect_pivot_offset = Vector2( -430.525, -466.635 )
 script = ExtResource( 3 )
 __meta__ = {
@@ -38,33 +40,42 @@ __meta__ = {
 }
 
 [node name="CurrentValue" type="Button" parent="."]
-margin_right = 1024.0
-margin_bottom = 600.0
+anchor_right = 1.0
+margin_bottom = 30.0
 hint_tooltip = "Click to specify a custom value"
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 1 )
 text = "current node value"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CustomValue" type="HBoxContainer" parent="."]
-visible = false
-margin_left = 340.0
-margin_right = 1024.0
-margin_bottom = 600.0
+anchor_right = 1.0
+margin_bottom = 30.0
 size_flags_horizontal = 3
-custom_constants/separation = 12
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Vector3" type="HBoxContainer" parent="CustomValue"]
 margin_right = 254.0
-margin_bottom = 600.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Vector3"]
 margin_right = 82.0
-margin_bottom = 600.0
+margin_bottom = 30.0
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/X"]
 margin_right = 24.0
-margin_bottom = 600.0
+margin_bottom = 30.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -84,16 +95,21 @@ __meta__ = {
 }
 
 [node name="x" parent="CustomValue/Vector3/X" instance=ExtResource( 4 )]
+margin_left = 24.0
+margin_right = 82.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Vector3"]
 margin_left = 86.0
 margin_right = 168.0
-margin_bottom = 600.0
+margin_bottom = 30.0
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/Y"]
 margin_right = 24.0
-margin_bottom = 600.0
+margin_bottom = 30.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -113,18 +129,21 @@ __meta__ = {
 }
 
 [node name="y" parent="CustomValue/Vector3/Y" instance=ExtResource( 4 )]
-margin_left = 360.0
-margin_right = 418.0
+margin_left = 24.0
+margin_right = 82.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
 
 [node name="Z" type="HBoxContainer" parent="CustomValue/Vector3"]
 margin_left = 172.0
 margin_right = 254.0
-margin_bottom = 600.0
+margin_bottom = 30.0
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/Z"]
 margin_right = 24.0
-margin_bottom = 600.0
+margin_bottom = 30.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -144,22 +163,27 @@ __meta__ = {
 }
 
 [node name="z" parent="CustomValue/Vector3/Z" instance=ExtResource( 4 )]
-margin_left = 274.0
-margin_right = 332.0
+margin_left = 24.0
+margin_right = 82.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
 
 [node name="Vector2" type="HBoxContainer" parent="CustomValue"]
-margin_left = 266.0
-margin_right = 434.0
-margin_bottom = 600.0
+margin_left = 258.0
+margin_right = 438.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Vector2"]
 margin_right = 82.0
-margin_bottom = 600.0
+margin_bottom = 30.0
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector2/X"]
 margin_right = 24.0
-margin_bottom = 600.0
+margin_bottom = 30.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -179,18 +203,21 @@ __meta__ = {
 }
 
 [node name="x" parent="CustomValue/Vector2/X" instance=ExtResource( 4 )]
-margin_left = 180.0
-margin_right = 238.0
+margin_left = 24.0
+margin_right = 82.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Vector2"]
 margin_left = 86.0
 margin_right = 168.0
-margin_bottom = 600.0
+margin_bottom = 30.0
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector2/Y"]
 margin_right = 24.0
-margin_bottom = 600.0
+margin_bottom = 30.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -210,29 +237,78 @@ __meta__ = {
 }
 
 [node name="y" parent="CustomValue/Vector2/Y" instance=ExtResource( 4 )]
-margin_left = 94.0
-margin_right = 152.0
+margin_left = 24.0
+margin_right = 82.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
 
 [node name="Number" parent="CustomValue" instance=ExtResource( 4 )]
+margin_left = 442.0
+margin_right = 623.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
 
 [node name="Real" parent="CustomValue" instance=ExtResource( 4 )]
-margin_left = 516.0
-margin_right = 574.0
+margin_left = 627.0
+margin_right = 807.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
 type = 1
 
 [node name="FreeText" type="LineEdit" parent="CustomValue"]
-margin_left = 586.0
-margin_right = 644.0
-margin_bottom = 600.0
+margin_left = 811.0
+margin_right = 992.0
+margin_bottom = 30.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+caret_blink = true
+caret_blink_speed = 0.5
 
 [node name="DeleteButton" parent="CustomValue" instance=ExtResource( 2 )]
-margin_left = 656.0
-margin_right = 684.0
-margin_bottom = 600.0
+margin_left = 996.0
+margin_right = 1024.0
+margin_bottom = 30.0
 hint_tooltip = "delete custom value"
 icon = SubResource( 4 )
+
+[node name="AnimaNode" type="Node" parent="."]
+script = ExtResource( 5 )
+__anima_visual_editor_data = {
+"animations_slots": [ "default" ],
+"connection_list": [  ],
+"events_slots": [  ],
+"nodes": [ {
+"data": {
+},
+"id": "AnimaNode",
+"name": "AnimaNode",
+"node_to_animate": null,
+"position": Vector2( 2209, 20 ),
+"title": "AnimaNode"
+}, {
+"data": {
+"animation_data": {
+"animation": {
+"label": "Select animation...",
+"name": ""
+},
+"type": 0
+},
+"delay": 0.0,
+"duration": 0.5
+},
+"id": "Animation",
+"name": "CurrentValue",
+"node_to_animate": "CurrentValue",
+"position": Vector2( 2762, -59 ),
+"title": "CurrentValue"
+} ],
+"scroll_offset": Vector2( 1637, -157 ),
+"zoom": 1.0
+}
 
 [connection signal="pressed" from="CurrentValue" to="." method="_on_CurrentValue_pressed"]
 [connection signal="changed" from="CustomValue/Vector3/X/x" to="." method="_on_input_changed"]

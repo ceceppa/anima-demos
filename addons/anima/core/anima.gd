@@ -71,7 +71,7 @@ const MINIMUM_DURATION := 0.000001
 var _animations_list := []
 var _custom_animations := []
 
-func begin(node: Node, name: String = 'anima'):
+func begin(node: Node, name: String = 'anima', single_shot := false):
 	var node_name = 'AnimaNode_' + name
 	var anima_node: Node
 
@@ -88,6 +88,8 @@ func begin(node: Node, name: String = 'anima'):
 		anima_node.name = node_name
 
 		anima_node._init_node(node)
+
+	anima_node.set_single_shot(single_shot)
 
 	return anima_node
 

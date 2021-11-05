@@ -35,6 +35,8 @@ func edit(node: AnimaNode) -> void:
 		_graph_edit.set_scroll_ofs(data.scroll_offset)
 		_graph_edit.set_zoom(data.zoom)
 
+	_nodes_popup.set_source_node(_anima_node)
+
 	_is_restoring_data = false
 
 func clear_all_nodes() -> void:
@@ -70,7 +72,6 @@ func _add_nodes(nodes_data: Array, animations_slots: Array, events_slots: Array)
 		node.render()
 		_graph_edit.add_child(node)
 
-
 func _connect_nodes(connection_list: Array) -> void:
 	for connection in connection_list:
 		_graph_edit.connect_node(connection.from, connection.from_port, connection.to, connection.to_port)
@@ -78,9 +79,10 @@ func _connect_nodes(connection_list: Array) -> void:
 func set_anima_node(node) -> void:
 	_anima_node = node
 
+	_maybe_show_graph_edit()
+
 func show() -> void:
 	.show()
-	_maybe_show_graph_edit()
 
 func _maybe_show_graph_edit() -> bool:
 	var is_graph_edit_visible = _anima_node is AnimaNode
@@ -88,8 +90,6 @@ func _maybe_show_graph_edit() -> bool:
 	_graph_edit.visible = is_graph_edit_visible
 	_warning_label.visible = !is_graph_edit_visible
 
-	_nodes_popup.set_source_node(_anima_node)
-	
 	return is_graph_edit_visible
 
 func _on_Right_pressed():

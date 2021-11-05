@@ -23,6 +23,7 @@ var _default_duration = Anima.DEFAULT_DURATION
 var _apply_visibility_strategy_on_play := true
 var _play_speed := 1.0
 var _current_play_mode: int = AnimaTween.PLAY_MODE.NORMAL
+var _is_single_shot := false
 
 var __do_nothing := 0.0
 export (Dictionary) var __anima_visual_editor_data
@@ -139,6 +140,18 @@ func group(group_data: Array, animation_data: Dictionary) -> void:
 
 	_total_animation_length += animation_data.duration
 
+	if not animation_data.has('items_delay'):
+		printerr('Please specify the `items_delay` value')
+
+		return
+
+	var items = group_data.size() - 1
+	var on_completed = animation_data.on_completed if animation_data.has('on_completed') else null
+	var on_started = animation_data.on_started if animation_data.has('on_started') else null
+
+	animation_data.erase('on_completed')
+	animation_data.erase('on_started')
+
 	for index in group_data.size():
 		var group_item: Dictionary = group_data[index]
 		var data = animation_data.duplicate()
@@ -152,6 +165,12 @@ func group(group_data: Array, animation_data: Dictionary) -> void:
 			data.group = group_item.group
 			delay_index += data.group.get_child_count()
 
+		if index == 0 and on_started:
+			data.on_started = on_started
+
+		if index == items and on_completed:
+			data.on_completed = on_completed
+
 		with(data)
 
 	_total_animation_length += animation_data.items_delay * (delay_index - 1)
@@ -164,6 +183,12 @@ func wait(seconds: float) -> void:
 		to = 1.0,
 		duration = seconds,
 	})
+
+func set_single_shot(single_shot: bool) -> void:
+	_is_single_shot = single_shot
+
+	if _is_single_shot:
+		_anima_tween.set_repeat(false)
 
 func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> void:
 	_anima_tween.set_visibility_strategy(strategy)
@@ -288,7 +313,7 @@ func _do_play() -> void:
 	var tween: AnimaTween = _anima_tween
 	if play_mode == AnimaTween.PLAY_MODE.BACKWARDS:
 		if not _anima_backwards_tween.has_data():
-			_anima_backwards_tween.reverse_animation(_anima_tween.get_animation_data(), _total_animation_length)
+			_anima_backwards_tween.reverse_animation(_anima_tween.get_animation_data(), _total_animation_length, _default_duration)
 
 		tween = _anima_backwards_tween
 
@@ -325,6 +350,14 @@ func set_default_duration(duration: float) -> void:
 	_default_duration = duration
 
 func _setup_animation(data: Dictionary) -> float:
+	if not data.has('duration'):
+		 data.duration = _default_duration
+
+	if not data.has('property') and not data.has('animation'):
+		printerr('Print specify the property to animate or the animation to use!')
+
+		return 0.0
+
 	if data.has('grid'):
 		if not data.has('grid_size'):
 			printerr('Please specify the grid size, or use `group` instead')
@@ -345,7 +378,7 @@ func _setup_animation(data: Dictionary) -> float:
 func _setup_node_animation(data: Dictionary) -> float:
 	var node = data.node
 	var delay = data.delay if data.has('delay') else 0.0
-	var duration = data.duration if data.has('duration') else _default_duration
+	var duration = data.duration
 
 	data._wait_time = max(0.0, data._wait_time + delay)
 
@@ -608,6 +641,13 @@ func _generate_animation_for_even_items(animation_data: Dictionary) -> float:
 	return _create_grid_animation_with(nodes, animation_data)
 
 func _create_grid_animation_with(nodes: Array, animation_data: Dictionary) -> float:
+	var total_nodes = nodes.size() - 1
+	var on_completed = animation_data.on_completed if animation_data.has('on_completed') else null
+	var on_started = animation_data.on_started if animation_data.has('on_started') else null
+
+	animation_data.erase('on_completed')
+	animation_data.erase('on_started')
+
 	for index in nodes.size():
 		var node = nodes[index]
 		var delay_index = index
@@ -619,10 +659,17 @@ func _create_grid_animation_with(nodes: Array, animation_data: Dictionary) -> fl
 		var data = animation_data.duplicate()
 
 		data.node = node
+
 		if not data.has('delay'):
 			data.delay = 0
 
 		data.delay += data.items_delay * delay_index
+
+		if index == 0 and on_started:
+			data.on_started = on_started
+
+		if index == total_nodes and on_completed:
+			data.on_completed = on_completed
 
 		with(data)
 
@@ -641,6 +688,11 @@ func _maybe_play() -> void:
 func _on_all_tween_completed() -> void:
 	emit_signal("animation_completed")
 	emit_signal("loop_completed", _loop_count)
+
+	if _is_single_shot:
+		queue_free()
+
+		return
 
 	if _should_loop:
 		_maybe_play()

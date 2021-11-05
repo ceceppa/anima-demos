@@ -6,7 +6,6 @@ extends Tween
 signal animation_completed
 
 var _animation_data := []
-var _backwards_animation_data := []
 
 # Needed to use interpolate_property
 var _fake_property: Dictionary = {}
@@ -201,7 +200,7 @@ func _add_frames(data: Dictionary, property: String, frames: Array, relative: bo
 	return _wait_time
 
 func get_animation_data() -> Array:
-	return _animation_data.duplicate(true)
+	return _animation_data
 
 func get_animations_count() -> int:
 	return _animation_data.size()
@@ -226,15 +225,13 @@ func set_visibility_strategy(strategy: int) -> void:
 func set_loop_strategy(strategy: int) -> void:
 	_loop_strategy = strategy
 
-func reverse_animation(animation_data: Array, animation_length: float):
+func reverse_animation(animation_data: Array, animation_length: float, default_duration: float):
 	clear_animations()
 
-	var data: Array = animation_data.duplicate(true)
+	var data: Array = _flip_animations(animation_data.duplicate(true), animation_length, default_duration)
 
-	data = _flip_animations(data, animation_length)
-
-	for animation_data in data:
-		add_animation_data(animation_data, PLAY_MODE.BACKWARDS)
+	for new_data in data:
+		add_animation_data(new_data, PLAY_MODE.BACKWARDS)
 
 #
 # In order to flip "nested relative" animations we need to calculate what all the
@@ -242,14 +239,14 @@ func reverse_animation(animation_data: Array, animation_length: float):
 # the correct relative positions, by also looking at the previous frames.
 # Otherwise we would end up with broken animations when animating the same property more than
 # once 
-func _flip_animations(data: Array, animation_length: float) -> Array:
+func _flip_animations(data: Array, animation_length: float, default_duration: float) -> Array:
 	var new_data := []
 	var previous_frames := {}
 	var length: float = animation_length
 
 	for animation in data:
 		var animation_data = animation.duplicate(true)
-		var duration: float = float(animation_data.duration)
+		var duration: float = float(animation_data.duration) if animation_data.has('duration') else default_duration
 		var wait_time: float = animation_data._wait_time
 		var node = animation_data.node
 		var new_wait_time: float = length - duration - wait_time
@@ -279,6 +276,21 @@ func _flip_animations(data: Array, animation_length: float) -> Array:
 			previous_frames[node][property] = animation_data.from
 
 		animation_data._wait_time = max(Anima.MINIMUM_DURATION, new_wait_time)
+
+		var old_on_completed = animation_data.on_completed if animation_data.has('on_completed') else null
+		var erase_on_completed := true
+
+		if animation_data.has('on_started'):
+			animation_data.on_completed = animation_data.on_started
+			animation_data.erase('on_started')
+
+			erase_on_completed = false
+
+		if old_on_completed:
+			animation_data.on_started = old_on_completed
+
+			if erase_on_completed:
+				animation_data.erase('on_completed')
 
 		new_data.push_back(animation_data)
 
@@ -385,11 +397,10 @@ func _cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float)
 	return s.y
 
 func _calculate_from_and_to(index: int, value: float) -> void:
-	var animation_data = _animation_data[index]
-	var node = animation_data.node
+	var animation_data: Dictionary = _animation_data[index]
+	var node: Node = animation_data.node
 
 	var do_calculate := true
-
 	var recalculate_from_to = _loop_strategy == Anima.LOOP.RECALCULATE_RELATIVE_DATA and animation_data.has('relative')
 	
 	if recalculate_from_to == false and animation_data.has('_property_data'):
@@ -397,6 +408,7 @@ func _calculate_from_and_to(index: int, value: float) -> void:
 
 	if do_calculate:
 		_do_calculate_from_to(node, animation_data)
+		_animation_data[index] = animation_data
 
 	var callback := '_on_animation_without_key'
 
@@ -530,15 +542,11 @@ func _maybe_adjust_modulate_value(animation_data: Dictionary, value):
 	return value
 
 func _on_tween_completed(_ignore, property_name: String) -> void:
+	var index := _get_animation_data_index(property_name)
 	var property_key = property_name.replace(':_fake_property:', '')
 
 	if _callbacks.has(property_key):
-		var callback = _callbacks[property_key]
-
-		if not callback is Array or callback.size() == 1:
-			callback[0].call_func()
-		else:
-			callback[0].call_funcv(callback[1])
+		_execute_callback(_callbacks[property_key])
 
 	_tween_completed += 1
 
@@ -582,12 +590,19 @@ func _on_tween_started(_ignore, key) -> void:
 
 	var should_trigger_on_started: bool = animation_data.has('_is_first_frame') and animation_data._is_first_frame and animation_data.has('on_started')
 	if should_trigger_on_started:
-		var fn: FuncRef
-		var args: Array = []
-		if animation_data.on_started is Array:
-			fn = animation_data.on_started[0]
-			args = animation_data.on_started.slice(1, -1)
-		else:
-			fn = animation_data.on_started
-			
-		fn.call_funcv(args)
+		_execute_callback(animation_data.on_started)
+
+func _execute_callback(callback) -> void:
+	var fn: FuncRef
+	var args: Array = []
+
+	if callback is Array:
+		fn = callback[0]
+		args = callback[1]
+
+		if _is_backwards_animation:
+			args = callback[2]
+	else:
+		fn = callback
+		
+	fn.call_funcv(args)

@@ -10,6 +10,7 @@ enum PORT_TYPE {
 	LABEL_ONLY,
 	ANIMATION,
 	EVENT,
+	ACTION,
 }
 
 enum NODE_TYPE {
@@ -23,6 +24,7 @@ const PORT_COLOR = {
 	PORT_TYPE.LABEL_ONLY: Color.transparent,
 	PORT_TYPE.ANIMATION: Color('#008484'),
 	PORT_TYPE.EVENT: Color('#eb8937'),
+	PORT_TYPE.ACTION: Color('#417799'),
 }
 
 const NODE_TYPE_COLOR = {

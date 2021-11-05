@@ -66,10 +66,10 @@ __anima_visual_editor_data = {
 "data": {
 "animation_data": {
 "property": {
-"from": 0.0,
+"from": 1.0,
 "name": "opacity",
 "relative": false,
-"to": 1.0,
+"to": 0.0,
 "type": 3
 },
 "type": 1
@@ -80,10 +80,10 @@ __anima_visual_editor_data = {
 "id": "Animation",
 "name": "Opening1",
 "node_to_animate": "Opening1",
-"position": Vector2( 2400, -180 ),
+"position": Vector2( 2400, -220 ),
 "title": "Opening1"
 } ],
-"scroll_offset": Vector2( 1881, -29.201 ),
+"scroll_offset": Vector2( 1881, -17.701 ),
 "zoom": 1.0
 }
 

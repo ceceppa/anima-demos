@@ -3,6 +3,8 @@ extends WindowDialog
 
 signal property_selected(property_name, property_type)
 
+onready var _line_edit: LineEdit = find_node('LineEdit')
+
 var _animatable_properties := [{name = 'opacity', type = TYPE_REAL}]
 var _anima: AnimaNode
 
@@ -17,6 +19,8 @@ func popup_centered(size: Vector2 = Vector2.ZERO) -> void:
 	
 	.popup_centered(size)
 	_anima.play()
+	
+	_line_edit.grab_focus()
 
 func populate_animatable_properties_list(source_node: Node) -> void:
 	var properties = source_node.get_property_list()

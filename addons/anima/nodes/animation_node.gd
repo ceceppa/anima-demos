@@ -45,9 +45,25 @@ func setup():
 		}
 	})
 
+	add_slot({
+		output = {
+			label = "on_started",
+			type = AnimaUI.PORT_TYPE.ACTION,
+			tooltip = tr("Execute an action when the animation starts")
+		}
+	})
+	add_slot({
+		output = {
+			label = "on_completed",
+			type = AnimaUI.PORT_TYPE.ACTION,
+			tooltip = tr("Execute an action when the animation completes")
+		}
+	})
+
 	_animation_control = ANIMATION_CONTROL.instance()
 	_animation_control.populate_animatable_properties_list(_node_to_animate)
 	_animation_control.connect("animation_updated", self, "_on_animation_selected")
+	_animation_control.connect("content_size_changed", self, "_on_animation_control_content_size_changed")
 
 	add_custom_row(_animation_control)
 
@@ -78,3 +94,19 @@ func input_connected(slot: int, from: Node, from_port: int) -> void:
 
 func _on_animation_selected() -> void:
 	emit_signal("node_updated")
+
+func _on_animation_control_content_size_changed(new_size: float) -> void:
+	var anima: AnimaNode = Anima.begin(self, 'resizeMe')
+	anima.set_single_shot(true)
+
+	var min_height := 0.0
+
+	for child in get_children():
+		if child is Control:
+			min_height += child.rect_size.y
+
+	var to := min_height + new_size
+
+	anima.then({ property = "rect_size:y", to = to, duration = 0.15, easing = Anima.EASING.EASE_OUT_BACK })
+
+	anima.play()

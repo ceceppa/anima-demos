@@ -1,0 +1,208 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://addons/anima/ui/PivotButton.gd" type="Script" id=2]
+[ext_resource path="res://addons/anima/components/Carousel.tscn" type="PackedScene" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 18
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="ButtonGroup" id=2]
+
+[sub_resource type="DynamicFont" id=3]
+size = 18
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="ButtonGroup" id=4]
+
+[sub_resource type="DynamicFont" id=5]
+size = 18
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 18
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="ButtonGroup" id=7]
+
+[sub_resource type="DynamicFont" id=8]
+size = 18
+use_filter = true
+font_data = ExtResource( 1 )
+
+[node name="PivotButton" type="VBoxContainer"]
+anchor_right = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_right = 1024.0
+margin_bottom = 28.0
+
+[node name="Button" type="Button" parent="HBoxContainer"]
+margin_right = 510.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 1 )
+toggle_mode = true
+pressed = true
+group = SubResource( 2 )
+text = "Ignore"
+
+[node name="Button2" type="Button" parent="HBoxContainer"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 1 )
+toggle_mode = true
+group = SubResource( 2 )
+text = "Point"
+
+[node name="Carousel" parent="." instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 32.0
+margin_right = 1024.0
+margin_bottom = 152.0
+index = 1
+duration = 1.0
+easing = 20
+
+[node name="Container" parent="Carousel" index="0"]
+margin_left = -1024.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 2048, 0 )
+
+[node name="Empty" type="Label" parent="Carousel/Container" index="0"]
+margin_right = 1022.0
+margin_bottom = 62.0
+rect_min_size = Vector2( 0, 62 )
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 1 )
+text = "No PIVOT point specified"
+align = 1
+valign = 1
+
+[node name="GridContainer" type="GridContainer" parent="Carousel/Container" index="1"]
+margin_left = 1026.0
+margin_right = 2048.0
+margin_bottom = 120.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_constants/vseparation = 12
+custom_constants/hseparation = 12
+columns = 3
+
+[node name="Button" type="Button" parent="Carousel/Container/GridContainer"]
+margin_right = 332.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 3 )
+group = SubResource( 4 )
+text = "Top Left"
+
+[node name="Button2" type="Button" parent="Carousel/Container/GridContainer"]
+margin_left = 344.0
+margin_right = 676.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 5 )
+group = SubResource( 4 )
+text = "Top Center"
+
+[node name="Button3" type="Button" parent="Carousel/Container/GridContainer"]
+margin_left = 688.0
+margin_right = 1020.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 6 )
+group = SubResource( 7 )
+text = "Top Right"
+
+[node name="Button4" type="Button" parent="Carousel/Container/GridContainer"]
+margin_top = 44.0
+margin_right = 332.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 1 )
+group = SubResource( 4 )
+text = "Center Left"
+
+[node name="Button5" type="Button" parent="Carousel/Container/GridContainer"]
+margin_left = 344.0
+margin_top = 44.0
+margin_right = 676.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 8 )
+group = SubResource( 4 )
+text = "Center"
+
+[node name="Button6" type="Button" parent="Carousel/Container/GridContainer"]
+margin_left = 688.0
+margin_top = 44.0
+margin_right = 1020.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 1 )
+text = "Center Right"
+
+[node name="Button7" type="Button" parent="Carousel/Container/GridContainer"]
+margin_top = 88.0
+margin_right = 332.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 1 )
+group = SubResource( 4 )
+text = "Bottom Left"
+
+[node name="Button8" type="Button" parent="Carousel/Container/GridContainer"]
+margin_left = 344.0
+margin_top = 88.0
+margin_right = 676.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 1 )
+group = SubResource( 4 )
+text = "Bottom Center"
+
+[node name="Button9" type="Button" parent="Carousel/Container/GridContainer"]
+margin_left = 688.0
+margin_top = 88.0
+margin_right = 1020.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 1 )
+group = SubResource( 4 )
+text = "Bottom Right"
+
+[editable path="Carousel"]

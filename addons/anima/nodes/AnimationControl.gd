@@ -3,6 +3,7 @@ extends MarginContainer
 
 signal animation_updated
 signal ui_resized
+signal content_size_changed(new_size)
 
 onready var _duration: LineEdit = find_node('Duration')
 onready var _delay: LineEdit = find_node('Delay')
@@ -51,3 +52,6 @@ func _on_AnimationData_value_updated():
 
 func _on_AnimationData_select_property():
 	$PropertiesWindow.popup_centered()
+
+func _on_AnimationData_content_size_changed(new_size: float):
+	emit_signal("content_size_changed", new_size)

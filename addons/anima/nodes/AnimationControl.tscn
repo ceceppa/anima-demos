@@ -89,15 +89,16 @@ size_flags_horizontal = 3
 align = 2
 
 [node name="AnimationData" parent="VBoxContainer" instance=ExtResource( 5 )]
-margin_left = 0.0
+anchor_right = 0.0
 margin_top = 94.0
 margin_right = 1008.0
-margin_bottom = 458.0
+margin_bottom = 208.0
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
 
 [node name="AnimationsWindow" parent="." instance=ExtResource( 2 )]
 
+[connection signal="content_size_changed" from="VBoxContainer/AnimationData" to="." method="_on_AnimationData_content_size_changed"]
 [connection signal="select_animation" from="VBoxContainer/AnimationData" to="." method="_on_AnimationData_select_animation"]
 [connection signal="select_property" from="VBoxContainer/AnimationData" to="." method="_on_AnimationData_select_property"]
 [connection signal="value_updated" from="VBoxContainer/AnimationData" to="." method="_on_AnimationData_value_updated"]
