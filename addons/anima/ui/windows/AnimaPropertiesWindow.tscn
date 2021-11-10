@@ -1,0 +1,79 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://addons/anima/ui/windows/AnimaPropertiesWindow.gd" type="Script" id=1]
+[ext_resource path="res://addons/anima/ui/shared/AnimaGodotUIButton.tscn" type="PackedScene" id=2]
+
+[sub_resource type="Image" id=3]
+data = {
+"data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 179, 223, 223, 223, 179, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 220, 220, 220, 59, 223, 223, 223, 201, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 200, 220, 220, 220, 59, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 222, 222, 222, 198, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 203, 223, 223, 223, 203, 223, 223, 223, 152, 223, 223, 223, 152, 222, 222, 222, 101, 222, 222, 222, 101, 219, 219, 219, 50, 219, 219, 219, 50, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 222, 222, 222, 0, 222, 222, 222, 0, 219, 219, 219, 0, 219, 219, 219, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
+"format": "RGBA8",
+"height": 16,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id=2]
+flags = 0
+flags = 0
+image = SubResource( 3 )
+size = Vector2( 16, 16 )
+
+[node name="PropertiesWindow" type="WindowDialog"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 1016.0
+margin_bottom = 592.0
+rect_pivot_offset = Vector2( 504, 292 )
+window_title = "Select the property to animate"
+script = ExtResource( 1 )
+__meta__ = {
+"_old_modulate": Color( 1, 1, 1, 0 )
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 16
+custom_constants/margin_top = 16
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 16
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 992.0
+margin_bottom = 568.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_right = 976.0
+margin_bottom = 24.0
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+margin_right = 910.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
+margin_left = 914.0
+margin_right = 976.0
+margin_bottom = 24.0
+text = "Clear"
+icon = SubResource( 2 )
+
+[node name="PropertiesTree" type="Tree" parent="MarginContainer/VBoxContainer"]
+margin_top = 28.0
+margin_right = 976.0
+margin_bottom = 552.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/HBoxContainer/LineEdit" to="." method="_on_LineEdit_text_changed"]
+[connection signal="item_activated" from="MarginContainer/VBoxContainer/PropertiesTree" to="." method="_on_PropertiesTree_item_activated"]
+[connection signal="item_double_clicked" from="MarginContainer/VBoxContainer/PropertiesTree" to="." method="_on_PropertiesTree_item_double_clicked"]

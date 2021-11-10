@@ -20,11 +20,13 @@ func _init():
 	_anima.also({ property = "opacity", from = 0, to = 1 })
 	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
 
-	_custom_title = load('res://addons/anima/ui/CustomNodeTitle.tscn').instance()
+	_custom_title = load('res://addons/anima/ui/AnimaCustomNodeTitle.tscn').instance()
 	add_child(_custom_title)
 
 	set_show_close_button(false)
 
+	_custom_title.connect("hide_content", self, "_on_hide_content")
+	_custom_title.connect("show_content", self, "_on_show_content")
 	_custom_title.connect('play_animation', self, '_on_play_animation')
 	_custom_title.connect('remove_node', self, '_on_remove_node')
 
@@ -304,3 +306,9 @@ func _on_offset_changed() -> void:
 
 func _on_remove_node() -> void:
 	remove()
+
+func _on_show_content() -> void:
+	pass
+
+func _on_hide_content() -> void:
+	pass

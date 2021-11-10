@@ -26,7 +26,6 @@ var _current_play_mode: int = AnimaTween.PLAY_MODE.NORMAL
 var _is_single_shot := false
 
 var __do_nothing := 0.0
-export (Dictionary) var __anima_visual_editor_data
 
 func _ready():
 	if _timer.get_parent() != self:
@@ -57,26 +56,6 @@ func _init_node(node: Node):
 
 	if node != self:
 		node.add_child(self)
-
-func generate_from_visual_data(node: Node, visual_data: Dictionary) -> void:
-	var data = {
-		node = node,
-		duration = visual_data.duration,
-		delay = visual_data.delay
-	}
-
-	var is_first := true
-
-	for animation in visual_data.animations:
-		if animation.type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
-			data.animation = animation.animation.name
-
-		if is_first:
-			then(data)
-		else:
-			also(data)
-
-		is_first = false
 
 func then(data: Dictionary) -> float:
 	data._wait_time = _total_animation_length
@@ -333,18 +312,6 @@ func _do_play() -> void:
 func set_loop_strategy(strategy: int):
 	_anima_tween.set_loop_strategy(strategy)
 	_anima_backwards_tween.set_loop_strategy(strategy)
-
-#
-# Returns the node that Anima will use when handling the animations
-# done via visual editor
-#
-func get_source_node() -> Node:
-	var parent = self.get_parent()
-
-	if parent == null:
-		return self
-
-	return parent
 
 func set_default_duration(duration: float) -> void:
 	_default_duration = duration

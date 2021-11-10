@@ -14,7 +14,7 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 
 	var position_frames = [
 		{ percentage = 0, from = 1000, easing_points = [0.55, 0.055, 0.675, 0.19] },
-		{ percentage = 60, to = -940, easing_points = [0.175, 0.885, 0.32, 1] },
+		{ percentage = 60, to = -940 },
 		{ percentage = 100, to = -60 },
 	]
 

@@ -46,6 +46,9 @@ texture = ExtResource( 1 )
 margin_right = 12.0
 margin_bottom = 20.0
 text = "Normal"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Button2" type="Button" parent="."]
 margin_left = 205.494

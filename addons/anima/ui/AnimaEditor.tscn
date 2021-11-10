@@ -1,9 +1,9 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://addons/anima/ui/NodesPopup.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/anima/ui/AnimaNodesPopup.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://addons/anima/fonts/Lato-Bold.ttf" type="DynamicFontData" id=3]
-[ext_resource path="res://addons/anima/ui/NodeEditor.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/anima/ui/AnimaNodeEditor.tscn" type="PackedScene" id=4]
 [ext_resource path="res://addons/anima/ui/AnimaEditor.gd" type="Script" id=5]
 
 [sub_resource type="DynamicFont" id=1]
@@ -117,7 +117,7 @@ anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 7
 custom_fonts/font = SubResource( 4 )
-text = "Please select an AnimaNode to use the Visual Editor"
+text = "Please select an AnimaVisualNode to use the Visual Editor"
 align = 1
 valign = 1
 

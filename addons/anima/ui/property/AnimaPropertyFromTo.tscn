@@ -1,0 +1,292 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://addons/anima/ui/shared/AnimaGodotUIButton.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.gd" type="Script" id=3]
+[ext_resource path="res://addons/anima/fonts/Lato-Bold.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://addons/anima/ui/shared/AnimaNumberEdit.tscn" type="PackedScene" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+size = 18
+use_filter = true
+font_data = ExtResource( 4 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.0980392, 0.113725, 0.156863, 1 )
+
+[sub_resource type="Image" id=5]
+data = {
+"data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 179, 223, 223, 223, 179, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 220, 220, 220, 59, 223, 223, 223, 201, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 200, 220, 220, 220, 59, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 222, 222, 222, 198, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 203, 223, 223, 223, 203, 223, 223, 223, 152, 223, 223, 223, 152, 222, 222, 222, 101, 222, 222, 222, 101, 219, 219, 219, 50, 219, 219, 219, 50, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 222, 222, 222, 0, 222, 222, 222, 0, 219, 219, 219, 0, 219, 219, 219, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
+"format": "RGBA8",
+"height": 16,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id=4]
+flags = 0
+flags = 0
+image = SubResource( 5 )
+size = Vector2( 16, 16 )
+
+[node name="PropertyFromTo" type="Control"]
+anchor_right = 1.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 0, 30 )
+rect_pivot_offset = Vector2( -430.525, -466.635 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CurrentValue" type="Button" parent="."]
+anchor_right = 1.0
+margin_bottom = 30.0
+rect_pivot_offset = Vector2( 512, 15 )
+hint_tooltip = "Click to specify a custom value"
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 1 )
+text = "current node value"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CustomValue" type="HBoxContainer" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+margin_bottom = 30.0
+rect_scale = Vector2( 1.5, 1.5 )
+rect_pivot_offset = Vector2( 512, 15 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Vector3" type="HBoxContainer" parent="CustomValue"]
+margin_right = 254.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="X" type="HBoxContainer" parent="CustomValue/Vector3"]
+margin_right = 82.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+custom_constants/separation = 0
+
+[node name="Panel" type="Panel" parent="CustomValue/Vector3/X"]
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 0 )
+custom_styles/panel = SubResource( 2 )
+
+[node name="Label" type="Label" parent="CustomValue/Vector3/X/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.701961, 0.564706, 0.537255, 1 )
+text = "x"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="x" parent="CustomValue/Vector3/X" instance=ExtResource( 5 )]
+margin_left = 24.0
+margin_right = 82.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
+type = 1
+
+[node name="Y" type="HBoxContainer" parent="CustomValue/Vector3"]
+margin_left = 86.0
+margin_right = 168.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+custom_constants/separation = 0
+
+[node name="Panel" type="Panel" parent="CustomValue/Vector3/Y"]
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 0 )
+custom_styles/panel = SubResource( 2 )
+
+[node name="Label" type="Label" parent="CustomValue/Vector3/Y/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.364706, 0.580392, 0.458824, 1 )
+text = "y"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="y" parent="CustomValue/Vector3/Y" instance=ExtResource( 5 )]
+margin_left = 24.0
+margin_right = 82.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
+type = 1
+
+[node name="Z" type="HBoxContainer" parent="CustomValue/Vector3"]
+margin_left = 172.0
+margin_right = 254.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+custom_constants/separation = 0
+
+[node name="Panel" type="Panel" parent="CustomValue/Vector3/Z"]
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 0 )
+custom_styles/panel = SubResource( 2 )
+
+[node name="Label" type="Label" parent="CustomValue/Vector3/Z/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.415686, 0.368627, 0.6, 1 )
+text = "z"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="z" parent="CustomValue/Vector3/Z" instance=ExtResource( 5 )]
+margin_left = 24.0
+margin_right = 82.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
+type = 1
+
+[node name="Vector2" type="HBoxContainer" parent="CustomValue"]
+margin_left = 258.0
+margin_right = 438.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="X" type="HBoxContainer" parent="CustomValue/Vector2"]
+margin_right = 88.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+custom_constants/separation = 0
+
+[node name="Panel" type="Panel" parent="CustomValue/Vector2/X"]
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 0 )
+custom_styles/panel = SubResource( 2 )
+
+[node name="Label" type="Label" parent="CustomValue/Vector2/X/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.701961, 0.564706, 0.537255, 1 )
+text = "x"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="x" parent="CustomValue/Vector2/X" instance=ExtResource( 5 )]
+margin_left = 24.0
+margin_right = 88.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
+type = 1
+
+[node name="Y" type="HBoxContainer" parent="CustomValue/Vector2"]
+margin_left = 92.0
+margin_right = 180.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+custom_constants/separation = 0
+
+[node name="Panel" type="Panel" parent="CustomValue/Vector2/Y"]
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 0 )
+custom_styles/panel = SubResource( 2 )
+
+[node name="Label" type="Label" parent="CustomValue/Vector2/Y/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.364706, 0.580392, 0.458824, 1 )
+text = "y"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="y" parent="CustomValue/Vector2/Y" instance=ExtResource( 5 )]
+margin_left = 24.0
+margin_right = 88.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
+type = 1
+
+[node name="Number" parent="CustomValue" instance=ExtResource( 5 )]
+margin_left = 442.0
+margin_right = 623.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="Real" parent="CustomValue" instance=ExtResource( 5 )]
+margin_left = 627.0
+margin_right = 807.0
+margin_bottom = 30.0
+caret_blink = true
+caret_blink_speed = 0.5
+type = 1
+
+[node name="FreeText" type="LineEdit" parent="CustomValue"]
+margin_left = 811.0
+margin_right = 992.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="DeleteButton" parent="CustomValue" instance=ExtResource( 1 )]
+margin_left = 996.0
+margin_right = 1024.0
+margin_bottom = 30.0
+hint_tooltip = "Clear custom value"
+icon = SubResource( 4 )
+icon_name = "Clear"
+
+[connection signal="pressed" from="CurrentValue" to="." method="_on_CurrentValue_pressed"]
+[connection signal="changed" from="CustomValue/Vector3/X/x" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Vector3/Y/y" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Vector3/Z/z" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Vector2/X/x" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Vector2/Y/y" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Number" to="." method="_on_input_changed"]
+[connection signal="changed" from="CustomValue/Real" to="." method="_on_input_changed"]
+[connection signal="text_changed" from="CustomValue/FreeText" to="." method="_on_FreeText_text_changed"]
+[connection signal="pressed" from="CustomValue/DeleteButton" to="." method="_on_DeleteButton_pressed"]

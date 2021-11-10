@@ -7,7 +7,7 @@ enum EditorPosition {
 }
 
 var _anima_editor: Control
-var _anima_node: AnimaNode
+var _anima_visual_node: AnimaVisualNode
 var _current_position = EditorPosition.BOTTOM
 
 func get_name():
@@ -33,7 +33,7 @@ func _exit_tree():
 		_anima_editor.queue_free()
 
 func handles(object):
-	var is_anima_node = object is AnimaNode
+	var is_anima_node = object is AnimaVisualNode
 
 	if is_anima_node:
 		_anima_editor.set_anima_node(object)
@@ -44,7 +44,7 @@ func handles(object):
 
 func edit(object):
 	print('editing anima node', object)
-	_anima_node = object
+	_anima_visual_node = object
 	_anima_editor.edit(object)
 
 func _on_anima_editor_switch_position() -> void:
@@ -63,13 +63,13 @@ func _on_anima_editor_switch_position() -> void:
 	_anima_editor.show()
 
 func _on_connections_updated(data: Dictionary) -> void:
-	var current_data: Dictionary = _anima_node.__anima_visual_editor_data
+	var current_data: Dictionary = _anima_visual_node.__anima_visual_editor_data
 	var undo_redo = get_undo_redo() # Method of EditorPlugin.
 
-	undo_redo.create_action('Updated AnimaNode')
+	undo_redo.create_action('Updated AnimaVisualNode')
 #	undo_redo.add_do_method(self, "_do_update_anima_node")
 #	undo_redo.add_undo_method(self, "_do_update_anima_node")
-	undo_redo.add_do_property(_anima_node, "__anima_visual_editor_data", data)
-	undo_redo.add_undo_property(_anima_node, "__anima_visual_editor_data", current_data)
+	undo_redo.add_do_property(_anima_visual_node, "__anima_visual_editor_data", data)
+	undo_redo.add_undo_property(_anima_visual_node, "__anima_visual_editor_data", current_data)
 	undo_redo.commit_action()
 

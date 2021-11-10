@@ -5,7 +5,7 @@ signal switch_position
 signal connections_updated(new_list)
 
 var _shader_code: String = ""
-var _anima_node: AnimaNode
+var _anima_visual_node: AnimaVisualNode
 var _node_offset: Vector2
 var _is_restoring_data := false
 
@@ -13,11 +13,11 @@ onready var _graph_edit: GraphEdit = find_node("AnimaNodeEditor")
 onready var _nodes_popup: PopupPanel = find_node("NodesPopup")
 onready var _warning_label = find_node("WarningLabel")
 
-func edit(node: AnimaNode) -> void:
+func edit(node: AnimaVisualNode) -> void:
 	_is_restoring_data = true
 
 	print_debug('editing node', node)
-	_anima_node = node
+	_anima_visual_node = node
 
 	clear_all_nodes()
 
@@ -35,7 +35,7 @@ func edit(node: AnimaNode) -> void:
 		_graph_edit.set_scroll_ofs(data.scroll_offset)
 		_graph_edit.set_zoom(data.zoom)
 
-	_nodes_popup.set_source_node(_anima_node)
+	_nodes_popup.set_source_node(_anima_visual_node)
 
 	_is_restoring_data = false
 
@@ -52,12 +52,12 @@ func _add_nodes(nodes_data: Array, animations_slots: Array, events_slots: Array)
 		var node: Node
 		
 		if node_data.id == 'AnimaNode':
-			node = _graph_edit.get_anima_start_node(_anima_node, animations_slots, events_slots)
+			node = _graph_edit.get_anima_start_node(_anima_visual_node, animations_slots, events_slots)
 		else:
-			var root = _anima_node.get_parent()
+			var root = _anima_visual_node.get_parent()
 
 			if root == null:
-				root = _anima_node
+				root = _anima_visual_node
 
 			var node_to_animate = root.find_node(node_data.node_to_animate, false)
 
@@ -77,7 +77,7 @@ func _connect_nodes(connection_list: Array) -> void:
 		_graph_edit.connect_node(connection.from, connection.from_port, connection.to, connection.to_port)
 
 func set_anima_node(node) -> void:
-	_anima_node = node
+	_anima_visual_node = node
 
 	_maybe_show_graph_edit()
 
@@ -85,7 +85,7 @@ func show() -> void:
 	.show()
 
 func _maybe_show_graph_edit() -> bool:
-	var is_graph_edit_visible = _anima_node is AnimaNode
+	var is_graph_edit_visible = _anima_visual_node is AnimaVisualNode
 	
 	_graph_edit.visible = is_graph_edit_visible
 	_warning_label.visible = !is_graph_edit_visible

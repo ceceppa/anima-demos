@@ -34,7 +34,7 @@ func _on_Button3_pressed():
 	_anima.clear()
 
 	_anima.then({ property = "x", from = 300.0, to = 500, duration = 0.3 })
-	_anima.loop_in_circle()
+	_anima.loop()
 
 func _on_Button4_pressed():
 	$Tween.resume_all()

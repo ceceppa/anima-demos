@@ -551,9 +551,9 @@ func _on_tween_completed(_ignore, property_name: String) -> void:
 	_tween_completed += 1
 
 	if _tween_completed >= _animation_data.size():
-		emit_signal("animation_completed")
-
 		stop_all()
+
+		emit_signal("animation_completed")
 
 func _on_tween_started(_ignore, key) -> void:
 	var index := _get_animation_data_index(key)

@@ -1,7 +1,7 @@
 tool
 extends "./_base_node.gd"
 
-const ANIMATION_CONTROL = preload("res://addons/anima/nodes/AnimationControl.tscn")
+const ANIMATION_CONTROL = preload("res://addons/anima/nodes/AnimaAnimationControl.tscn")
 
 var _animation_control
 var _animation_control_data: Dictionary = {}
@@ -96,9 +96,6 @@ func _on_animation_selected() -> void:
 	emit_signal("node_updated")
 
 func _on_animation_control_content_size_changed(new_size: float) -> void:
-	var anima: AnimaNode = Anima.begin(self, 'resizeMe')
-	anima.set_single_shot(true)
-
 	var min_height := 0.0
 
 	for child in get_children():
@@ -107,6 +104,22 @@ func _on_animation_control_content_size_changed(new_size: float) -> void:
 
 	var to := min_height + new_size
 
-	anima.then({ property = "rect_size:y", to = to, duration = 0.15, easing = Anima.EASING.EASE_OUT_BACK })
+	_animate_height(to)
+
+func _animate_height(to: float) -> void:
+	var anima: AnimaNode = Anima.begin(self, 'resizeMe')
+	anima.set_single_shot(true)
+
+	anima.then({ property = "rect_size:y", to = to, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK })
 
 	anima.play()
+
+func _on_show_content() -> void:
+	_animation_control.show()
+
+	_animate_height(_animation_control.rect_size.y)
+
+func _on_hide_content() -> void:
+	_animation_control.hide()
+	
+	_animate_height(0)

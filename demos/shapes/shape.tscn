@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/anima/shapes/Triangle.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/core/node.gd" type="Script" id=2]
 [ext_resource path="res://addons/anima/components/AnimaLabel.gd" type="Script" id=3]
 [ext_resource path="res://resources/fonts/Lato-Bold.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 font_data = ExtResource( 4 )
@@ -43,8 +43,21 @@ point3 = Vector2( 100, 100 )
 values_in = 1
 border_color = Color( 1, 1, 1, 1 )
 
-[node name="AnimaNode" type="Node" parent="."]
-script = ExtResource( 2 )
+[node name="Line2D" type="Line2D" parent="."]
+points = PoolVector2Array( 467.404, 386.329 )
+
+[node name="AnimaLabel" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_clip_content = true
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+font = SubResource( 1 )
+
+[node name="AnimaVisualNode" type="Node" parent="."]
+script = ExtResource( 5 )
 __anima_visual_editor_data = {
 "animations_slots": [ "default" ],
 "connection_list": [ {
@@ -60,16 +73,18 @@ __anima_visual_editor_data = {
 "id": "AnimaNode",
 "name": "AnimaNode",
 "node_to_animate": null,
-"position": Vector2( 1961, 20 ),
+"position": Vector2( 1722, 20 ),
 "title": "AnimaNode"
 }, {
 "data": {
 "animation_data": {
 "property": {
-"from": 1.0,
-"name": "opacity",
+"easing": 33,
+"from": 100.0,
+"name": "position:x",
+"pivot": [ 0, -1 ],
 "relative": false,
-"to": 0.0,
+"to": 500.0,
 "type": 3
 },
 "type": 1
@@ -80,22 +95,9 @@ __anima_visual_editor_data = {
 "id": "Animation",
 "name": "Opening1",
 "node_to_animate": "Opening1",
-"position": Vector2( 2400, -220 ),
+"position": Vector2( 2100, -280 ),
 "title": "Opening1"
 } ],
-"scroll_offset": Vector2( 1881, -17.701 ),
+"scroll_offset": Vector2( 1566, -367 ),
 "zoom": 1.0
 }
-
-[node name="Line2D" type="Line2D" parent="."]
-points = PoolVector2Array( 467.404, 386.329 )
-
-[node name="AnimaLabel" type="Control" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-rect_clip_content = true
-script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-font = SubResource( 1 )
