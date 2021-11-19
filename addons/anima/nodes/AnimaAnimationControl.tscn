@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://addons/anima/nodes/AnimaAnimationControl.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/ui/windows/AnimationsWindow.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://addons/anima/fonts/Lato-Regular.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://addons/anima/ui/AnimaAnimationData.tscn" type="PackedScene" id=5]
 [ext_resource path="res://addons/anima/ui/windows/AnimaEasingsWindow.tscn" type="PackedScene" id=6]
+[ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.tscn" type="PackedScene" id=7]
 
 [sub_resource type="DynamicFont" id=1]
 size = 18
@@ -36,11 +37,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="TimeData" type="VBoxContainer" parent="VBoxContainer"]
+margin_right = 1008.0
+margin_bottom = 102.0
+size_flags_horizontal = 3
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/TimeData"]
 margin_right = 1008.0
 margin_bottom = 4.0
 
-[node name="Label3" type="Label" parent="VBoxContainer"]
+[node name="Label3" type="Label" parent="VBoxContainer/TimeData"]
 margin_top = 8.0
 margin_right = 1008.0
 margin_bottom = 30.0
@@ -49,51 +55,51 @@ custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
 text = "Time:"
 align = 1
 
-[node name="GridContainer2" type="GridContainer" parent="VBoxContainer"]
+[node name="GridContainer2" type="GridContainer" parent="VBoxContainer/TimeData"]
 margin_top = 34.0
 margin_right = 1008.0
-margin_bottom = 90.0
+margin_bottom = 102.0
 custom_constants/vseparation = 8
 custom_constants/hseparation = 12
 columns = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/GridContainer2"]
-margin_top = 1.0
+[node name="Label" type="Label" parent="VBoxContainer/TimeData/GridContainer2"]
+margin_top = 4.0
 margin_right = 120.0
-margin_bottom = 23.0
+margin_bottom = 26.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "duration (s):"
 
-[node name="Duration" type="LineEdit" parent="VBoxContainer/GridContainer2"]
+[node name="Duration" parent="VBoxContainer/TimeData/GridContainer2" instance=ExtResource( 7 )]
+anchor_right = 0.0
 margin_left = 132.0
 margin_right = 1008.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-align = 2
+label = "parent value"
+type = 3
 
-[node name="Label2" type="Label" parent="VBoxContainer/GridContainer2"]
-margin_top = 33.0
+[node name="Label2" type="Label" parent="VBoxContainer/TimeData/GridContainer2"]
+margin_top = 42.0
 margin_right = 120.0
-margin_bottom = 55.0
+margin_bottom = 64.0
 rect_min_size = Vector2( 120, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "delay (s):"
 
-[node name="Delay" type="LineEdit" parent="VBoxContainer/GridContainer2"]
+[node name="Delay" parent="VBoxContainer/TimeData/GridContainer2" instance=ExtResource( 7 )]
+anchor_right = 0.0
 margin_left = 132.0
-margin_top = 32.0
+margin_top = 38.0
 margin_right = 1008.0
-margin_bottom = 56.0
-hint_tooltip = "Use a negative value to anticipate the start time of this animation."
-size_flags_horizontal = 3
-align = 2
+margin_bottom = 68.0
+label = "parent value"
+type = 3
 
 [node name="AnimationData" parent="VBoxContainer" instance=ExtResource( 5 )]
 anchor_right = 0.0
-margin_top = 94.0
+margin_top = 106.0
 margin_right = 1008.0
-margin_bottom = 208.0
+margin_bottom = 220.0
 
 [node name="PropertiesWindow" parent="." instance=ExtResource( 3 )]
 
@@ -110,6 +116,8 @@ margin_right = 1016.0
 margin_bottom = 592.0
 rect_pivot_offset = Vector2( 504, 292 )
 
+[connection signal="vale_updated" from="VBoxContainer/TimeData/GridContainer2/Duration" to="." method="_on_Duration_vale_updated"]
+[connection signal="vale_updated" from="VBoxContainer/TimeData/GridContainer2/Delay" to="." method="_on_Delay_vale_updated"]
 [connection signal="content_size_changed" from="VBoxContainer/AnimationData" to="." method="_on_AnimationData_content_size_changed"]
 [connection signal="select_animation" from="VBoxContainer/AnimationData" to="." method="_on_AnimationData_select_animation"]
 [connection signal="select_easing" from="VBoxContainer/AnimationData" to="." method="_on_AnimationData_select_easing"]

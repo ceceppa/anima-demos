@@ -72,8 +72,13 @@ func _add_nodes(nodes_data: Array, animations_slots: Array, events_slots: Array)
 		node.render()
 		_graph_edit.add_child(node)
 
+		AnimaUI.debug(self, "node added")
+
 func _connect_nodes(connection_list: Array) -> void:
+	AnimaUI.debug(self, "connecting nodes", connection_list)
+
 	for connection in connection_list:
+		AnimaUI.debug(self, "connecting node", connection)
 		_graph_edit.connect_node(connection.from, connection.from_port, connection.to, connection.to_port)
 
 func set_anima_node(node) -> void:
@@ -87,8 +92,9 @@ func show() -> void:
 func _maybe_show_graph_edit() -> bool:
 	var is_graph_edit_visible = _anima_visual_node is AnimaVisualNode
 	
-	_graph_edit.visible = is_graph_edit_visible
-	_warning_label.visible = !is_graph_edit_visible
+	if _graph_edit:
+		_graph_edit.visible = is_graph_edit_visible
+		_warning_label.visible = !is_graph_edit_visible
 
 	return is_graph_edit_visible
 

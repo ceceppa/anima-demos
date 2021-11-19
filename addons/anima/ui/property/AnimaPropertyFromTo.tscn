@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://addons/anima/ui/shared/AnimaGodotUIButton.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/anima/components/Carousel.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/anima/ui/property/AnimaPropertyFromTo.gd" type="Script" id=3]
 [ext_resource path="res://addons/anima/fonts/Lato-Bold.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://addons/anima/ui/shared/AnimaNumberEdit.tscn" type="PackedScene" id=5]
@@ -13,7 +14,37 @@ font_data = ExtResource( 4 )
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.0980392, 0.113725, 0.156863, 1 )
 
-[sub_resource type="Image" id=5]
+[sub_resource type="Image" id=9]
+data = {
+"data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 85, 212, 212, 0, 96, 217, 243, 0, 96, 217, 243, 0, 97, 218, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 218, 244, 0, 97, 218, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 218, 244, 0, 97, 218, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 85, 212, 212, 6, 96, 217, 243, 135, 96, 217, 243, 229, 97, 218, 244, 255, 97, 218, 244, 0, 97, 218, 244, 0, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 218, 244, 0, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 0, 0, 0, 0, 95, 216, 243, 133, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 97, 218, 244, 0, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 218, 244, 0, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 97, 218, 244, 0, 96, 217, 243, 225, 97, 218, 244, 255, 94, 214, 240, 70, 95, 216, 242, 0, 0, 0, 0, 0, 97, 218, 244, 0, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 218, 244, 0, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 96, 216, 242, 0, 97, 218, 244, 0, 0, 0, 0, 0, 97, 218, 244, 0, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 218, 244, 0, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 97, 218, 244, 0, 97, 218, 244, 255, 97, 218, 244, 255, 95, 216, 242, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 218, 244, 0, 97, 218, 244, 255, 97, 218, 244, 255, 96, 216, 242, 0, 97, 218, 244, 0, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 96, 217, 243, 0, 96, 217, 243, 230, 97, 218, 244, 255, 94, 214, 240, 70, 95, 216, 242, 0, 0, 0, 0, 0, 96, 217, 243, 0, 96, 217, 243, 230, 97, 218, 244, 255, 94, 214, 240, 70, 95, 216, 242, 0, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 97, 218, 244, 0, 0, 0, 0, 0, 95, 216, 243, 0, 95, 216, 243, 134, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 95, 216, 243, 0, 95, 216, 243, 134, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 255, 97, 218, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 182, 218, 0, 72, 182, 218, 7, 96, 217, 243, 135, 96, 217, 243, 229, 97, 218, 244, 255, 97, 218, 244, 0, 72, 182, 218, 0, 72, 182, 218, 7, 96, 217, 243, 135, 96, 217, 243, 229, 97, 218, 244, 255, 97, 218, 244, 0, 97, 218, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 182, 218, 0, 96, 217, 243, 0, 96, 217, 243, 0, 97, 218, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 182, 218, 0, 96, 217, 243, 0, 96, 217, 243, 0, 97, 218, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
+"format": "RGBA8",
+"height": 12,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id=4]
+flags = 0
+flags = 0
+image = SubResource( 9 )
+size = Vector2( 16, 12 )
+
+[sub_resource type="Image" id=10]
+data = {
+"data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 222, 222, 222, 0, 221, 221, 221, 99, 223, 223, 223, 178, 223, 223, 223, 229, 223, 223, 223, 229, 223, 223, 223, 178, 221, 221, 221, 99, 222, 222, 222, 0, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 24, 223, 223, 223, 186, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 186, 223, 223, 223, 24, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 223, 223, 223, 186, 224, 224, 224, 255, 223, 223, 223, 226, 221, 221, 221, 84, 214, 214, 214, 25, 214, 214, 214, 25, 222, 222, 222, 85, 223, 223, 223, 226, 224, 224, 224, 255, 223, 223, 223, 186, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 95, 224, 224, 224, 255, 223, 223, 223, 226, 212, 212, 212, 18, 216, 216, 216, 0, 214, 214, 214, 0, 214, 214, 214, 0, 217, 217, 217, 0, 212, 212, 212, 18, 223, 223, 223, 226, 224, 224, 224, 255, 222, 222, 222, 95, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 175, 224, 224, 224, 255, 223, 223, 223, 88, 217, 217, 217, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 217, 217, 217, 0, 223, 223, 223, 88, 224, 224, 224, 255, 222, 222, 222, 175, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 225, 224, 224, 224, 255, 214, 214, 214, 25, 214, 214, 214, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 214, 214, 214, 0, 214, 214, 214, 25, 224, 224, 224, 255, 223, 223, 223, 225, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 230, 224, 224, 224, 255, 216, 216, 216, 20, 216, 216, 216, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 214, 214, 214, 0, 214, 214, 214, 25, 224, 224, 224, 255, 223, 223, 223, 225, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 180, 224, 224, 224, 255, 222, 222, 222, 85, 217, 217, 217, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 217, 217, 217, 0, 222, 222, 222, 86, 224, 224, 224, 255, 223, 223, 223, 179, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 98, 224, 224, 224, 255, 223, 223, 223, 225, 212, 212, 212, 18, 216, 216, 216, 0, 214, 214, 214, 0, 214, 214, 214, 0, 216, 216, 216, 0, 212, 212, 212, 18, 223, 223, 223, 225, 224, 224, 224, 255, 223, 223, 223, 97, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 187, 224, 224, 224, 255, 223, 223, 223, 226, 221, 221, 221, 84, 214, 214, 214, 25, 214, 214, 214, 25, 221, 221, 221, 84, 223, 223, 223, 226, 224, 224, 224, 255, 223, 223, 223, 187, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 214, 214, 214, 0, 214, 214, 214, 25, 223, 223, 223, 186, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 223, 223, 223, 186, 223, 223, 223, 24, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 214, 214, 214, 0, 222, 222, 222, 0, 221, 221, 221, 100, 223, 223, 223, 178, 223, 223, 223, 229, 223, 223, 223, 229, 223, 223, 223, 178, 221, 221, 221, 100, 222, 222, 222, 0, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 221, 221, 221, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
+"format": "RGBA8",
+"height": 16,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id=6]
+flags = 0
+flags = 0
+image = SubResource( 10 )
+size = Vector2( 16, 16 )
+
+[sub_resource type="Image" id=11]
 data = {
 "data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 179, 223, 223, 223, 179, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 220, 0, 220, 220, 220, 59, 223, 223, 223, 201, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 200, 220, 220, 220, 59, 220, 220, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 222, 222, 0, 222, 222, 222, 199, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 222, 222, 222, 198, 222, 222, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 254, 223, 223, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 254, 223, 223, 223, 203, 223, 223, 223, 203, 223, 223, 223, 152, 223, 223, 223, 152, 222, 222, 222, 101, 222, 222, 222, 101, 219, 219, 219, 50, 219, 219, 219, 50, 221, 221, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 223, 223, 223, 0, 222, 222, 222, 0, 222, 222, 222, 0, 219, 219, 219, 0, 219, 219, 219, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
 "format": "RGBA8",
@@ -22,10 +53,10 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id=4]
+[sub_resource type="ImageTexture" id=8]
 flags = 0
 flags = 0
-image = SubResource( 5 )
+image = SubResource( 11 )
 size = Vector2( 16, 16 )
 
 [node name="PropertyFromTo" type="Control"]
@@ -39,6 +70,7 @@ script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+type = 0
 
 [node name="CurrentValue" type="Button" parent="."]
 anchor_right = 1.0
@@ -47,7 +79,7 @@ rect_pivot_offset = Vector2( 512, 15 )
 hint_tooltip = "Click to specify a custom value"
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 1 )
-text = "current node value"
+text = "current value"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -65,8 +97,9 @@ __meta__ = {
 }
 
 [node name="Vector3" type="HBoxContainer" parent="CustomValue"]
-margin_right = 254.0
-margin_bottom = 30.0
+visible = false
+margin_right = 478.0
+margin_bottom = 32.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -74,14 +107,14 @@ __meta__ = {
 }
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Vector3"]
-margin_right = 82.0
-margin_bottom = 30.0
+margin_right = 156.0
+margin_bottom = 32.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/X"]
 margin_right = 24.0
-margin_bottom = 30.0
+margin_bottom = 32.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -100,22 +133,21 @@ __meta__ = {
 
 [node name="x" parent="CustomValue/Vector3/X" instance=ExtResource( 5 )]
 margin_left = 24.0
-margin_right = 82.0
-margin_bottom = 30.0
+margin_right = 156.0
+margin_bottom = 32.0
 caret_blink = true
 caret_blink_speed = 0.5
-type = 1
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Vector3"]
-margin_left = 86.0
-margin_right = 168.0
-margin_bottom = 30.0
+margin_left = 160.0
+margin_right = 317.0
+margin_bottom = 32.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/Y"]
 margin_right = 24.0
-margin_bottom = 30.0
+margin_bottom = 32.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -134,22 +166,21 @@ __meta__ = {
 
 [node name="y" parent="CustomValue/Vector3/Y" instance=ExtResource( 5 )]
 margin_left = 24.0
-margin_right = 82.0
-margin_bottom = 30.0
+margin_right = 157.0
+margin_bottom = 32.0
 caret_blink = true
 caret_blink_speed = 0.5
-type = 1
 
 [node name="Z" type="HBoxContainer" parent="CustomValue/Vector3"]
-margin_left = 172.0
-margin_right = 254.0
-margin_bottom = 30.0
+margin_left = 321.0
+margin_right = 478.0
+margin_bottom = 32.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector3/Z"]
 margin_right = 24.0
-margin_bottom = 30.0
+margin_bottom = 32.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -168,28 +199,28 @@ __meta__ = {
 
 [node name="z" parent="CustomValue/Vector3/Z" instance=ExtResource( 5 )]
 margin_left = 24.0
-margin_right = 82.0
-margin_bottom = 30.0
+margin_right = 157.0
+margin_bottom = 32.0
 caret_blink = true
 caret_blink_speed = 0.5
-type = 1
 
 [node name="Vector2" type="HBoxContainer" parent="CustomValue"]
-margin_left = 258.0
-margin_right = 438.0
-margin_bottom = 30.0
+visible = false
+margin_left = 222.0
+margin_right = 411.0
+margin_bottom = 32.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="X" type="HBoxContainer" parent="CustomValue/Vector2"]
-margin_right = 88.0
-margin_bottom = 30.0
+margin_right = 92.0
+margin_bottom = 32.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector2/X"]
 margin_right = 24.0
-margin_bottom = 30.0
+margin_bottom = 32.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -208,22 +239,21 @@ __meta__ = {
 
 [node name="x" parent="CustomValue/Vector2/X" instance=ExtResource( 5 )]
 margin_left = 24.0
-margin_right = 88.0
-margin_bottom = 30.0
+margin_right = 92.0
+margin_bottom = 32.0
 caret_blink = true
 caret_blink_speed = 0.5
-type = 1
 
 [node name="Y" type="HBoxContainer" parent="CustomValue/Vector2"]
-margin_left = 92.0
-margin_right = 180.0
-margin_bottom = 30.0
+margin_left = 96.0
+margin_right = 189.0
+margin_bottom = 32.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
 [node name="Panel" type="Panel" parent="CustomValue/Vector2/Y"]
 margin_right = 24.0
-margin_bottom = 30.0
+margin_bottom = 32.0
 rect_min_size = Vector2( 24, 0 )
 custom_styles/panel = SubResource( 2 )
 
@@ -242,29 +272,82 @@ __meta__ = {
 
 [node name="y" parent="CustomValue/Vector2/Y" instance=ExtResource( 5 )]
 margin_left = 24.0
-margin_right = 88.0
-margin_bottom = 30.0
+margin_right = 93.0
+margin_bottom = 32.0
 caret_blink = true
 caret_blink_speed = 0.5
-type = 1
+
+[node name="Carousel" parent="CustomValue" instance=ExtResource( 2 )]
+margin_right = 992.0
+margin_bottom = 32.0
+
+[node name="Controls" parent="CustomValue/Carousel" index="0"]
+margin_right = 992.0
+margin_bottom = 28.0
+
+[node name="GodotUIButton" parent="CustomValue/Carousel/Controls" index="0" instance=ExtResource( 1 )]
+margin_right = 75.0
+margin_bottom = 28.0
+text = "Value"
+icon = SubResource( 4 )
+icon_name = "float"
+
+[node name="GodotUIButton2" parent="CustomValue/Carousel/Controls" index="1" instance=ExtResource( 1 )]
+margin_left = 79.0
+margin_right = 174.0
+margin_bottom = 28.0
+hint_tooltip = "Set value as relative to a node property. For example:
+
+\":size:x\"
+
+uses the node width as value when the animation is played"
+text = "Relative"
+icon = SubResource( 6 )
+icon_name = "Node"
+
+[node name="Wrapper" parent="CustomValue/Carousel" index="1"]
+margin_top = 32.0
+margin_right = 992.0
+margin_bottom = 32.0
+
+[node name="Container" parent="CustomValue/Carousel/Wrapper" index="0"]
+margin_right = 1984.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 1984, 0 )
+
+[node name="NumberEdit" parent="CustomValue/Carousel/Wrapper/Container" index="0" instance=ExtResource( 5 )]
+margin_right = 990.0
+margin_bottom = 32.0
+size_flags_vertical = 0
+
+[node name="NumberEdit2" parent="CustomValue/Carousel/Wrapper/Container" index="1" instance=ExtResource( 5 )]
+margin_left = 994.0
+margin_right = 1984.0
+margin_bottom = 32.0
+size_flags_vertical = 0
+type = 2
 
 [node name="Number" parent="CustomValue" instance=ExtResource( 5 )]
-margin_left = 442.0
-margin_right = 623.0
-margin_bottom = 30.0
+visible = false
+margin_right = 478.0
+margin_bottom = 32.0
+align = 2
 caret_blink = true
 caret_blink_speed = 0.5
 
 [node name="Real" parent="CustomValue" instance=ExtResource( 5 )]
-margin_left = 627.0
-margin_right = 807.0
-margin_bottom = 30.0
+visible = false
+margin_left = 609.0
+margin_right = 798.0
+margin_bottom = 32.0
+text = "0"
+align = 2
 caret_blink = true
 caret_blink_speed = 0.5
-type = 1
 
 [node name="FreeText" type="LineEdit" parent="CustomValue"]
-margin_left = 811.0
+visible = false
+margin_left = 498.0
 margin_right = 992.0
 margin_bottom = 30.0
 size_flags_horizontal = 3
@@ -272,12 +355,12 @@ size_flags_vertical = 3
 caret_blink = true
 caret_blink_speed = 0.5
 
-[node name="DeleteButton" parent="CustomValue" instance=ExtResource( 1 )]
+[node name="ClearButton" parent="CustomValue" instance=ExtResource( 1 )]
 margin_left = 996.0
 margin_right = 1024.0
-margin_bottom = 30.0
+margin_bottom = 32.0
 hint_tooltip = "Clear custom value"
-icon = SubResource( 4 )
+icon = SubResource( 8 )
 icon_name = "Clear"
 
 [connection signal="pressed" from="CurrentValue" to="." method="_on_CurrentValue_pressed"]
@@ -289,4 +372,6 @@ icon_name = "Clear"
 [connection signal="changed" from="CustomValue/Number" to="." method="_on_input_changed"]
 [connection signal="changed" from="CustomValue/Real" to="." method="_on_input_changed"]
 [connection signal="text_changed" from="CustomValue/FreeText" to="." method="_on_FreeText_text_changed"]
-[connection signal="pressed" from="CustomValue/DeleteButton" to="." method="_on_DeleteButton_pressed"]
+[connection signal="pressed" from="CustomValue/ClearButton" to="." method="_on_ClearButton_pressed"]
+
+[editable path="CustomValue/Carousel"]

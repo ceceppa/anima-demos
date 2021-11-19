@@ -108,6 +108,7 @@ pressed_icon_name = "GuiVisibilityHidden"
 margin_left = 138.0
 margin_right = 166.0
 margin_bottom = 24.0
+hint_tooltip = "Play animation"
 icon = SubResource( 5 )
 icon_name = "Play"
 
@@ -115,8 +116,10 @@ icon_name = "Play"
 margin_left = 170.0
 margin_right = 198.0
 margin_bottom = 24.0
+hint_tooltip = "Remove animation"
 icon = SubResource( 7 )
 icon_name = "Close"
 
 [connection signal="pressed" from="Container/CollapseButton" to="." method="_on_CollapseButton_pressed"]
+[connection signal="pressed" from="Container/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="Container/RemoveButton" to="." method="_on_RemoveButton_pressed"]

@@ -69,7 +69,7 @@ const CONNECTED_LABEL_COLOR = Color.white
 # Used to get Godot Icons
 var _godot_base_control: Control
 
-const _is_debug_enabled := false
+const _is_debug_enabled := true
 
 const MAPPED_ICONS := {
 	TYPE_REAL: 'float',
@@ -228,7 +228,7 @@ func get_node_icon(node: Node) -> Texture:
 
 	return node_icon
 
-func debug(caller: Node, v1: String, v2 = null, v3 = null) -> void:
+func debug(caller: Node, v1: String, v2 = "", v3 = "") -> void:
 	if not _is_debug_enabled:
 		return
 

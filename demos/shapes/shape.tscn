@@ -18,6 +18,7 @@ __meta__ = {
 [node name="Opening1" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_right = -0.00195312
 margin_bottom = -0.000488281
 rect_pivot_offset = Vector2( 512, 300 )
 script = ExtResource( 1 )
@@ -73,31 +74,31 @@ __anima_visual_editor_data = {
 "id": "AnimaNode",
 "name": "AnimaNode",
 "node_to_animate": null,
-"position": Vector2( 1722, 20 ),
+"position": Vector2( 1623, 20 ),
 "title": "AnimaNode"
 }, {
 "data": {
 "animation_data": {
 "property": {
-"easing": 33,
-"from": 100.0,
+"easing": null,
+"from": 12.0,
 "name": "position:x",
 "pivot": [ 0, -1 ],
 "relative": false,
-"to": 500.0,
+"to": 0.0,
 "type": 3
 },
 "type": 1
 },
 "delay": 0.0,
-"duration": 0.5
+"duration": 0.7
 },
 "id": "Animation",
 "name": "Opening1",
 "node_to_animate": "Opening1",
-"position": Vector2( 2100, -280 ),
+"position": Vector2( 2000, -200 ),
 "title": "Opening1"
 } ],
-"scroll_offset": Vector2( 1566, -367 ),
+"scroll_offset": Vector2( 1577, -65 ),
 "zoom": 1.0
 }

@@ -4,12 +4,15 @@ extends "./AnimaBaseWindow.gd"
 signal property_selected(property_name, property_type)
 
 onready var _line_edit: LineEdit = find_node('LineEdit')
+onready var _nodes_list: VBoxContainer = find_node('AnimaNodesList')
 
 var _animatable_properties := [{name = 'opacity', type = TYPE_REAL}]
 
+func _ready():
+	_nodes_list.hide()
+
 func _on_popup_visible() -> void:
 	_line_edit.grab_focus()
-	pass
 
 func populate_animatable_properties_list(source_node: Node) -> void:
 	var properties = source_node.get_property_list()

@@ -16,7 +16,7 @@ func get_source_node() -> Node:
 
 	return parent
 
-func generate_from_visual_data(node: Node, visual_data: Dictionary) -> void:
+func play_animation_from_visual_data(node: Node, visual_data: Dictionary) -> void:
 	var anima: AnimaNode = Anima.begin(node)
 	anima.set_single_shot(true)
 

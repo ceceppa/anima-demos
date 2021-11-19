@@ -281,22 +281,7 @@ func get_data() -> Dictionary:
 	return {}
 
 func _on_play_animation():
-	if _node_to_animate == null:
-		printerr('No _node_to_animate defined!')
-
-		return
-
-	var animation_data = get_data()
-	print('playing animation')
-
-	var anima = Anima.begin(self)
-	anima.generate_from_visual_data(_node_to_animate, animation_data)
-
-	anima.play()
-	
-	yield(anima, "animation_completed")
-
-	anima.queue_free()
+	pass
 
 func _on_offset_changed() -> void:
 	if offset != _old_offset:

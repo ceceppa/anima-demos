@@ -16,6 +16,7 @@ func _init():
 		min_size = Vector2(350, 0)
 	})
 
+
 func setup():
 	add_slot({
 		input = {
@@ -71,6 +72,8 @@ func _after_render() -> void:
 	_animation_control.restore_data(_animation_control_data)
 	
 	._after_render()
+	
+	AnimaUI.debug(self, '_after_render')
 
 func set_node_to_animate(node: Node) -> void:
 	AnimaUI.debug(self, 'set node to animate', node)
@@ -87,10 +90,23 @@ func restore_data(data: Dictionary) -> void:
 	_animation_control_data = data
 
 func get_data() -> Dictionary:
-	return _animation_control.get_animations_data()
+	return _animation_control.get_animation_data()
 
-func input_connected(slot: int, from: Node, from_port: int) -> void:
-	.input_connected(slot, from, from_port)
+func connect_input(slot: int, from: Node, from_slot: int) -> void:
+	.connect_input(slot, from, from_slot)
+
+	# also?
+	if from_slot == 2:
+		var time_data: VBoxContainer = find_node('TimeData', true, false)
+		var duration = time_data.find_node('Duration')
+		var delay = time_data.find_node('Delay')
+		var data: Dictionary = from.get_data()
+
+		duration.clear_value()
+		duration.set_can_clear_custom_value(true)
+
+		delay.clear_value()
+		delay.set_can_clear_custom_value(true)
 
 func _on_animation_selected() -> void:
 	emit_signal("node_updated")
@@ -123,3 +139,58 @@ func _on_hide_content() -> void:
 	_animation_control.hide()
 	
 	_animate_height(0)
+
+func _on_play_animation() -> void:
+	var visual_data: Dictionary = get_data()
+	var animation_data: Dictionary = visual_data.animation_data
+
+	var anima: AnimaNode = Anima.begin(self)
+	anima.set_single_shot(true)
+
+	var anima_data = {
+		node = _node_to_animate,
+		duration = visual_data.duration,
+		delay = visual_data.delay
+	}
+
+	var initial_value = null
+
+	if animation_data.type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
+		anima_data.animation = animation_data.animation.name
+	else:
+		initial_value = AnimaNodesProperties.get_property_initial_value(_node_to_animate, animation_data.property.name)
+
+		for key in animation_data.property:
+			if key == 'name':
+				anima_data.property = animation_data.property.name
+			elif key == 'pivot':
+				var pivot = animation_data.property.pivot
+
+				if pivot[0] == 1:
+					anima_data.pivot = pivot[1]
+			else:
+				var value = animation_data.property[key]
+				
+				if value != null:
+					anima_data[key] = animation_data.property[key]
+
+	anima.then(anima_data)
+	anima.play()
+
+	yield(anima, "animation_completed")
+
+	# reset values
+	if initial_value == null:
+		return
+
+	var mapped_property = AnimaNodesProperties.map_property_to_godot_property(_node_to_animate, animation_data.property.name)
+
+
+	if mapped_property.has('callback'):
+		mapped_property.callback.call_func(mapped_property.param, initial_value)
+	elif mapped_property.has('subkey'):
+		_node_to_animate[mapped_property.property_name][mapped_property.key][mapped_property.subkey] = initial_value
+	elif mapped_property.has('key'):
+		_node_to_animate[mapped_property.property_name][mapped_property.key] = initial_value
+	else:
+		_node_to_animate[mapped_property.property_name] = initial_value

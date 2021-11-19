@@ -53,12 +53,18 @@ func get_animation_data() -> Dictionary:
 		data.property = {
 			name = _property_button.text,
 			type = _property_type,
-			from = _from_value.get_value(),
-			to = _to_value.get_value(),
 			relative = _relative_check.pressed,
 			pivot = _pivot_button.get_value(),
 			easing = _easing_button.get_meta('_value')
 		}
+
+		var from = _from_value.get_value()
+		var to = _to_value.get_value()
+
+		if from != null:
+			data.property.from = from
+		if to != null:
+			data.property.to = to
 
 	return data
 
@@ -77,21 +83,32 @@ func restore_data(data: Dictionary) -> void:
 		_animation_button.text = data.animation.label
 		_animation_name = data.animation.name
 
+		AnimaUI.debug(self, "it's an animation")
+
 		return
 
 	_property_button.text = data.property.name
 	_property_type = data.property.type
 	_from_value.set_type(data.property.type)
 	_to_value.set_type(data.property.type)
-	_from_value.set_value(data.property.from)
-	_to_value.set_value(data.property.to)
+
+	if data.property.has('from'):
+		_from_value.set_value(data.property.from)
+
+	if data.property.has('to'):
+		_to_value.set_value(data.property.to)
+
 	_relative_check.pressed = data.property.relative
 	_pivot_button.set_value(data.property.pivot)
-	set_easing(data.property.easing)
+
+	if data.property.easing != null:
+		set_easing(data.property.easing)
 
 	if _property_type_button.pressed:
 		_on_PropertyTypeButton_pressed()
-		
+
+	AnimaUI.debug(self, 'restoring animation completed')
+
 func set_animation_data(label: String, name: String) -> void:
 	_animation_button.text = label
 	_animation_name = name
@@ -106,8 +123,8 @@ func set_property_to_animate(name: String, type: int) -> void:
 	wrapper.margin_right = rect_size.x
 	wrapper.rect_size.x = rect_size.x
 
-	_from_value.set_type(type)
-	_to_value.set_type(type)
+	_from_value.set_type(TYPE_STRING)
+	_to_value.set_type(TYPE_STRING)
 
 	_on_PropertyTypeButton_pressed()
 

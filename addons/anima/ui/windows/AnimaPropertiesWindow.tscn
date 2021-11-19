@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/anima/ui/windows/AnimaPropertiesWindow.gd" type="Script" id=1]
 [ext_resource path="res://addons/anima/ui/shared/AnimaGodotUIButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/anima/ui/shared/AnimaNodesList.tscn" type="PackedScene" id=3]
 
 [sub_resource type="Image" id=3]
 data = {
@@ -42,38 +43,48 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 margin_left = 16.0
 margin_top = 16.0
 margin_right = 992.0
 margin_bottom = 568.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_right = 976.0
-margin_bottom = 24.0
+[node name="AnimaNodesList" parent="MarginContainer/HBoxContainer" instance=ExtResource( 3 )]
+rect_min_size = Vector2( 260, 0 )
 
-[node name="LineEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-margin_right = 910.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-
-[node name="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 914.0
-margin_right = 976.0
-margin_bottom = 24.0
-text = "Clear"
-icon = SubResource( 2 )
-
-[node name="PropertiesTree" type="Tree" parent="MarginContainer/VBoxContainer"]
-margin_top = 28.0
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+margin_left = 264.0
 margin_right = 976.0
 margin_bottom = 552.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/HBoxContainer/LineEdit" to="." method="_on_LineEdit_text_changed"]
-[connection signal="item_activated" from="MarginContainer/VBoxContainer/PropertiesTree" to="." method="_on_PropertiesTree_item_activated"]
-[connection signal="item_double_clicked" from="MarginContainer/VBoxContainer/PropertiesTree" to="." method="_on_PropertiesTree_item_double_clicked"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+margin_right = 712.0
+margin_bottom = 28.0
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_right = 636.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+
+[node name="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
+margin_left = 640.0
+margin_right = 712.0
+margin_bottom = 28.0
+text = "Clear"
+icon = SubResource( 2 )
+
+[node name="PropertiesTree" type="Tree" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+margin_top = 32.0
+margin_right = 712.0
+margin_bottom = 552.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="text_changed" from="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/LineEdit" to="." method="_on_LineEdit_text_changed"]
+[connection signal="item_activated" from="MarginContainer/HBoxContainer/VBoxContainer/PropertiesTree" to="." method="_on_PropertiesTree_item_activated"]
+[connection signal="item_double_clicked" from="MarginContainer/HBoxContainer/VBoxContainer/PropertiesTree" to="." method="_on_PropertiesTree_item_double_clicked"]

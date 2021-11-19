@@ -5,19 +5,20 @@ signal animation_updated
 signal ui_resized
 signal content_size_changed(new_size)
 
-onready var _duration: LineEdit = find_node('Duration')
-onready var _delay: LineEdit = find_node('Delay')
+onready var _duration: Control = find_node('Duration')
+onready var _delay: Control = find_node('Delay')
 onready var _animations_container: VBoxContainer = find_node('AnimationsContainer')
 onready var _animation_data: VBoxContainer = find_node('AnimationData')
 
-func get_animations_data() -> Dictionary:
-	var duration =  _duration.text if _duration else Anima.DEFAULT_DURATION
-	var delay =  _delay.text if _delay else 0.0
+func get_animation_data() -> Dictionary:
 	var animation_data = _animation_data.get_animation_data() if _animation_data else []
+	
+	_duration = find_node('Duration')
+	_delay = find_node('Delay')
 
 	var data := {
-		duration = float(duration),
-		delay = float(delay),
+		duration = _duration.get_value(),
+		delay = _delay.get_value(),
 		animation_data = animation_data
 	}
 
@@ -25,11 +26,11 @@ func get_animations_data() -> Dictionary:
 
 func restore_data(data: Dictionary) -> void:
 	var animation_data: Dictionary = data.animation_data if data.has('animation_data') else {}
-	var duration = data.duration if data.has('duration') else 0.5
+	var duration = data.duration if data.has('duration') else Anima.DEFAULT_DURATION
 	var delay = data.delay if data.has('duration') else 0.0
 
-	_duration.text = str(duration)
-	_delay.text = str(delay)
+	_duration.set_value(duration)
+	_delay.set_value(delay)
 
 	AnimaUI.debug(self, 'restoring data', data)
 	_animation_data.restore_data(animation_data)
@@ -66,4 +67,10 @@ func _on_AnimationData_select_easing():
 func _on_AnimaEasingsWindow_easing_selected(easing):
 	_animation_data.set_easing(easing)
 
+	emit_signal("animation_updated")
+
+func _on_Duration_vale_updated():
+	emit_signal("animation_updated")
+
+func _on_Delay_vale_updated():
 	emit_signal("animation_updated")

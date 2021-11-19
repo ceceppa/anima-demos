@@ -32,7 +32,7 @@ func _ready():
 		_init_node(self)
 
 func _exit_tree():
-	if _timer:
+	if _timer and not _timer.is_queued_for_deletion():
 		_timer.stop()
 
 	_anima_tween.stop_all()
