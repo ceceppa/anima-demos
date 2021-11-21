@@ -6,6 +6,7 @@ signal select_animation
 signal select_easing
 signal content_size_changed(new_size)
 signal value_updated
+signal select_relative_property
 
 onready var _animation_type_button: Button = find_node('AnimationTypeButton')
 onready var _property_type_button: Button = find_node('PropertyTypeButton')
@@ -286,3 +287,9 @@ func _on_PivotButton_pivot_point_selected():
 
 func _on_EasingButton_pressed():
 	emit_signal("select_easing")
+
+func _on_FromValue_select_relative_property():
+	emit_signal("select_relative_property")
+
+func _on_ToValue_select_relative_property():
+	emit_signal("select_relative_property")

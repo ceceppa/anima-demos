@@ -2,6 +2,7 @@ tool
 extends Control
 
 signal vale_updated
+signal select_relative_property
 
 enum TYPES {
 	INT = TYPE_INT,
@@ -14,17 +15,22 @@ enum TYPES {
 onready var _current_value_button: Button = find_node('CurrentValue')
 onready var _custom_value: HBoxContainer = find_node('CustomValue')
 onready var _delete_button: Button = find_node('DeleteButton')
+onready var _relative_switcher: MenuButton = find_node('RelativeSwitcher')
 
 export (String) var label = 'current value' setget set_label
 export (TYPES) var type = TYPES.INT setget set_type
 export (bool) var can_clear_custom_value := true setget set_can_clear_custom_value
-export (bool) var show_relative_button := true setget set_show_relative_button
+export (bool) var show_relative_switcher := true setget set_show_relative_switcher
+
+const MIN_SIZE := 30.0
 
 var _input_visible: Control
 
 func _ready():
 	if _input_visible == null:
 		_on_ClearButton_pressed()
+
+	_relative_switcher.get_popup().connect("index_pressed", self, "_on_relative_switcher_index_pressed")
 
 func set_type(the_type: int) -> void:
 	type = the_type
@@ -54,7 +60,6 @@ func set_type(the_type: int) -> void:
 		_:
 			printerr('set_type: unsupported type' + str(type))
 
-	node_name = 'Carousel'
 	_input_visible = find_node(node_name)
 	_input_visible.show()
 
@@ -118,7 +123,12 @@ func set_value(value) -> void:
 		return
 
 	if _input_visible is LineEdit:
-		_input_visible.text = str(value)
+		var s: String = str(value)
+
+		_input_visible.set_value(s)
+		if _input_visible.get_type() == 2:
+			_on_relative_switcher_index_pressed(1, false)
+
 	elif _input_visible.name == 'Vector2':
 		var x: LineEdit = _input_visible.find_node('x')
 		var y: LineEdit = _input_visible.find_node('y')
@@ -166,11 +176,11 @@ func set_label(new_label: String) -> void:
 	label = new_label
 	_current_value_button.text = label
 
-func set_show_relative_button(relative_button: bool) -> void:
-	show_relative_button = relative_button
+func set_show_relative_switcher(relative_button: bool) -> void:
+	show_relative_switcher = relative_button
 	
-	var button: Button = find_node('RelativeButton')
-	button.visible = show_relative_button
+	var button: Button = find_node('ValueTypeButton')
+	button.visible = show_relative_switcher
 
 func _on_CurrentValue_pressed():
 	_animate_custom_value(AnimaTween.PLAY_MODE.NORMAL)
@@ -191,3 +201,29 @@ func _handle_custom_value_visibility(visible: bool) -> void:
 
 func _on_RelativeButton_pressed():
 	pass # Replace with function body.
+
+func _on_relative_switcher_index_pressed(index: int, clear_field := true) -> void:
+	var icon_name := 'int' if type == TYPES.INT else 'float'
+
+	if index == 1:
+		icon_name = 'Node'
+
+	_relative_switcher.set_icon_name(icon_name)
+
+	if not _input_visible is LineEdit:
+		return
+
+	var field_type: int = type
+	if index == 1:
+		type = 2
+
+	if clear_field:
+		_input_visible.clear()
+		_input_visible.set_type(type)
+		_input_visible.grab_focus()
+
+func _on_Number_type_changed(new_type):
+	$CustomValue/RelativeSelectorButton.visible = new_type == 2
+
+func _on_RelativeSelectorButton_pressed():
+	emit_signal("select_relative_property")

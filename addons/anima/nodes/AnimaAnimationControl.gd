@@ -39,6 +39,9 @@ func populate_animatable_properties_list(source_node: Node) -> void:
 	$AnimationsWindow.show_demo_by_type(source_node)
 	$PropertiesWindow.populate_animatable_properties_list(source_node)
 
+func populate_nodes_list(source: AnimaVisualNode) -> void:
+	$PropertiesWindow.set_anima_visual_node(source)
+
 func _on_AnimationsWindow_animation_selected(label: String, name: String):
 	_animation_data.set_animation_data(label, name)
 
@@ -74,3 +77,7 @@ func _on_Duration_vale_updated():
 
 func _on_Delay_vale_updated():
 	emit_signal("animation_updated")
+
+func _on_AnimationData_select_relative_property():
+	$PropertiesWindow.popup_centered()
+	$PropertiesWindow.show_nodes_list(true)

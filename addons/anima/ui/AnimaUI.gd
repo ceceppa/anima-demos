@@ -68,6 +68,7 @@ const CONNECTED_LABEL_COLOR = Color.white
 
 # Used to get Godot Icons
 var _godot_base_control: Control
+var _anima_visual_node: Node
 
 const _is_debug_enabled := true
 
@@ -240,3 +241,8 @@ func get_godot_icon_for_type(type: int) -> Texture:
 
 	return get_godot_icon('KeyValue')
 	
+func set_selected_anima_visual_node(node: Node) -> void:
+	_anima_visual_node = node
+	
+func get_selected_anima_visual_node() -> Node:
+	return _anima_visual_node

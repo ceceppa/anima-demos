@@ -17,6 +17,5 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 type = 1
-allow_relative = true
 
 [connection signal="text_changed" from="." to="." method="_on_NumberEdit_text_changed"]

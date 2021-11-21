@@ -29,3 +29,7 @@ margin_right = 1016.0
 margin_bottom = 592.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[connection signal="text_changed" from="HBoxContainer/SearchField" to="." method="_on_SearchField_text_changed"]
+[connection signal="item_activated" from="NodesList" to="." method="_on_NodesList_item_activated"]
+[connection signal="item_selected" from="NodesList" to="." method="_on_NodesList_item_selected"]

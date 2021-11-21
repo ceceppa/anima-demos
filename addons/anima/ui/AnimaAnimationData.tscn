@@ -177,7 +177,7 @@ __meta__ = {
 [node name="AnimateGrid" type="GridContainer" parent="Wrapper/PropertyValues"]
 margin_top = 26.0
 margin_right = 1024.0
-margin_bottom = 160.0
+margin_bottom = 184.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -186,9 +186,9 @@ __meta__ = {
 
 [node name="From" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 4.0
+margin_top = 9.0
 margin_right = 160.0
-margin_bottom = 26.0
+margin_bottom = 31.0
 rect_min_size = Vector2( 160, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "From:"
@@ -202,12 +202,13 @@ modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 164.0
 margin_right = 1024.0
+margin_bottom = 40.0
 
 [node name="To" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 38.0
+margin_top = 53.0
 margin_right = 160.0
-margin_bottom = 60.0
+margin_bottom = 75.0
 rect_min_size = Vector2( 160, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "To:"
@@ -220,15 +221,15 @@ __meta__ = {
 modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 164.0
-margin_top = 34.0
+margin_top = 44.0
 margin_right = 1024.0
-margin_bottom = 64.0
+margin_bottom = 84.0
 
 [node name="Relative" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 72.0
+margin_top = 92.0
 margin_right = 160.0
-margin_bottom = 94.0
+margin_bottom = 114.0
 rect_min_size = Vector2( 160, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "Relative"
@@ -240,9 +241,9 @@ __meta__ = {
 [node name="RelativeCheck" type="CheckBox" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 164.0
-margin_top = 68.0
+margin_top = 88.0
 margin_right = 1024.0
-margin_bottom = 98.0
+margin_bottom = 118.0
 hint_tooltip = "If true, the from and to value are applied according to the current node property value."
 custom_fonts/font = SubResource( 1 )
 text = "Relative value"
@@ -252,9 +253,9 @@ __meta__ = {
 
 [node name="Pivot" type="Label" parent="Wrapper/PropertyValues/AnimateGrid"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 107.0
+margin_top = 129.0
 margin_right = 160.0
-margin_bottom = 129.0
+margin_bottom = 151.0
 rect_min_size = Vector2( 160, 0 )
 custom_fonts/font = SubResource( 1 )
 text = "Pivot"
@@ -267,15 +268,15 @@ __meta__ = {
 modulate = Color( 1, 1, 1, 0 )
 anchor_right = 0.0
 margin_left = 164.0
-margin_top = 102.0
+margin_top = 122.0
 margin_right = 1024.0
-margin_bottom = 134.0
+margin_bottom = 158.0
 
 [node name="Label2" type="Label" parent="Wrapper/PropertyValues"]
 modulate = Color( 1, 1, 1, 0 )
-margin_top = 164.0
+margin_top = 188.0
 margin_right = 1024.0
-margin_bottom = 186.0
+margin_bottom = 210.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
@@ -286,9 +287,9 @@ __meta__ = {
 }
 
 [node name="Easing" type="GridContainer" parent="Wrapper/PropertyValues"]
-margin_top = 190.0
+margin_top = 214.0
 margin_right = 1024.0
-margin_bottom = 218.0
+margin_bottom = 242.0
 size_flags_horizontal = 3
 columns = 2
 __meta__ = {
@@ -324,7 +325,9 @@ __meta__ = {
 [connection signal="pressed" from="GridContainer/HBoxContainer/PropertyTypeButton" to="." method="_on_PropertyTypeButton_pressed"]
 [connection signal="pressed" from="AnimationType/AnimationContainer/AnimationButton" to="." method="_on_AnimationButton_pressed"]
 [connection signal="pressed" from="AnimationType/PropertyContainer/PropertyButton" to="." method="_on_PropertyButton_pressed"]
+[connection signal="select_relative_property" from="Wrapper/PropertyValues/AnimateGrid/FromValue" to="." method="_on_FromValue_select_relative_property"]
 [connection signal="vale_updated" from="Wrapper/PropertyValues/AnimateGrid/FromValue" to="." method="_on_FromValue_vale_updated"]
+[connection signal="select_relative_property" from="Wrapper/PropertyValues/AnimateGrid/ToValue" to="." method="_on_ToValue_select_relative_property"]
 [connection signal="vale_updated" from="Wrapper/PropertyValues/AnimateGrid/ToValue" to="." method="_on_ToValue_vale_updated"]
 [connection signal="pressed" from="Wrapper/PropertyValues/AnimateGrid/RelativeCheck" to="." method="_on_CheckBox_pressed"]
 [connection signal="pivot_height_changed" from="Wrapper/PropertyValues/AnimateGrid/PivotButton" to="." method="_on_PivotButton_pivot_height_changed"]

@@ -18,6 +18,7 @@ func edit(node: AnimaVisualNode) -> void:
 
 	print_debug('editing node', node)
 	_anima_visual_node = node
+	AnimaUI.set_selected_anima_visual_node(node)
 
 	clear_all_nodes()
 
@@ -34,8 +35,6 @@ func edit(node: AnimaVisualNode) -> void:
 
 		_graph_edit.set_scroll_ofs(data.scroll_offset)
 		_graph_edit.set_zoom(data.zoom)
-
-	_nodes_popup.set_source_node(_anima_visual_node)
 
 	_is_restoring_data = false
 

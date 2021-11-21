@@ -81,7 +81,7 @@ __anima_visual_editor_data = {
 "animation_data": {
 "property": {
 "easing": null,
-"from": 12.0,
+"from": ":size:x",
 "name": "position:x",
 "pivot": [ 0, -1 ],
 "relative": false,
@@ -99,6 +99,6 @@ __anima_visual_editor_data = {
 "position": Vector2( 2000, -200 ),
 "title": "Opening1"
 } ],
-"scroll_offset": Vector2( 1577, -65 ),
+"scroll_offset": Vector2( 1399.32, 45 ),
 "zoom": 1.0
 }

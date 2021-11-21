@@ -7,14 +7,29 @@ onready var _line_edit: LineEdit = find_node('LineEdit')
 onready var _nodes_list: VBoxContainer = find_node('AnimaNodesList')
 
 var _animatable_properties := [{name = 'opacity', type = TYPE_REAL}]
+var _source_node: Node
 
 func _ready():
 	_nodes_list.hide()
 
 func _on_popup_visible() -> void:
 	_line_edit.grab_focus()
+	
+	var list: VBoxContainer = find_node('AnimaNodesList')
+	list.populate()
+	list.select_node(_source_node)
+
+func show_nodes_list(show: bool) -> void:
+	var list: VBoxContainer = find_node('AnimaNodesList')
+
+	list.visible = show
 
 func populate_animatable_properties_list(source_node: Node) -> void:
+	AnimaUI.debug(self, 'pupulating animatable properties for', source_node)
+
+	_source_node = source_node
+	_animatable_properties.clear()
+
 	var properties = source_node.get_property_list()
 	var properties_to_ignore := [
 		'pause_mode',
@@ -106,3 +121,6 @@ func _on_PropertiesTree_item_double_clicked():
 
 func _on_PropertiesTree_item_activated():
 	_on_PropertiesTree_item_double_clicked()
+
+func _on_AnimaNodesList_node_selected(node: Node) -> void:
+	populate_animatable_properties_list(node)
