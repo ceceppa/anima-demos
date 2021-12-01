@@ -90,8 +90,13 @@ func restore_data(data: Dictionary) -> void:
 
 	_property_button.text = data.property.name
 	_property_type = data.property.type
-	_from_value.set_type(data.property.type)
-	_to_value.set_type(data.property.type)
+
+	if data.property.type == TYPE_VECTOR2 or data.property.type == TYPE_VECTOR3:
+		_from_value.set_type(data.property.type)
+		_to_value.set_type(data.property.type)
+	else:
+		_from_value.set_type(TYPE_STRING)
+		_to_value.set_type(TYPE_STRING)
 
 	if data.property.has('from'):
 		_from_value.set_value(data.property.from)
@@ -289,7 +294,7 @@ func _on_EasingButton_pressed():
 	emit_signal("select_easing")
 
 func _on_FromValue_select_relative_property():
-	emit_signal("select_relative_property")
+	emit_signal("select_relative_property", _from_value)
 
 func _on_ToValue_select_relative_property():
-	emit_signal("select_relative_property")
+	emit_signal("select_relative_property", _to_value)

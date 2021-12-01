@@ -90,7 +90,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 		_:
 			printerr('Pivot point not handled yet')
 
-static func get_property_initial_value(node: Node, property: String):
+static func get_property_value(node: Node, property: String):
 	property = property.to_lower()
 
 	match property:

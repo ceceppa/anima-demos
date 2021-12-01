@@ -1,9 +1,9 @@
 tool
 extends "./AnimaBaseWindow.gd"
 
-signal property_selected(property_name, property_type)
+signal property_selected(property_name, property_type, node)
 
-onready var _line_edit: LineEdit = find_node('LineEdit')
+onready var _property_search: LineEdit = find_node('PropertySearch')
 onready var _nodes_list: VBoxContainer = find_node('AnimaNodesList')
 
 var _animatable_properties := [{name = 'opacity', type = TYPE_REAL}]
@@ -13,11 +13,12 @@ func _ready():
 	_nodes_list.hide()
 
 func _on_popup_visible() -> void:
-	_line_edit.grab_focus()
-	
 	var list: VBoxContainer = find_node('AnimaNodesList')
 	list.populate()
 	list.select_node(_source_node)
+
+	_property_search.clear()
+	_property_search.grab_focus()
 
 func show_nodes_list(show: bool) -> void:
 	var list: VBoxContainer = find_node('AnimaNodesList')
@@ -115,7 +116,7 @@ func _on_PropertiesTree_item_double_clicked():
 	if is_child:
 		property_to_animate = parent.get_text(0) + ":" + property_to_animate
 
-	emit_signal("property_selected", property_to_animate, selected_item.get_metadata(0).type)
+	emit_signal("property_selected", property_to_animate, selected_item.get_metadata(0).type, _nodes_list.get_selected())
 
 	hide()
 

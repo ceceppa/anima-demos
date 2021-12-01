@@ -15,12 +15,13 @@ enum TYPES {
 onready var _current_value_button: Button = find_node('CurrentValue')
 onready var _custom_value: HBoxContainer = find_node('CustomValue')
 onready var _delete_button: Button = find_node('DeleteButton')
-onready var _relative_switcher: MenuButton = find_node('RelativeSwitcher')
+onready var _relative_selector: Button = find_node('RelativeSelectorButton')
 
 export (String) var label = 'current value' setget set_label
 export (TYPES) var type = TYPES.INT setget set_type
 export (bool) var can_clear_custom_value := true setget set_can_clear_custom_value
-export (bool) var show_relative_switcher := true setget set_show_relative_switcher
+export (bool) var show_relative_selector := true setget set_show_relative_selector
+export (bool) var can_edit_value := true setget set_can_edit_value
 
 const MIN_SIZE := 30.0
 
@@ -29,8 +30,6 @@ var _input_visible: Control
 func _ready():
 	if _input_visible == null:
 		_on_ClearButton_pressed()
-
-	_relative_switcher.get_popup().connect("index_pressed", self, "_on_relative_switcher_index_pressed")
 
 func set_type(the_type: int) -> void:
 	type = the_type
@@ -68,6 +67,9 @@ func set_can_clear_custom_value(can_clear: bool) -> void:
 
 	var clear_button = find_node('ClearButton')
 	clear_button.visible = can_clear_custom_value
+
+func set_can_edit_value(can_edit: bool) -> void:
+	can_edit_value = can_edit
 
 func _animate_custom_value(mode: int) -> void:
 	if _input_visible == null:
@@ -125,9 +127,10 @@ func set_value(value) -> void:
 	if _input_visible is LineEdit:
 		var s: String = str(value)
 
-		_input_visible.set_value(s)
-		if _input_visible.get_type() == 2:
-			_on_relative_switcher_index_pressed(1, false)
+		if _input_visible.has_method('set_value'):
+			_input_visible.set_value(s)
+		else:
+			_input_visible.text = s
 
 	elif _input_visible.name == 'Vector2':
 		var x: LineEdit = _input_visible.find_node('x')
@@ -156,6 +159,9 @@ func get_value():
 		if _input_visible.has_method('get_value'):
 			return _input_visible.get_value()
 		
+		if _input_visible.text.find(':') < 0:
+			return float(_input_visible.text)
+
 		return _input_visible.text
 	elif _input_visible.name == 'Vector2':
 		var x: LineEdit = _input_visible.find_node('x')
@@ -176,13 +182,16 @@ func set_label(new_label: String) -> void:
 	label = new_label
 	_current_value_button.text = label
 
-func set_show_relative_switcher(relative_button: bool) -> void:
-	show_relative_switcher = relative_button
+func set_show_relative_selector(relative_button: bool) -> void:
+	show_relative_selector = relative_button
 	
-	var button: Button = find_node('ValueTypeButton')
-	button.visible = show_relative_switcher
+	var button: Button = find_node("RelativeSelectorButton")
+	button.visible = show_relative_selector
 
 func _on_CurrentValue_pressed():
+	if not can_edit_value:
+		return
+
 	_animate_custom_value(AnimaTween.PLAY_MODE.NORMAL)
 
 func _on_ClearButton_pressed():
@@ -201,29 +210,6 @@ func _handle_custom_value_visibility(visible: bool) -> void:
 
 func _on_RelativeButton_pressed():
 	pass # Replace with function body.
-
-func _on_relative_switcher_index_pressed(index: int, clear_field := true) -> void:
-	var icon_name := 'int' if type == TYPES.INT else 'float'
-
-	if index == 1:
-		icon_name = 'Node'
-
-	_relative_switcher.set_icon_name(icon_name)
-
-	if not _input_visible is LineEdit:
-		return
-
-	var field_type: int = type
-	if index == 1:
-		type = 2
-
-	if clear_field:
-		_input_visible.clear()
-		_input_visible.set_type(type)
-		_input_visible.grab_focus()
-
-func _on_Number_type_changed(new_type):
-	$CustomValue/RelativeSelectorButton.visible = new_type == 2
 
 func _on_RelativeSelectorButton_pressed():
 	emit_signal("select_relative_property")

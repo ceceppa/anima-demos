@@ -4,6 +4,10 @@ extends Button
 export (String) var icon_name setget set_icon_name
 export (String) var pressed_icon_name setget set_pressed_icon_name
 
+func _ready():
+	if icon == null:
+		set_icon_name(icon_name)
+
 func set_icon_name(name: String):
 	icon_name = name
 
@@ -19,3 +23,6 @@ func _on_GodotUIToolButton_pressed():
 		name = pressed_icon_name
 
 	icon = AnimaUI.get_godot_icon(name)
+
+func _on_GodotUIButton_visibility_changed():
+	pass # Replace with function body.

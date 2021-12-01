@@ -10,3 +10,4 @@ func set_label(name: String) -> void:
 
 func _on_DeleteButton_pressed():
 	emit_signal("delete_event")
+

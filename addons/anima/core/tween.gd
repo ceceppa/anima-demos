@@ -254,7 +254,7 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 		var is_relative = animation_data.has('relative') and animation_data.relative
 
 		if not animation_data.has('from'):
-			var node_from = AnimaNodesProperties.get_property_initial_value(node, property)
+			var node_from = AnimaNodesProperties.get_property_value(node, property)
 
 			if previous_frames.has(node) and previous_frames[node].has(property):
 				node_from = previous_frames[node][property]
@@ -264,7 +264,7 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 		if animation_data.has('to') and is_relative:
 			animation_data.to += animation_data.from
 		elif not animation_data.has('to'):
-			animation_data.to = AnimaNodesProperties.get_property_initial_value(node, property)
+			animation_data.to = AnimaNodesProperties.get_property_value(node, property)
 			animation_data.__ignore_to_relative = false
 
 		if not previous_frames.has(node):
@@ -425,10 +425,11 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 	var from
 	var to
 	var relative = animation_data.relative if animation_data.has('relative') else false
-	var node_from = AnimaNodesProperties.get_property_initial_value(node, animation_data.property)
+	var node_from = AnimaNodesProperties.get_property_value(node, animation_data.property)
 
 	if animation_data.has('from'):
-		from = _maybe_convert_from_deg_to_rad(node, animation_data, animation_data.from)
+		from = _maybe_calculate_value(animation_data.from, animation_data)
+		from = _maybe_convert_from_deg_to_rad(node, animation_data, from)
 		from = _maybe_calculate_relative_value(relative, from, node_from)
 	else:
 		from = node_from
@@ -438,7 +439,8 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 		var start = node_from if _is_backwards_animation else from
 		var to_relative = false if animation_data.has('__ignore_to_relative') else relative
 
-		to = _maybe_convert_from_deg_to_rad(node, animation_data, animation_data.to)
+		to = _maybe_calculate_value(animation_data.to, animation_data)
+		to = _maybe_convert_from_deg_to_rad(node, animation_data, to)
 		to = _maybe_calculate_relative_value(to_relative, to, start)
 	else:
 		to = node_from
@@ -458,6 +460,51 @@ func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
 
 	animation_data._property_data.from = from
 	animation_data._property_data.to = to
+
+func _maybe_calculate_value(value, animation_data: Dictionary):
+	if not value is String or value.find(':') < 0:
+		return value
+
+	var regex := RegEx.new()
+	regex.compile("(:?[a-z]*:[a-z]*:?[a-z]*)")
+
+	var results := regex.search_all(value)
+	var variables := []
+	var values := []
+
+	results.invert()
+
+	for index in results.size():
+		var rm: RegExMatch = results[index]
+		var info: Array = rm.get_string().split(":")
+		var source_node = info.pop_front()
+
+		if source_node == '':
+			source_node = animation_data.node
+		else:
+			source_node = get_viewport().find_node(source_node, true, false)
+
+		var property: String = PoolStringArray(info).join(":")
+		var property_value = AnimaNodesProperties.get_property_value(source_node, property)
+
+		AnimaUI.debug(self, "_maybe_calculate_value: search", source_node, rm.get_string(), property, property_value)
+
+		var variable := char(65 + index)
+
+		variables.push_back(variable)
+		values.push_back(property_value)
+		
+		value.erase(rm.get_start(), rm.get_end() - rm.get_start())
+		value = value.insert(rm.get_start(), variable)
+
+	var expression := Expression.new()
+	expression.parse(value, variables)
+
+	var result = expression.execute(values)
+
+	AnimaUI.debug(self, "-->", value, result)
+
+	return result
 
 func _maybe_calculate_relative_value(relative, value, current_node_value):
 	if not relative:

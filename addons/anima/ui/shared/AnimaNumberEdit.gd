@@ -7,18 +7,18 @@ signal type_changed(new_type)
 enum Type {
 	INTEGER,
 	FLOAT,
-	RELATIVE
+	STRING
 }
 
 const REG_EX = {
 	Type.INTEGER: "^[+-]?[0-9]*$",
 	Type.FLOAT: "^[+-]?([0-9]*([.][0-9]*)?|[.][0-9]+)$",
-	Type.RELATIVE: "^[a-z]*:[a-z]+:*[a-z]*$",
+	Type.STRING: ".*",
 }
 
 export (Type) var type setget set_type
 
-var _regex = RegEx.new()
+var _regex := RegEx.new()
 
 var _old_text: String
 
@@ -32,8 +32,7 @@ func _on_NumberEdit_text_changed(new_text: String):
 	# not allow to them to be the only value in the field, but we need to accept them
 	var is_valid = _regex.search(new_text) or \
 		new_text == '' or \
-		(['+', '-'].find(new_text) == 0 and type != Type.RELATIVE) or \
-		(new_text == ':' and type == Type.RELATIVE)
+		['+', '-'].find(new_text) == 0
 
 	if is_valid:
 		_old_text = new_text
@@ -45,6 +44,9 @@ func _on_NumberEdit_text_changed(new_text: String):
 		set_cursor_position(text.length())
 
 func get_value():
+	if text.find(":") >= 0:
+		return text
+
 	if type == Type.INTEGER:
 		return int(text)
 	elif type == Type.FLOAT:
@@ -53,9 +55,6 @@ func get_value():
 		return text
 
 func set_value(value: String) -> void:
-	if value.find(':') == 0:
-		set_type(Type.RELATIVE)
-
 	text = value
 
 func set_type(new_type: int) -> void:

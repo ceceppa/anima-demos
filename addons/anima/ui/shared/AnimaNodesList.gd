@@ -24,6 +24,9 @@ func select_node(node: Node) -> void:
 	
 	_select_node(root, node.name)
 
+func get_selected() -> String:
+	return _nodes_list.get_selected().get_text(0)
+
 func _select_node(tree_item: TreeItem, name: String) -> void:
 	var child := tree_item.get_children()
 
@@ -44,6 +47,9 @@ func _select_node(tree_item: TreeItem, name: String) -> void:
 func _retrieves_list_of_nodes() -> void:
 	var anima_visual_node: AnimaVisualNode = AnimaUI.get_selected_anima_visual_node()
 	_start_node = anima_visual_node.get_source_node()
+
+	if _nodes_list == null:
+		_nodes_list = find_node('NodesList')
 
 	_nodes_list.clear()
 

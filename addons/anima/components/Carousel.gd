@@ -51,6 +51,9 @@ func set_index(new_index: int) -> void:
 	var count: int = max(0, _container.get_child_count() - 1)
 	index = clamp(new_index, 0, count)
 
+	if _heights.size() == 0:
+		return
+
 	var x = rect_size.x * index
 	var wrapper_height = _heights[index]
 	var height = _controls.rect_size.y + wrapper_height

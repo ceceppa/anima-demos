@@ -4,7 +4,7 @@ extends Control
 signal switch_position
 signal connections_updated(new_list)
 
-var _shader_code: String = ""
+var _start_node: Node
 var _anima_visual_node: AnimaVisualNode
 var _node_offset: Vector2
 var _is_restoring_data := false
@@ -12,11 +12,11 @@ var _is_restoring_data := false
 onready var _graph_edit: GraphEdit = find_node("AnimaNodeEditor")
 onready var _nodes_popup: PopupPanel = find_node("NodesPopup")
 onready var _warning_label = find_node("WarningLabel")
+onready var _animation_selector: OptionButton = find_node("AnimationSelector")
 
 func edit(node: AnimaVisualNode) -> void:
 	_is_restoring_data = true
 
-	print_debug('editing node', node)
 	_anima_visual_node = node
 	AnimaUI.set_selected_anima_visual_node(node)
 
@@ -26,11 +26,11 @@ func edit(node: AnimaVisualNode) -> void:
 	AnimaUI.debug(self, 'restoring visual editor data', data)
 
 	if data == null || not data.has('nodes') || data.nodes.size() == 0:
-		var start_node = _graph_edit.get_anima_start_node(node, [], [])
+		_start_node = _graph_edit.get_anima_start_node(node, [], [])
 
-		_graph_edit.add_child(start_node)
+		_graph_edit.add_child(_start_node)
 	else:
-		_add_nodes(data.nodes, data.animations_slots, data.events_slots)
+		_add_nodes(data.nodes, data.animations_names, data.events_slots)
 		_connect_nodes(data.connection_list)
 
 		_graph_edit.set_scroll_ofs(data.scroll_offset)
@@ -44,14 +44,15 @@ func clear_all_nodes() -> void:
 			_graph_edit.remove_child(node)
 			node.free()
 
-func _add_nodes(nodes_data: Array, animations_slots: Array, events_slots: Array) -> void:
+func _add_nodes(nodes_data: Array, animations_names: Array, events_slots: Array) -> void:
 	AnimaUI.debug(self, 'adding nodes: ', nodes_data.size())
 
 	for node_data in nodes_data:
 		var node: Node
 		
 		if node_data.id == 'AnimaNode':
-			node = _graph_edit.get_anima_start_node(_anima_visual_node, animations_slots, events_slots)
+			node = _graph_edit.get_anima_start_node(_anima_visual_node, animations_names, events_slots)
+			_start_node = node
 		else:
 			var root = _anima_visual_node.get_parent()
 
@@ -132,7 +133,7 @@ func _update_anima_node_data() -> void:
 
 	var data:= {
 		nodes = [],
-		animations_slots = [],
+		animations_names = [],
 		events_slots = [],
 		connection_list = _graph_edit.get_connection_list(),
 		scroll_offset = _graph_edit.get_scroll_ofs(),
@@ -140,7 +141,7 @@ func _update_anima_node_data() -> void:
 	}
 
 	for child in _graph_edit.get_children():
-		if child.is_queued_for_deletion():
+		if child == null or child.is_queued_for_deletion():
 			continue
 
 		if child is GraphNode:
@@ -158,12 +159,47 @@ func _update_anima_node_data() -> void:
 				data = child.get_data()
 			})
 
-	data.animations_slots = _graph_edit.get_animations_slots()
+	data.animations_names = _graph_edit.get_animations_names()
 	data.events_slots = _graph_edit.get_events_slots()
+	data.data_by_animation = _get_data_from_connections(_start_node)
 
 	AnimaUI.debug(self, 'updating visual editor data', data)
 
 	emit_signal("connections_updated", data)
+
+func _get_data_from_connections(node: Node, animation_id: int = -1, data := {}, start_time := 0.0) -> Dictionary:
+	for output in node.get_connected_outputs():
+		var to: GraphNode = output[1]
+		var wait_time := start_time
+		var output_port: int = output[0]
+		var to_data: Dictionary = to.get_data()
+
+		if node.name == "AnimaNode":
+			animation_id = output_port
+
+			data[animation_id] = []
+		elif output_port == 0:
+			var node_data: Dictionary = node.get_data()
+
+			wait_time += node_data.duration
+
+		var node_data: Dictionary = { start_time = start_time, node = to.get_node_to_animate(), data = to_data }
+		data[animation_id].push_back(node_data)
+
+		if animation_id >= 0:
+			_get_data_from_connections(to, animation_id, data, to_data.duration )
+
+	return data
+
+func _update_animations_list() -> void:
+	if _is_restoring_data and _animation_selector.items.size() > 0:
+		return
+
+	_animation_selector.items.clear()
+
+	var animations: Array = AnimaUI.get_selected_anima_visual_node().get_animations_list()
+	for animation in animations:
+		_animation_selector.add_item(animation)
 
 func _on_AnimaNodeEditor_show_nodes_list(offset: Vector2, position: Vector2):
 	_node_offset = offset
@@ -178,3 +214,10 @@ func _on_AnimaNodeEditor_node_connected():
 
 func _on_AnimaNodeEditor_node_updated():
 	_update_anima_node_data()
+	_update_animations_list()
+
+func _on_GodotUIButton_pressed():
+	var node: AnimaVisualNode = AnimaUI.get_selected_anima_visual_node()
+	var name: String = _animation_selector.get_item_text(_animation_selector.get_selected_id())
+
+	node.play_animation(name)

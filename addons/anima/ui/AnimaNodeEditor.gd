@@ -17,7 +17,7 @@ func _init():
 
 	set_right_disconnects(true)
 
-func get_anima_start_node(source_node: Node, animations_slots := [], events_slots := []) -> GraphNode:
+func get_anima_start_node(source_node: Node, animations_names := [], events_slots := []) -> GraphNode:
 	if _anima_start_node == null or not is_instance_valid(_anima_start_node):
 		_anima_start_node = ANIMA_START_NODE.new()
 
@@ -26,7 +26,7 @@ func get_anima_start_node(source_node: Node, animations_slots := [], events_slot
 		_anima_start_node.set_offset(Vector2(get_rect().size.x - 300, 20))
 
 	_anima_start_node.set_source_node(source_node)
-	_anima_start_node.set_animations_slots(animations_slots)
+	_anima_start_node.set_animations_names(animations_names)
 	_anima_start_node.set_events_slots(events_slots)
 
 	return _anima_start_node
@@ -37,8 +37,8 @@ func get_shader_output_node():
 func get_events_slots() -> Array:
 	return _anima_start_node.get_events_slots()
 
-func get_animations_slots() -> Array:
-	return _anima_start_node.get_animations_slots()
+func get_animations_names() -> Array:
+	return _anima_start_node.get_animations_names()
 
 func _on_connection_request(from_node: String, from_slot: int, to_node: String, to_slot: int) -> bool:
 	if from_node == to_node:
@@ -66,7 +66,7 @@ func connect_node(from_node: String, from_slot: int, to_node: String, to_slot: i
 			to = child
 
 	if from:
-		from.connect_output(from_slot)
+		from.connect_output(from_slot, to, to_slot)
 	if to:
 		to.connect_input(to_slot, from, from_slot)
 
