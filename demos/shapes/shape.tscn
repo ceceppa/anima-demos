@@ -18,7 +18,6 @@ __meta__ = {
 [node name="Opening1" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_bottom = -0.000488281
 rect_pivot_offset = Vector2( 512, 300 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -46,6 +45,7 @@ border_color = Color( 1, 1, 1, 1 )
 points = PoolVector2Array( 467.404, 386.329 )
 
 [node name="AnimaLabel" type="Control" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_clip_content = true
@@ -89,13 +89,13 @@ __anima_visual_editor_data = {
 },
 "node": Object(Control,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"anchor_left":0.0,"anchor_top":0.0,"anchor_right":1.0,"anchor_bottom":1.0,"margin_left":-1024.0,"margin_top":0.0,"margin_right":-1024.0,"margin_bottom":0.0,"grow_horizontal":1,"grow_vertical":1,"rect_min_size":Vector2( 0, 0 ),"rect_rotation":0.0,"rect_scale":Vector2( 1, 1 ),"rect_pivot_offset":Vector2( 512, 300 ),"rect_clip_content":false,"hint_tooltip":"","focus_neighbour_left":NodePath(""),"focus_neighbour_top":NodePath(""),"focus_neighbour_right":NodePath(""),"focus_neighbour_bottom":NodePath(""),"focus_next":NodePath(""),"focus_previous":NodePath(""),"focus_mode":0,"mouse_filter":0,"mouse_default_cursor_shape":0,"input_pass_on_modal_close_click":true,"size_flags_horizontal":1,"size_flags_vertical":1,"size_flags_stretch_ratio":1.0,"theme":null,"script":ExtResource( 1 ),"__meta__":{
 "_edit_use_anchors_": false
-},"_anima":Object(Node,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"script":Resource( "res://addons/anima/core/node.gd" ),"_anima_tween":Object(Tween,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"repeat":true,"playback_process_mode":1,"playback_speed":1.0,"playback/active":false,"playback/repeat":true,"playback/speed":1.0,"script":Resource( "res://addons/anima/core/tween.gd" ),"_animation_data":[  ],"_fake_property":{
+},"_anima":Object(Node,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"script":Resource( "res://addons/anima/core/node.gd" ),"_anima_tween":Object(Tween,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"repeat":false,"playback_process_mode":1,"playback_speed":1.0,"playback/active":false,"playback/repeat":false,"playback/speed":1.0,"script":Resource( "res://addons/anima/core/tween.gd" ),"_animation_data":[  ],"_fake_property":{
 },"_visibility_strategy":0,"_callbacks":{
 },"_is_backwards_animation":false,"_loop_strategy":0,"_tween_completed":0)
-,"_anima_backwards_tween":Object(Tween,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"repeat":true,"playback_process_mode":1,"playback_speed":1.0,"playback/active":false,"playback/repeat":true,"playback/speed":1.0,"script":Resource( "res://addons/anima/core/tween.gd" ),"_animation_data":[  ],"_fake_property":{
+,"_anima_backwards_tween":Object(Tween,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"repeat":false,"playback_process_mode":1,"playback_speed":1.0,"playback/active":false,"playback/repeat":false,"playback/speed":1.0,"script":Resource( "res://addons/anima/core/tween.gd" ),"_animation_data":[  ],"_fake_property":{
 },"_visibility_strategy":0,"_callbacks":{
 },"_is_backwards_animation":false,"_loop_strategy":0,"_tween_completed":0)
-,"_total_animation_length":0.0,"_last_animation_duration":0.0,"_timer":Object(Timer,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"process_mode":1,"wait_time":1.0,"one_shot":true,"autostart":false,"script":null)
+,"_total_animation_length":0.0,"_last_animation_duration":0.0,"_timer":Object(Timer,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"process_mode":1,"wait_time":1.0,"one_shot":false,"autostart":false,"script":null)
 ,"_loop_times":0,"_loop_count":0,"_should_loop":false,"_play_mode":0,"_default_duration":0.7,"_apply_visibility_strategy_on_play":true,"_play_speed":1.0,"_current_play_mode":0,"_is_single_shot":false,"__do_nothing":0.0)
 ,"point1":Vector2( 0, 0 ),"point2":Vector2( 100, 100 ),"point3":Vector2( 0, 100 ),"values_in":1,"color":Color( 0, 0, 0, 1 ),"is_filled":true,"border_width":0.0,"border_color":Color( 1, 1, 1, 1 ),"border_type":0,"_border_line":Object(Line2D,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"visible":false,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"position":Vector2( 0, 0 ),"rotation":0.0,"scale":Vector2( 1, 1 ),"z_index":0,"z_as_relative":true,"points":PoolVector2Array(  ),"width":10.0,"width_curve":null,"default_color":Color( 0.4, 0.5, 1, 1 ),"gradient":null,"texture":null,"texture_mode":0,"joint_mode":0,"begin_cap_mode":0,"end_cap_mode":0,"sharp_limit":2.0,"round_precision":8,"antialiased":false,"script":null)
 )
@@ -117,15 +117,15 @@ __anima_visual_editor_data = {
 "delay": -0.3,
 "duration": 0.7
 },
-"node": Object(Control,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"anchor_left":0.0,"anchor_top":0.0,"anchor_right":1.0,"anchor_bottom":1.0,"margin_left":1024.0,"margin_top":0.0,"margin_right":1024.0,"margin_bottom":0.0,"grow_horizontal":1,"grow_vertical":1,"rect_min_size":Vector2( 0, 0 ),"rect_rotation":0.0,"rect_scale":Vector2( 1, 1 ),"rect_pivot_offset":Vector2( 512, 300 ),"rect_clip_content":false,"hint_tooltip":"","focus_neighbour_left":NodePath(""),"focus_neighbour_top":NodePath(""),"focus_neighbour_right":NodePath(""),"focus_neighbour_bottom":NodePath(""),"focus_next":NodePath(""),"focus_previous":NodePath(""),"focus_mode":0,"mouse_filter":0,"mouse_default_cursor_shape":0,"input_pass_on_modal_close_click":true,"size_flags_horizontal":1,"size_flags_vertical":1,"size_flags_stretch_ratio":1.0,"theme":null,"script":ExtResource( 1 ),"__meta__":{
+"node": Object(Control,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"anchor_left":0.0,"anchor_top":0.0,"anchor_right":1.0,"anchor_bottom":1.0,"margin_left":-2.46519e-32,"margin_top":0.0,"margin_right":-2.46519e-32,"margin_bottom":0.0,"grow_horizontal":1,"grow_vertical":1,"rect_min_size":Vector2( 0, 0 ),"rect_rotation":0.0,"rect_scale":Vector2( 1, 1 ),"rect_pivot_offset":Vector2( 512, 300 ),"rect_clip_content":false,"hint_tooltip":"","focus_neighbour_left":NodePath(""),"focus_neighbour_top":NodePath(""),"focus_neighbour_right":NodePath(""),"focus_neighbour_bottom":NodePath(""),"focus_next":NodePath(""),"focus_previous":NodePath(""),"focus_mode":0,"mouse_filter":0,"mouse_default_cursor_shape":0,"input_pass_on_modal_close_click":true,"size_flags_horizontal":1,"size_flags_vertical":1,"size_flags_stretch_ratio":1.0,"theme":null,"script":ExtResource( 1 ),"__meta__":{
 "_edit_use_anchors_": false
-},"_anima":Object(Node,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"script":Resource( "res://addons/anima/core/node.gd" ),"_anima_tween":Object(Tween,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"repeat":true,"playback_process_mode":1,"playback_speed":1.0,"playback/active":false,"playback/repeat":true,"playback/speed":1.0,"script":Resource( "res://addons/anima/core/tween.gd" ),"_animation_data":[  ],"_fake_property":{
+},"_anima":Object(Node,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"script":Resource( "res://addons/anima/core/node.gd" ),"_anima_tween":Object(Tween,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"repeat":false,"playback_process_mode":1,"playback_speed":1.0,"playback/active":false,"playback/repeat":false,"playback/speed":1.0,"script":Resource( "res://addons/anima/core/tween.gd" ),"_animation_data":[  ],"_fake_property":{
 },"_visibility_strategy":0,"_callbacks":{
 },"_is_backwards_animation":false,"_loop_strategy":0,"_tween_completed":0)
-,"_anima_backwards_tween":Object(Tween,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"repeat":true,"playback_process_mode":1,"playback_speed":1.0,"playback/active":false,"playback/repeat":true,"playback/speed":1.0,"script":Resource( "res://addons/anima/core/tween.gd" ),"_animation_data":[  ],"_fake_property":{
+,"_anima_backwards_tween":Object(Tween,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"repeat":false,"playback_process_mode":1,"playback_speed":1.0,"playback/active":false,"playback/repeat":false,"playback/speed":1.0,"script":Resource( "res://addons/anima/core/tween.gd" ),"_animation_data":[  ],"_fake_property":{
 },"_visibility_strategy":0,"_callbacks":{
 },"_is_backwards_animation":false,"_loop_strategy":0,"_tween_completed":0)
-,"_total_animation_length":0.0,"_last_animation_duration":0.0,"_timer":Object(Timer,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"process_mode":1,"wait_time":1.0,"one_shot":true,"autostart":false,"script":null)
+,"_total_animation_length":0.0,"_last_animation_duration":0.0,"_timer":Object(Timer,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"process_mode":1,"wait_time":1.0,"one_shot":false,"autostart":false,"script":null)
 ,"_loop_times":0,"_loop_count":0,"_should_loop":false,"_play_mode":0,"_default_duration":0.7,"_apply_visibility_strategy_on_play":true,"_play_speed":1.0,"_current_play_mode":0,"_is_single_shot":false,"__do_nothing":0.0)
 ,"point1":Vector2( 0, 0 ),"point2":Vector2( 100, 0 ),"point3":Vector2( 100, 100 ),"values_in":1,"color":Color( 0, 0, 0, 1 ),"is_filled":true,"border_width":0.0,"border_color":Color( 1, 1, 1, 1 ),"border_type":0,"_border_line":Object(Line2D,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"visible":false,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"position":Vector2( 0, 0 ),"rotation":0.0,"scale":Vector2( 1, 1 ),"z_index":0,"z_as_relative":true,"points":PoolVector2Array(  ),"width":10.0,"width_curve":null,"default_color":Color( 0.4, 0.5, 1, 1 ),"gradient":null,"texture":null,"texture_mode":0,"joint_mode":0,"begin_cap_mode":0,"end_cap_mode":0,"sharp_limit":2.0,"round_precision":8,"antialiased":false,"script":null)
 )

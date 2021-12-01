@@ -122,6 +122,12 @@ static func get_property_value(node: Node, property: String):
 			return node.get_global_transform().y.x
 		"skew:y":
 			return node.get_global_transform().x.y
+		"size":
+			return get_size(node)
+		"size:x":
+			return get_size(node).x
+		"size:y":
+			return get_size(node).y
 
 	var p = property.split(':')
 

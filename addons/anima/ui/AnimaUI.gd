@@ -219,7 +219,10 @@ func set_godot_gui(base_control: Control) -> void:
 	_godot_base_control = base_control
 
 func get_godot_icon(name: String) -> Texture:
-	return _godot_base_control.get_icon(name, "EditorIcons")
+	if _godot_base_control:
+		return _godot_base_control.get_icon(name, "EditorIcons")
+
+	return null
 
 func get_node_icon(node: Node) -> Texture:
 	var node_icon: Texture = AnimaUI.get_godot_icon(node.get_class())
