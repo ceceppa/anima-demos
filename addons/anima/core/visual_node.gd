@@ -100,6 +100,8 @@ func _play_and_reset_initial_values(anima_node: AnimaNode) -> void:
 
 	yield(anima_node, "animation_completed")
 
+	yield(get_tree().create_timer(0.5), "timeout")
+
 	# reset node initial values
 	if _initial_values.size() == 0:
 		return
@@ -121,4 +123,4 @@ func _play_and_reset_initial_values(anima_node: AnimaNode) -> void:
 			else:
 				node[mapped_property.property_name] = initial_value
 
-		_initial_values.clear()
+	_initial_values.clear()
