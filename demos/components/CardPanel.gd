@@ -81,7 +81,7 @@ func _animate_height_change(anchor_top: float, opacity: int) -> void:
 
 	anima.with({ node = $Subtitle, property = "anchor_top", to = anchor_top + 0.1, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK, delay = 0.1 })
 	anima.with({ node = $Subtitle, property = "anchor_bottom", to = anchor_top + 0.2, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK, delay = 0.1 })
-	anima.with({ node = $Subtitle, property = "opacity", to = opacity, duration = 0.3, hide_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY })
+	anima.with({ node = $Subtitle, property = "opacity", to = opacity, duration = 0.3, visibility_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY })
 
 	anima.play()
 

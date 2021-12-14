@@ -1,7 +1,7 @@
 tool
 extends "./AnimaBaseWindow.gd"
 
-signal property_selected(property_name, property_type, node)
+signal property_selected(property_name, property_type, node, node_name)
 
 onready var _property_search: LineEdit = find_node('PropertySearch')
 onready var _nodes_list: VBoxContainer = find_node('AnimaNodesList')
@@ -31,6 +31,8 @@ func populate_animatable_properties_list(source_node: Node) -> void:
 	_source_node = source_node
 	_animatable_properties.clear()
 
+	_animatable_properties.push_back({name = 'opacity', type = TYPE_REAL})
+
 	var properties = source_node.get_property_list()
 	var properties_to_ignore := [
 		'pause_mode',
@@ -54,7 +56,8 @@ func populate_animatable_properties_list(source_node: Node) -> void:
 			property.type == TYPE_VECTOR3 or \
 			property.type == TYPE_INT or \
 			property.type == TYPE_REAL or \
-			property.type == TYPE_COLOR:
+			property.type == TYPE_COLOR or \
+			property.type == TYPE_RECT2:
 			_animatable_properties.push_back({name = property.name.replace('rect_', ''), type = property.type})
 
 	_animatable_properties.sort_custom(PropertiesSorter, "sort_by_name")
@@ -90,6 +93,8 @@ func populate_tree(filter: String = '') -> void:
 			sub_properties = ['x', 'y', 'z']
 		elif animatable_property.type == TYPE_COLOR:
 			sub_properties = ['r', 'g', 'b', 'a']
+		elif animatable_property.type == TYPE_RECT2:
+			sub_properties = ['x', 'y', 'w', 'h']
 
 		for sub_property in sub_properties:
 			var sub = tree.create_item(item)
@@ -109,19 +114,20 @@ func _on_PropertiesTree_item_double_clicked():
 	var tree: Tree = find_node('PropertiesTree')
 	var selected_item: TreeItem = tree.get_selected()
 	var parent = selected_item.get_parent()
-	var is_child = parent.get_parent() != null
+	var is_child: bool = parent.get_parent() != null
+	var selected_node: String = _nodes_list.get_selected()
 
 	var property_to_animate: String = selected_item.get_text(0)
 
 	if is_child:
 		property_to_animate = parent.get_text(0) + ":" + property_to_animate
 
-	emit_signal("property_selected", property_to_animate, selected_item.get_metadata(0).type, _nodes_list.get_selected())
+	emit_signal("property_selected", property_to_animate, selected_item.get_metadata(0).type, selected_node)
 
 	hide()
 
 func _on_PropertiesTree_item_activated():
 	_on_PropertiesTree_item_double_clicked()
 
-func _on_AnimaNodesList_node_selected(node: Node) -> void:
+func _on_AnimaNodesList_node_selected(node: Node, _path) -> void:
 	populate_animatable_properties_list(node)

@@ -280,6 +280,9 @@ func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION, spee
 func get_length() -> float:
 	return _total_animation_length
 
+func set_root_node(node) -> void:
+	_anima_tween.set_root_node(node)
+
 func _do_play() -> void:
 	var play_mode: int = _play_mode
 	var is_loop_in_circle = _play_mode == AnimaTween.PLAY_MODE.LOOP_IN_CIRCLE
@@ -321,7 +324,7 @@ func _setup_animation(data: Dictionary) -> float:
 		 data.duration = _default_duration
 
 	if not data.has('property') and not data.has('animation'):
-		printerr('Print specify the property to animate or the animation to use!')
+		printerr('Please specify the property to animate or the animation to use!', data)
 
 		return 0.0
 

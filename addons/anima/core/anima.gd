@@ -96,6 +96,9 @@ func begin(node: Node, name: String = 'anima', single_shot := false):
 
 	return anima_node
 
+func begin_single_shot(node: Node, name: String = "anima"):
+	return begin(node, name, true)
+
 func player(node: Node):
 	var player = load('./player.gd').new()
 

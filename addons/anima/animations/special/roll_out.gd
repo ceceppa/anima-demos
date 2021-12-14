@@ -3,7 +3,7 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 
 	var position_frames = [
 		{ percentage = 0, from = 0 },
-		{ percentage = 100, to = size.x },
+		{ percentage = 100, to = size.x * 3 },
 	]
 
 	var rotate_frames = [

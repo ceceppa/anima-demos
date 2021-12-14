@@ -19,12 +19,7 @@ func _ready() -> void:
 	)
 #	_anima.then({ property = "x", from = -100.0, relative = true, duration = 0.3, on_started = [funcref(self, '_test'), [false], [true]] })
 	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
-
-	var t: AnimaTween = AnimaTween.new()
-	add_child(t)
-	t._maybe_calculate_value(":size:x + 24 * (icon:position:x)", { node = self })
-
-#	$Tween.interpolate_property($icon, "position", Vector2.ZERO, Vector2(100, 100), 0.3);
+#	_anima.then({ node = $icon, property = "x", from = 0, to = 100, duration = 0.3 })
 
 func _on_Button_pressed():
 	_anima.play()

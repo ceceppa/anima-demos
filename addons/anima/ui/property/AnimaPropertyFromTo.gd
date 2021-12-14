@@ -26,13 +26,20 @@ export (bool) var can_edit_value := true setget set_can_edit_value
 const MIN_SIZE := 30.0
 
 var _input_visible: Control
+var _relative_source: Button
 
 func _ready():
 	if _input_visible == null:
 		_on_ClearButton_pressed()
 
+	var relative_buttons := [$CustomValue/RelativeSelectorButton, $CustomValue/Vector2/X/RelativeVector2X, $CustomValue/Vector2/Y/RelativeVector2Y]
+
+	for button in relative_buttons:
+		button.connect("pressed", self, "_on_RelativeSelectorButton_pressed", [button])
+
 func set_type(the_type: int) -> void:
 	type = the_type
+
 	var node_name: String = 'FreeText'
 	var custom_value = find_node('CustomValue')
 
@@ -45,6 +52,8 @@ func set_type(the_type: int) -> void:
 
 		child.hide()
 
+	var show_global_relative := true
+
 	match type:
 		TYPE_INT:
 			node_name = 'Number'
@@ -52,12 +61,22 @@ func set_type(the_type: int) -> void:
 			node_name = 'Real'
 		TYPE_VECTOR2:
 			node_name = 'Vector2'
+			show_global_relative = false
 		TYPE_VECTOR3:
 			node_name = 'Vector3'
+			show_global_relative = false
+		TYPE_RECT2:
+			node_name = "Rect2"
+			show_global_relative = false
 		TYPE_STRING:
 			node_name = 'FreeText'
 		_:
 			printerr('set_type: unsupported type' + str(type))
+
+	if _relative_selector == null:
+		_relative_selector = find_node('RelativeSelectorButton')
+
+	_relative_selector.visible = show_global_relative
 
 	_input_visible = find_node(node_name)
 	_input_visible.show()
@@ -91,7 +110,7 @@ func _animate_custom_value(mode: int) -> void:
 		from = 1.0,
 		to = 0.0
 	})
-	anima.with({
+	anima.also({
 		node = _custom_value,
 		property = "scale",
 		from = Vector2(1.5, 1.5),
@@ -105,20 +124,69 @@ func _animate_custom_value(mode: int) -> void:
 		from = 0.0,
 		to = 1.0
 	})
+	
+	var height: float = _input_visible.rect_size.y
+
+	anima.also({
+		node = self,
+		property = "size:y",
+		to = height
+	})
+	anima.also({
+		property = "min_size:y",
+		to = height
+	})
 
 	_custom_value.show()
+	_custom_value.rect_size.y = height
 
 	if mode == AnimaTween.PLAY_MODE.NORMAL:
 		anima.play()
 		
 		yield(anima, "animation_completed")
 
-		_input_visible.grab_focus()
+#		if _input_visible.is_visible_in_tree():
+#			_input_visible.grab_focus()
 	else:
 		anima.play_backwards()
 
 func clear_value() -> void:
 	_on_ClearButton_pressed()
+
+func set_placeholder(value) -> void:
+	if _input_visible == null or value == null:
+		return
+
+	var t = typeof(value)
+	if t == TYPE_VECTOR2 or t == TYPE_VECTOR3:
+		var fields = ['x', 'y'] if t == TYPE_VECTOR2 else ['x', 'y', 'z']
+		
+		for field in fields:
+			var l: LineEdit = _input_visible.find_node(field)
+			var label: Label = l.get_parent().find_node("Label")
+			var v: String = str(value[field])
+
+			l.placeholder_text = v
+			label.hint_tooltip = "Current value: " + v
+	elif typeof(value) == TYPE_RECT2:
+		var fields = ['x', 'y', 'w', 'h']
+		
+		for field in fields:
+			var l: LineEdit = _input_visible.find_node(field)
+			var label: Label = l.get_parent().find_node("Label")
+			var v: String = ""
+			
+			if field == "x" or field == "y":
+				v = str(value.position[field])
+			elif field == "w":
+				v = str(value.size.x)
+			elif field == "h":
+				v = str(value.size.y)
+
+			l.placeholder_text = v
+			label.hint_tooltip = "Current value: " + v
+	else:
+		_input_visible.placeholder_text = str(value)
 
 func set_value(value) -> void:
 	if value == null:
@@ -148,8 +216,26 @@ func set_value(value) -> void:
 			x.text = str(value[0])
 			y.text = str(value[1])
 			z.text = str(value[2])
+	elif _input_visible.name == 'Rect2':
+		var x: LineEdit = _input_visible.find_node('x')
+		var y: LineEdit = _input_visible.find_node('y')
+		var w: LineEdit = _input_visible.find_node('w')
+		var h: LineEdit = _input_visible.find_node('h')
+
+		if value is Array:
+			x.text = str(value[0])
+			y.text = str(value[1])
+			w.text = str(value[2])
+			h.text = str(value[3])
 
 	_on_CurrentValue_pressed()
+
+func set_relative_value(value: String) -> void:
+	if _input_visible is LineEdit:
+		_input_visible.text = value
+
+	var linked_node: LineEdit = _relative_source.get_node(_relative_source.linked_field)
+	linked_node.text = value
 
 func get_value():
 	if _input_visible == null or $CurrentValue.modulate.a > 0:
@@ -174,6 +260,13 @@ func get_value():
 		var z: LineEdit = _input_visible.find_node('z')
 
 		return [x.get_value(), y.get_value(), z.get_value()]
+	elif _input_visible.name == 'Rect2':
+		var x: LineEdit = _input_visible.find_node('x')
+		var y: LineEdit = _input_visible.find_node('y')
+		var w: LineEdit = _input_visible.find_node('w')
+		var h: LineEdit = _input_visible.find_node('h')
+
+		return [x.get_value(), y.get_value(), w.get_value(), h.get_value()]
 
 func set_label(new_label: String) -> void:
 	if _current_value_button == null:
@@ -208,8 +301,7 @@ func _on_FreeText_text_changed(_new_text):
 func _handle_custom_value_visibility(visible: bool) -> void:
 	_custom_value.visible = visible
 
-func _on_RelativeButton_pressed():
-	pass # Replace with function body.
+func _on_RelativeSelectorButton_pressed(source: Button):
+	_relative_source = source
 
-func _on_RelativeSelectorButton_pressed():
 	emit_signal("select_relative_property")

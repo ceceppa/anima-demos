@@ -63,7 +63,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 		Anima.PIVOT.CENTER:
 			if node is Control:
 				node.set_pivot_offset(size / 2)
-		Anima.PIVOT.CENTER_BOTTOM:
+		Anima.PIVOT.BOTTOM_CENTER:
 			if node is Control:
 				node.set_pivot_offset(Vector2(size.x / 2, size.y / 2))
 			else:
@@ -71,7 +71,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 
 				node.offset = Vector2(0, -size.y / 2)
 				node.global_position = position - node.offset
-		Anima.PIVOT.LEFT_BOTTOM:
+		Anima.PIVOT.BOTTOM_LEFT:
 			if node is Control:
 				node.set_pivot_offset(Vector2(0, size.y))
 			else:
@@ -79,7 +79,7 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 
 				node.offset = Vector2(size.x / 2, size.y)
 				node.global_position = position - node.offset
-		Anima.PIVOT.RIGHT_BOTTOM:
+		Anima.PIVOT.BOTTOM_RIGHT:
 			if node is Control:
 				node.set_pivot_offset(Vector2(size.x, size.y / 2))
 			else:
@@ -144,6 +144,8 @@ static func get_property_value(node: Node, property: String):
 		node_property_name = rect_property_name
 	elif property_name in node:
 		node_property_name = property_name
+	elif rect_property_name in node:
+		node_property_name = rect_property_name
 
 	if p[0] == 'shader_param':
 		var material: ShaderMaterial
@@ -159,7 +161,18 @@ static func get_property_value(node: Node, property: String):
 			return node[property_name][key][subkey]
 
 		if key:
-			return node[node_property_name][key]
+			var prop = node[node_property_name]
+
+			if typeof(prop) == TYPE_RECT2:
+				if ['x', 'y'].find(key) >= 0:
+					return prop.position[key]
+
+				if key == "w":
+					return prop.size.x
+				
+				return prop.size.y
+
+			return prop[key]
 
 		return node[node_property_name]
 
@@ -274,6 +287,8 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		node_property_name = rect_property_name
 	elif property_name in node:
 		node_property_name = property_name
+	elif rect_property_name in node:
+		node_property_name = rect_property_name
 
 	if p[0] == 'shader_param':
 		var material: ShaderMaterial
@@ -288,6 +303,16 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		}
 
 	if node_property_name:
+		if node[node_property_name] is Rect2 and p.size() > 1:
+			var k: String = p[1]
+
+			if k == "x" or k == "y":
+				key = "position"
+				subkey = k
+			else:
+				key = "size"
+				subkey = "x" if k == "w" else "y"
+
 		if subkey:
 			return {
 				property_name = node_property_name,

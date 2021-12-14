@@ -1,7 +1,7 @@
 tool
 extends VBoxContainer
 
-signal node_selected(node)
+signal node_selected(node, path)
 
 export (bool) var trigger_selected := false
 
@@ -19,13 +19,32 @@ func populate():
 	_search_filed.clear()
 	_search_filed.grab_focus()
 
+func get_selected() -> String:
+	var selected := _nodes_list.get_selected()
+
+	if selected == null:
+		return ""
+
+	if selected.get_parent() == null:
+		return "."
+
+	var path := []
+
+	while selected:
+		var name: String = selected.get_text(0)
+
+		if selected.get_parent() == null:
+			name = "."
+
+		path.push_front(name)
+		selected = selected.get_parent()
+
+	return PoolStringArray(path).join("/")
+
 func select_node(node: Node) -> void:
 	var root: TreeItem = _nodes_list.get_root()
 	
 	_select_node(root, node.name)
-
-func get_selected() -> String:
-	return _nodes_list.get_selected().get_text(0)
 
 func _select_node(tree_item: TreeItem, name: String) -> void:
 	var child := tree_item.get_children()
@@ -74,7 +93,7 @@ func _add_children(start_node: Node, parent_item = null, is_root := false) -> vo
 			item.set_text(0, child.name)
 			item.set_icon(0, AnimaUI.get_node_icon(child))
 
-		if child.get_child_count() > 0 and not child is AnimaShape:
+		if child.get_child_count() > 0 and not child is AnimaShape and not child is AnimaChars:
 			_add_children(child, item)
 
 func _is_visible(name: String) -> bool:
@@ -89,12 +108,15 @@ func _on_SearchField_text_changed(new_text: String):
 	_retrieves_list_of_nodes()
 
 func _on_NodesList_item_activated():
-	var node_name = _nodes_list.get_selected().get_text(0)
-	var node = _start_node.find_node(node_name)
+	var path: String = get_selected()
+	var node: Node = _start_node.get_node(path)
+
+	if node == null:
+		node = _start_node
 
 	AnimaUI.debug(self, 'node selected', node)
 
-	emit_signal("node_selected", node)
+	emit_signal("node_selected", node, path)
 
 func _on_SearchField_gui_input(event):
 	if event is InputEventKey and event.scancode == KEY_ESCAPE:

@@ -33,7 +33,7 @@ func get_anima() -> AnimaNode:
 	anima.then({ node = $AnimaLine, animation = 'move_line_1_again', duration = 0.3, delay = - 0.1, easing = Anima.EASING.EASE_OUT_CUBIC })
 	anima.with({ node = $AnimaLine2, animation = 'move_line_2_again', duration = 0.3, easing = Anima.EASING.EASE_OUT_CUBIC })
 
-	anima.with({ group = $Anima, animation = 'animate_anima', duration = 0.5, easing_points = [0.5,1,0.85,1.78], hide_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY })
+	anima.with({ group = $Anima, animation = 'animate_anima', duration = 0.5, easing_points = [0.5,1,0.85,1.78], visibility_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY })
 
 	anima.then({ node = $AnimaLine, property = '_x1', to = 100, relative = true, duration = 0.3, delay = -0.1, easing = Anima.EASING.EASE_OUT_CUBIC })
 	anima.with({ node = $AnimaLine, property = '_x2', to = -100, relative = true, duration = 0.3, easing = Anima.EASING.EASE_OUT_CUBIC })

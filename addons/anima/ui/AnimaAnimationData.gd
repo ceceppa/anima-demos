@@ -7,6 +7,7 @@ signal select_easing
 signal content_size_changed(new_size)
 signal value_updated
 signal select_relative_property
+signal animate_as_changed(as_node)
 
 onready var _animation_type_button: Button = find_node('AnimationTypeButton')
 onready var _property_type_button: Button = find_node('PropertyTypeButton')
@@ -22,6 +23,8 @@ onready var _relative_check: CheckBox = find_node('RelativeCheck')
 onready var _property_values: VBoxContainer = find_node('PropertyValues')
 onready var _pivot_button: Control = find_node('PivotButton')
 onready var _easing_button: Button = find_node('EasingButton')
+onready var _node_or_group: VBoxContainer = find_node('NodeOrGroup')
+onready var _node_or_group_controls: HBoxContainer = _node_or_group.find_node('Controls')
 
 var _animation_name: String
 var _data_to_restore: Dictionary
@@ -32,8 +35,13 @@ var _previous_animation_type: int
 
 func _ready():
 	_property_container.hide()
+	$Wrapper.rect_position.y *= AnimaUI.get_dpi_scale()
+	$AnimationType.rect_min_size.y *= AnimaUI.get_dpi_scale()
 
 	_maybe_init_anima_node()
+
+func show_group_or_node() -> void:
+	_node_or_group.show()
 
 func get_animation_data() -> Dictionary:
 	var type: int = AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION
@@ -44,6 +52,8 @@ func get_animation_data() -> Dictionary:
 	var data := {
 		type = type
 	}
+
+	var as_group: ButtonGroup = _node_or_group_controls.get_child(0).group
 
 	if type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
 		data.animation = {
@@ -56,7 +66,8 @@ func get_animation_data() -> Dictionary:
 			type = _property_type,
 			relative = _relative_check.pressed,
 			pivot = _pivot_button.get_value(),
-			easing = _easing_button.get_meta('_value')
+			easing = _easing_button.get_meta('_value'),
+			animate_as = as_group.get_pressed_button().get_index()
 		}
 
 		var from = _from_value.get_value()
@@ -67,9 +78,10 @@ func get_animation_data() -> Dictionary:
 		if to != null:
 			data.property.to = to
 
+	AnimaUI.debug(self, "get_animation_data", data)
 	return data
 
-func restore_data(data: Dictionary) -> void:
+func restore_data(source_node: Node, data: Dictionary) -> void:
 	if not data.has('type'):
 		return
 
@@ -91,7 +103,7 @@ func restore_data(data: Dictionary) -> void:
 	_property_button.text = data.property.name
 	_property_type = data.property.type
 
-	if data.property.type == TYPE_VECTOR2 or data.property.type == TYPE_VECTOR3:
+	if data.property.type == TYPE_VECTOR2 or data.property.type == TYPE_VECTOR3 or data.property.type == TYPE_RECT2:
 		_from_value.set_type(data.property.type)
 		_to_value.set_type(data.property.type)
 	else:
@@ -103,6 +115,19 @@ func restore_data(data: Dictionary) -> void:
 
 	if data.property.has('to'):
 		_to_value.set_value(data.property.to)
+
+	var current_value = AnimaNodesProperties.get_property_value(source_node, data.property.name)
+
+	_from_value.set_placeholder(current_value)
+	_to_value.set_placeholder(current_value)
+
+	if data.property.has("animate_as_node"):
+		var as_group: ButtonGroup = _node_or_group_controls.get_child(0).group
+		var buttons: Array = as_group.get_buttons()
+		var button: Button = buttons[int(data.property.animate_as_node)]
+		
+		button.pressed = true
+		_node_or_group.find_node("Carousel").set_index(button.get_index())
 
 	_relative_check.pressed = data.property.relative
 	_pivot_button.set_value(data.property.pivot)
@@ -119,8 +144,8 @@ func set_animation_data(label: String, name: String) -> void:
 	_animation_button.text = label
 	_animation_name = name
 
-func set_property_to_animate(name: String, type: int) -> void:
-	_property_button.text = name
+func set_property_to_animate(source_node: Node, property_name: String, type: int) -> void:
+	_property_button.text = property_name
 	_property_type = type
 	
 	_previous_animation_type = -1
@@ -129,8 +154,17 @@ func set_property_to_animate(name: String, type: int) -> void:
 	wrapper.margin_right = rect_size.x
 	wrapper.rect_size.x = rect_size.x
 
-	_from_value.set_type(TYPE_STRING)
-	_to_value.set_type(TYPE_STRING)
+	if type == TYPE_RECT2 or type == TYPE_VECTOR2 or type == TYPE_VECTOR3:
+		_from_value.set_type(type)
+		_to_value.set_type(type)
+	else:
+		_from_value.set_type(TYPE_STRING)
+		_to_value.set_type(TYPE_STRING)
+
+	var current_value = AnimaNodesProperties.get_property_value(source_node, property_name)
+
+	_from_value.set_placeholder(current_value)
+	_to_value.set_placeholder(current_value)
 
 	_on_PropertyTypeButton_pressed()
 
@@ -217,14 +251,13 @@ func _maybe_init_anima_node() -> void:
 	_anima_property_values.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)
 
 func _adjust_height(calculate_property_values_height: bool, pivot_size: float = -1.0) -> void:
-	var wrapper = find_node('Wrapper')
 	var new_size := 0 # _animation_container.rect_size.y
 	
 	var pivot_button: Control = find_node('PivotButton')
 	var pivot_height: float = max(0, pivot_button.rect_size.y - 32)
 
 	if calculate_property_values_height and _property_type != 0:
-		new_size = 20.0
+		new_size = 20.0 * AnimaUI.get_dpi_scale()
 
 		for child in _property_values.get_children():
 			if child is Control:
@@ -232,6 +265,11 @@ func _adjust_height(calculate_property_values_height: bool, pivot_size: float = 
 
 	if pivot_size >= 0.0:
 		new_size -= pivot_height
+
+	if _node_or_group == null:
+		_node_or_group = find_node("NodeOrGroup")
+
+	new_size += _node_or_group.find_node("Carousel").get_expected_wrapper_height()
 
 	emit_signal("content_size_changed", new_size + pivot_size)
 
@@ -298,3 +336,21 @@ func _on_FromValue_select_relative_property():
 
 func _on_ToValue_select_relative_property():
 	emit_signal("select_relative_property", _to_value)
+
+func _on_AsNode_pressed():
+	emit_signal("animate_as_changed", true)
+	emit_signal("value_updated")
+
+func _on_AsGroup_pressed():
+	emit_signal("animate_as_changed", false)
+	emit_signal("value_updated")
+
+func _on_Carousel_carousel_height_changed(final_height):
+	_adjust_height(true)
+
+func _on_PropertyValues_item_rect_changed():
+	$Timer.stop()
+	$Timer.start()
+
+func _on_Timer_timeout():
+	_adjust_height(true)

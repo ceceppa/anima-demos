@@ -5,16 +5,15 @@ extends Tween
 
 signal animation_completed
 
+const ANIMATED_ITEM = preload("res://addons/anima/core/animated_item.gd")
+
 var _animation_data := []
-
-# Needed to use interpolate_property
-var _fake_property: Dictionary = {}
-
 var _visibility_strategy: int = Anima.VISIBILITY.IGNORE
 var _callbacks := {}
 var _is_backwards_animation := false
 var _loop_strategy = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
 var _tween_completed := 0
+var _root_node
 
 enum PLAY_MODE {
 	NORMAL,
@@ -23,11 +22,7 @@ enum PLAY_MODE {
 }
 
 func _ready():
-	connect("tween_started", self, '_on_tween_started')
-	connect("tween_step", self, '_on_tween_step_with_easing')
-	connect("tween_step", self, '_on_tween_step_with_easing_callback')
-	connect("tween_step", self, '_on_tween_step_with_easing_funcref')
-	connect("tween_step", self, '_on_tween_step_without_easing')
+#	connect("tween_started", self, '_on_tween_started')
 	connect("tween_completed", self, '_on_tween_completed')
 
 	#
@@ -38,7 +33,7 @@ func _ready():
 	# - recreating the anima animation again before playing
 	# - cheat
 	#
-	# Of the 3 I did prefer "chating" making belive Godot that this tween is in a
+	# Of the 3 I did prefer "cheating" making belive Godot that this tween is in a
 	# repeat loop.
 	# So, once all the animations are completed (_tween_completed == _animation_data.size())
 	# we pause the tween, and next time we call play again we resume it and it works...
@@ -59,14 +54,11 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	index = str(_animation_data.size())
 
 	var duration = animation_data.duration if animation_data.has('duration') else Anima.DEFAULT_DURATION
-	var property_key = 'p' + index
 
-	_fake_property[property_key] = 0.0
+#	if animation_data.has('on_completed') and animation_data.has('_is_last_frame'):
+#		_callbacks[property_key] = animation_data.on_completed
 
-	if animation_data.has('on_completed') and animation_data.has('_is_last_frame'):
-		_callbacks[property_key] = animation_data.on_completed
-
-	if animation_data.has('hide_strategy'):
+	if animation_data.has('visibility_strategy'):
 		_apply_visibility_strategy(animation_data)
 
 	var easing_points
@@ -81,26 +73,36 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		easing_points = animation_data.easing_points
 
 	animation_data._easing_points = easing_points
+	animation_data._property_data = AnimatedUtils.calculate_from_and_to(animation_data)
 
-	animation_data._animation_callback = funcref(self, '_calculate_from_and_to')
+	var object
+
+	if animation_data._property_data.has('subkey'):
+		object = AnimatedPropertyWithSubKeyItem.new()
+	elif animation_data._property_data.has('key'):
+		object = AnimatedPropertyWithKeyItem.new()
+	else:
+		object = AnimatedPropertyItem.new()
+
+	object.set_animation_data(animation_data)
+
+	var use_method: String = "animate_linear"
 
 	if easing_points is Array:
-		animation_data._use_step_callback = '_on_tween_step_with_easing'
+		use_method = 'animate_with_easing_points'
 	elif easing_points is String:
-		animation_data._use_step_callback = '_on_tween_step_with_easing_callback'
+		use_method = 'animate_with_easing'
 	elif easing_points is FuncRef:
-		animation_data._use_step_callback = '_on_tween_step_with_easing_funcref'
-	else:
-		animation_data._use_step_callback = '_on_tween_step_without_easing'
+		use_method = 'animate_with_easing_funcref'
 
 	_is_backwards_animation = play_mode != PLAY_MODE.NORMAL
 
 	var from := 0.0 if play_mode == PLAY_MODE.NORMAL else 1.0
 	var to := 1.0 - from
 
-	interpolate_property(
-		self,
-		'_fake_property:' + property_key,
+	interpolate_method(
+		object,
+		use_method,
 		from,
 		to,
 		duration,
@@ -109,6 +111,8 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		animation_data._wait_time
 	)
 
+#func test(a:float) -> void:
+#	print(a)
 #
 # Given an array of frames generates the animation data using relative end value
 #
@@ -132,6 +136,9 @@ func add_relative_frames(data: Dictionary, property: String, frames: Array) -> f
 #
 func add_frames(data: Dictionary, property: String, frames: Array) -> float:
 	return _add_frames(data, property, frames)
+
+func set_root_node(node: Node) -> void:
+	_root_node = node
 
 func _add_frames(data: Dictionary, property: String, frames: Array, relative: bool = false) -> float:
 	var duration: float = data.duration if data.has('duration') else 0.0
@@ -212,7 +219,6 @@ func clear_animations() -> void:
 	remove_all()
 	reset_all()
 
-	_fake_property = {}
 	_callbacks = {}
 	_animation_data.clear()
 
@@ -303,8 +309,8 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anim
 	var should_hide_nodes := false
 	var should_make_nodes_transparent := false
 
-	if animation_data.has('hide_strategy'):
-		strategy = animation_data.hide_strategy
+	if animation_data.has("visibility_strategy"):
+		strategy = animation_data.visibility_strategy
 
 	if strategy == Anima.VISIBILITY.HIDDEN_ONLY:
 		should_hide_nodes = true
@@ -330,196 +336,6 @@ func _apply_visibility_strategy(animation_data: Dictionary, strategy: int = Anim
 
 		if animation_data.has('property') and animation_data.property == 'opacity':
 			node.remove_meta('_old_modulate')
-
-func _on_tween_step_with_easing(object: Object, key: NodePath, _time: float, elapsed: float):
-	var index := _get_animation_data_index(key)
-
-	if _animation_data[index]._use_step_callback != '_on_tween_step_with_easing':
-		return
-
-	var animation_data = _animation_data[index]
-	var easing_points = animation_data._easing_points
-	var p1 = easing_points[0]
-	var p2 = easing_points[1]
-	var p3 = easing_points[2]
-	var p4 = easing_points[3]
-
-	var easing_elapsed = _cubic_bezier(Vector2.ZERO, Vector2(p1, p2), Vector2(p3, p4), Vector2(1, 1), elapsed)
-
-	animation_data._animation_callback.call_func(index, easing_elapsed)
-
-func _on_tween_step_with_easing_callback(object: Object, key: NodePath, _time: float, elapsed: float):
-	var index := _get_animation_data_index(key)
-
-	if _animation_data[index]._use_step_callback != '_on_tween_step_with_easing_callback':
-		return
-
-	var easing_points_function = _animation_data[index]._easing_points
-	var easing_callback = funcref(AnimaEasing, easing_points_function)
-	var easing_elapsed = easing_callback.call_func(elapsed)
-
-	_animation_data[index]._animation_callback.call_func(index, easing_elapsed)
-
-func _on_tween_step_with_easing_funcref(object: Object, key: NodePath, _time: float, elapsed: float):
-	var index := _get_animation_data_index(key)
-
-	if _animation_data[index]._use_step_callback != '_on_tween_step_with_easing_funcref':
-		return
-
-	var easing_callback = _animation_data[index]._easing_points
-	var easing_elapsed = easing_callback.call_func(elapsed)
-
-	_animation_data[index]._animation_callback.call_func(index, easing_elapsed)
-
-func _on_tween_step_without_easing(object: Object, key: NodePath, _time: float, elapsed: float):
-	var index := _get_animation_data_index(key)
-
-	if _animation_data[index]._use_step_callback != '_on_tween_step_without_easing':
-		return
-
-	_animation_data[index]._animation_callback.call_func(index, elapsed)
-
-func _get_animation_data_index(key: NodePath) -> int:
-	var s = str(key)
-
-	return int(s.replace('_fake_property:p', '')) - 1
-
-func _cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float) -> float:
-	var q0 = p0.linear_interpolate(p1, t)
-	var q1 = p1.linear_interpolate(p2, t)
-	var q2 = p2.linear_interpolate(p3, t)
-
-	var r0 = q0.linear_interpolate(q1, t)
-	var r1 = q1.linear_interpolate(q2, t)
-
-	var s = r0.linear_interpolate(r1, t)
-
-	return s.y
-
-func _calculate_from_and_to(index: int, value: float) -> void:
-	var animation_data: Dictionary = _animation_data[index]
-	var node: Node = animation_data.node
-
-	var do_calculate := true
-	var recalculate_from_to = _loop_strategy == Anima.LOOP.RECALCULATE_RELATIVE_DATA and animation_data.has('relative')
-	
-	if recalculate_from_to == false and animation_data.has('_property_data'):
-		do_calculate = false
-
-	if do_calculate:
-		_do_calculate_from_to(node, animation_data)
-		_animation_data[index] = animation_data
-
-	var callback := '_on_animation_without_key'
-
-	if animation_data._property_data.has('subkey'):
-		callback = '_on_animation_with_subkey'
-	elif animation_data._property_data.has('key'):
-		callback = '_on_animation_with_key'
-
-	animation_data._animation_callback = funcref(self, callback)
-
-	_animation_data[index]._animation_callback.call_func(index, value)
-
-func _do_calculate_from_to(node: Node, animation_data: Dictionary) -> void:
-	var from
-	var to
-	var relative = animation_data.relative if animation_data.has('relative') else false
-	var node_from = AnimaNodesProperties.get_property_value(node, animation_data.property)
-
-	if animation_data.has('from'):
-		from = _maybe_calculate_value(animation_data.from, animation_data)
-		from = _maybe_convert_from_deg_to_rad(node, animation_data, from)
-		from = _maybe_calculate_relative_value(relative, from, node_from)
-	else:
-		from = node_from
-		animation_data.__from = from
-
-	if animation_data.has('to'):
-		var start = node_from if _is_backwards_animation else from
-		var to_relative = false if animation_data.has('__ignore_to_relative') else relative
-
-		to = _maybe_calculate_value(animation_data.to, animation_data)
-		to = _maybe_convert_from_deg_to_rad(node, animation_data, to)
-		to = _maybe_calculate_relative_value(to_relative, to, start)
-	else:
-		to = node_from
-
-	if animation_data.has('pivot'):
-		if node is Spatial:
-			printerr('3D Pivot not supported yet')
-		else:
-			AnimaNodesProperties.set_2D_pivot(animation_data.node, animation_data.pivot)
-
-	animation_data._property_data = AnimaNodesProperties.map_property_to_godot_property(node, animation_data.property)
-
-	if to is Rect2:
-		animation_data._property_data.diff = { position = to.position - from.position, size = to.size - from.size }
-	else:
-		animation_data._property_data.diff = to - from
-
-	animation_data._property_data.from = from
-	animation_data._property_data.to = to
-
-func _maybe_calculate_value(value, animation_data: Dictionary):
-	if not value is String or value.find(':') < 0:
-		return value
-
-	var regex := RegEx.new()
-	regex.compile("(:?[a-z]*:[a-z]*:?[a-z]*)")
-
-	var results := regex.search_all(value)
-	var variables := []
-	var values := []
-
-	results.invert()
-
-	for index in results.size():
-		var rm: RegExMatch = results[index]
-		var info: Array = rm.get_string().split(":")
-		var source_node = info.pop_front()
-
-		if source_node == '':
-			source_node = animation_data.node
-		else:
-			source_node = get_viewport().find_node(source_node, true, false)
-
-		var property: String = PoolStringArray(info).join(":")
-		var property_value = AnimaNodesProperties.get_property_value(source_node, property)
-
-		AnimaUI.debug(self, "_maybe_calculate_value: search", source_node, rm.get_string(), property, property_value)
-
-		var variable := char(65 + index)
-
-		variables.push_back(variable)
-		values.push_back(property_value)
-		
-		value.erase(rm.get_start(), rm.get_end() - rm.get_start())
-		value = value.insert(rm.get_start(), variable)
-
-	var expression := Expression.new()
-	expression.parse(value, variables)
-
-	var result = expression.execute(values)
-
-	AnimaUI.debug(self, "-->", value, result)
-
-	return result
-
-func _maybe_calculate_relative_value(relative, value, current_node_value):
-	if not relative:
-		return value
-
-	return value + current_node_value
-
-func _maybe_convert_from_deg_to_rad(node: Node, animation_data: Dictionary, value):
-	if not node is Spatial or animation_data.property.find('rotation') < 0:
-		return value
-
-	if value is Vector3:
-		return Vector3(deg2rad(value.x), deg2rad(value.y), deg2rad(value.z))
-
-	return deg2rad(value)
 
 func _on_animation_with_key(index: int, elapsed: float) -> void:
 	var data = _calculate_value(index, elapsed)
@@ -589,12 +405,12 @@ func _maybe_adjust_modulate_value(animation_data: Dictionary, value):
 	return value
 
 func _on_tween_completed(_ignore, property_name: String) -> void:
-	var index := _get_animation_data_index(property_name)
-	var property_key = property_name.replace(':_fake_property:', '')
-
-	if _callbacks.has(property_key):
-		_execute_callback(_callbacks[property_key])
-
+#	var index := _get_animation_data_index(property_name)
+#	var property_key = property_name.replace(':_fake_property:', '')
+#
+#	if _callbacks.has(property_key):
+#		_execute_callback(_callbacks[property_key])
+#
 	_tween_completed += 1
 
 	if _tween_completed >= _animation_data.size():
@@ -603,41 +419,43 @@ func _on_tween_completed(_ignore, property_name: String) -> void:
 		emit_signal("animation_completed")
 
 func _on_tween_started(_ignore, key) -> void:
-	var index := _get_animation_data_index(key)
-	var hide_strategy = _visibility_strategy
-	var animation_data = _animation_data[index]
-
-	if animation_data.has('hide_strategy'):
-		hide_strategy = animation_data.hide_strategy
-
-	var node: Node = animation_data.node
-	var should_restore_visibility := false
-	var should_restore_modulate := false
-
-	if hide_strategy == Anima.VISIBILITY.HIDDEN_ONLY:
-		should_restore_visibility = true
-	elif hide_strategy == Anima.VISIBILITY.HIDDEN_AND_TRANSPARENT:
-		should_restore_modulate = true
-		should_restore_visibility = true
-	elif hide_strategy == Anima.VISIBILITY.TRANSPARENT_ONLY:
-		should_restore_modulate = true
-
-	if should_restore_modulate:
-		var old_modulate
-		
-		if node.has_meta('_old_modulate'):
-			old_modulate = node.get_meta('_old_modulate')
-			old_modulate.a = 1.0
-
-		if old_modulate:
-			node.modulate = old_modulate
-
-	if should_restore_visibility:
-		node.show()
-
-	var should_trigger_on_started: bool = animation_data.has('_is_first_frame') and animation_data._is_first_frame and animation_data.has('on_started')
-	if should_trigger_on_started:
-		_execute_callback(animation_data.on_started)
+	print("started")
+#	var index := _get_animation_data_index(key)
+#	var visibility_strategy = _visibility_strategy
+#	var animation_data = _animation_data[index]
+#
+#	if animation_data.has("visibility_strategy"):
+#		visibility_strategy = animation_data.visibility_strategy
+#
+#	var node: Node = animation_data.node
+#	var should_restore_visibility := false
+#	var should_restore_modulate := false
+#
+#	if visibility_strategy == Anima.VISIBILITY.HIDDEN_ONLY:
+#		should_restore_visibility = true
+#	elif visibility_strategy == Anima.VISIBILITY.HIDDEN_AND_TRANSPARENT:
+#		should_restore_modulate = true
+#		should_restore_visibility = true
+#	elif visibility_strategy == Anima.VISIBILITY.TRANSPARENT_ONLY:
+#		should_restore_modulate = true
+#
+#	if should_restore_modulate:
+#		var old_modulate
+#
+#		if node.has_meta('_old_modulate'):
+#			old_modulate = node.get_meta('_old_modulate')
+#			old_modulate.a = 1.0
+#
+#		if old_modulate:
+#			node.modulate = old_modulate
+#
+#	if should_restore_visibility:
+#		node.show()
+#
+#	var should_trigger_on_started: bool = animation_data.has('_is_first_frame') and animation_data._is_first_frame and animation_data.has('on_started')
+#	if should_trigger_on_started:
+#		_execute_callback(animation_data.on_started)
+	pass
 
 func _execute_callback(callback) -> void:
 	var fn: FuncRef
@@ -653,3 +471,241 @@ func _execute_callback(callback) -> void:
 		fn = callback
 		
 	fn.call_funcv(args)
+
+
+class AnimatedUtils:
+#	static func calculate_from_and_to(animation_data: Dictionary, loop_strategy: int) -> void:
+#		var node: Node = animation_data.node
+#
+#		var do_calculate := true
+#		var recalculate_from_to = loop_strategy == Anima.LOOP.RECALCULATE_RELATIVE_DATA and animation_data.has('relative')
+#
+#		if recalculate_from_to == false and animation_data.has('_property_data'):
+#			do_calculate = false
+#
+#		if do_calculate:
+#			_do_calculate_from_to(node, animation_data)
+#
+#		var callback := 'animate_property'
+#
+#		if animation_data._property_data.has('subkey'):
+#			callback = 'animate_property_with_subkey'
+#		elif animation_data._property_data.has('key'):
+#			callback = 'animate_property_with_key'
+#
+#		animation_data._animation_callback = callback
+	static func calculate_from_and_to(animation_data: Dictionary) -> Dictionary:
+		var node: Node = animation_data.node
+		var from
+		var to
+		var relative = animation_data.relative if animation_data.has('relative') else false
+		var node_from = AnimaNodesProperties.get_property_value(node, animation_data.property)
+		var property_data: Dictionary
+
+		if animation_data.has('from'):
+			from = _maybe_calculate_value(animation_data.from, animation_data)
+			from = _maybe_convert_from_deg_to_rad(node, animation_data, from)
+			from = _maybe_calculate_relative_value(relative, from, node_from)
+		else:
+			from = node_from
+
+		if animation_data.has('to'):
+			var start = node_from #if _is_backwards_animation else from
+			var to_relative = false if animation_data.has('__ignore_to_relative') else relative
+
+			to = _maybe_calculate_value(animation_data.to, animation_data)
+			to = _maybe_convert_from_deg_to_rad(node, animation_data, to)
+			to = _maybe_calculate_relative_value(to_relative, to, start)
+		else:
+			to = node_from
+
+		if animation_data.has('pivot'):
+			if node is Spatial:
+				printerr('3D Pivot not supported yet')
+			else:
+				AnimaNodesProperties.set_2D_pivot(animation_data.node, animation_data.pivot)
+
+		property_data = AnimaNodesProperties.map_property_to_godot_property(node, animation_data.property)
+
+		if typeof(to) == TYPE_RECT2:
+			property_data.diff = { position = to.position - from.position, size = to.size - from.size }
+		else:
+			property_data.diff = to - from
+
+		property_data.from = from
+		property_data.to = to
+
+		return property_data
+
+	static func _maybe_calculate_value(value, animation_data: Dictionary):
+		if (not value is String and not value is Array) or (value is String and value.find(':') < 0):
+			return value
+
+		var values_to_check: Array
+
+		if value is String:
+			values_to_check.push_back(value)
+		else:
+			values_to_check = value
+
+		var regex := RegEx.new()
+		regex.compile("([\\w\\/.:]+[a-zA-Z]*:[a-z]*:?[a-z]*)")
+
+		var all_results := []
+		var root = null #_root_node #if _root_node else get_viewport()
+
+		for single_value in values_to_check:
+			if single_value == "":
+				single_value = "0.0"
+
+			var results := regex.search_all(single_value)
+			var variables := []
+			var values := []
+
+			results.invert()
+
+			for index in results.size():
+				var rm: RegExMatch = results[index]
+				var info: Array = rm.get_string().split(":")
+				var source = info.pop_front()
+				var source_node: Node
+
+				if source == '':
+					source_node = animation_data.node
+				else:
+					source_node = root.get_node(source)
+
+				var property: String = PoolStringArray(info).join(":")
+				var property_value = AnimaNodesProperties.get_property_value(source_node, property)
+
+				AnimaUI.debug("AnimatedItem", "_maybe_calculate_value: search", source_node, rm.get_string(), property, property_value)
+
+				var variable := char(65 + index)
+
+				variables.push_back(variable)
+				values.push_back(property_value)
+
+				single_value.erase(rm.get_start(), rm.get_end() - rm.get_start())
+				single_value = single_value.insert(rm.get_start(), variable)
+
+			var expression := Expression.new()
+			expression.parse(single_value, variables)
+
+			var result = expression.execute(values)
+
+			all_results.push_back(result)
+			AnimaUI.debug("AnimatedItem", "-->", value, result)
+
+		if value is String:
+			return all_results[0]
+
+		if all_results.size() == 2:
+			return Vector2(all_results[0], all_results[1])
+		elif all_results.size() == 3:
+			return Vector3(all_results[0], all_results[1], all_results[2])
+		elif all_results.size() == 4:
+			return Rect2(all_results[0], all_results[1], all_results[2], all_results[3])
+
+		return all_results
+
+	static func _maybe_calculate_relative_value(relative, value, current_node_value):
+		if not relative:
+			return value
+
+		if value is Rect2:
+			value.position += current_node_value.position
+			value.size += current_node_value.size
+
+			return value
+
+		return value + current_node_value
+
+	static func _maybe_convert_from_deg_to_rad(node: Node, animation_data: Dictionary, value):
+		if not node is Spatial or animation_data.property.find('rotation') < 0:
+			return value
+
+		if value is Vector3:
+			return Vector3(deg2rad(value.x), deg2rad(value.y), deg2rad(value.z))
+
+		return deg2rad(value)
+
+class AnimatedItem extends Node:
+	var _node: Node
+	var _property: String
+	var _key
+	var _subKey
+	var _animation_data: Dictionary
+	var _loop_strategy: int = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
+	var _is_backwards_animation: bool = false
+	var _root_node: Node
+	var _animation_callback: FuncRef
+
+	func set_animation_data(data: Dictionary) -> void:
+		_animation_data = data
+
+		var p_data: Dictionary = data._property_data
+		_property = p_data.property_name
+		_key = p_data.key if p_data.has("key") else null
+		_subKey = p_data.subkey if p_data.has("subkey") else null
+
+		_node = data.node
+
+	func animate(elapsed: float) -> void:
+		var property_data = _animation_data._property_data
+		var value = property_data.from + (property_data.diff * elapsed)
+
+		apply_value(value)
+
+	func apply_value(value) -> void:
+		printerr("Please use LinearAnimatedItem or EasingAnimatedItem class intead!!!")
+
+	func animate_with_easing(elapsed: float):
+		var easing_points = _animation_data._easing_points
+		var p1 = easing_points[0]
+		var p2 = easing_points[1]
+		var p3 = easing_points[2]
+		var p4 = easing_points[3]
+
+		var easing_elapsed = _cubic_bezier(Vector2.ZERO, Vector2(p1, p2), Vector2(p3, p4), Vector2(1, 1), elapsed)
+
+		animate(easing_elapsed)
+
+	func animate_with_easing_points(elapsed: float):
+		var easing_points_function = _animation_data._easing_points
+		var easing_callback = funcref(AnimaEasing, easing_points_function)
+		var easing_elapsed = easing_callback.call_func(elapsed)
+
+		animate(easing_elapsed)
+
+	func animate_with_easing_funcref(elapsed: float):
+		var easing_callback = _animation_data._easing_points
+		var easing_elapsed = easing_callback.call_func(elapsed)
+
+		animate(easing_elapsed)
+
+	func animate_linear(elapsed: float):
+		animate(elapsed)
+
+	func _cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float) -> float:
+		var q0 = p0.linear_interpolate(p1, t)
+		var q1 = p1.linear_interpolate(p2, t)
+		var q2 = p2.linear_interpolate(p3, t)
+
+		var r0 = q0.linear_interpolate(q1, t)
+		var r1 = q1.linear_interpolate(q2, t)
+
+		var s = r0.linear_interpolate(r1, t)
+
+		return s.y
+
+class AnimatedPropertyItem extends AnimatedItem:
+	func apply_value(value) -> void:
+		_node[_property] = value
+
+class AnimatedPropertyWithKeyItem extends AnimatedItem:
+	func apply_value(value) -> void:
+		_node[_property][_key] = value
+
+class AnimatedPropertyWithSubKeyItem extends AnimatedItem:
+	func apply_value(value) -> void:
+		_node[_property][_key][_subKey] = value

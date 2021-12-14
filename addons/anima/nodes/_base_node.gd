@@ -14,6 +14,8 @@ enum BodyDataType {
 	ROW
 }
 
+onready var DPI_SCALE = AnimaUI.get_dpi_scale()
+
 func _init():
 	_anima = Anima.begin(self)
 	_anima.then({ property = "scale", from = Vector2.ZERO, duration = 0.3, easing = Anima.EASING.EASE_OUT_BACK, pivot = Anima.PIVOT.CENTER })
@@ -32,7 +34,7 @@ func _init():
 
 	connect("offset_changed", self, "_on_offset_changed")
 
-	rect_min_size = get_minimum_size() + Vector2(200, 150)
+	rect_min_size = (get_minimum_size() + Vector2(200, 150)) * AnimaUI.get_dpi_scale()
 
 func _ready():
 	setup()
@@ -42,15 +44,40 @@ func _ready():
 func _after_render() -> void:
 	var position = get_position_in_parent() - 3
 
-	_anima.play_with_delay(0.05 * position)
+	_adjust_font_size(self)
+	_anima.play()
+
+#
+# TODO: Is this the right way to handle different screen DPI?
+#
+func _adjust_font_size(start_node: Node) -> void:
+	for child in start_node.get_children():
+		if child.has_meta("_font_changed"):
+			continue
+
+		if child and child.has_method("get_font"):
+			var font: DynamicFont = child.get_font("font")
+
+			if font and not font.has_meta("_original_size"):
+				font.set_meta("_original_size", font.size)
+				font.size *= DPI_SCALE
+
+				child.add_font_override("font", font)
+				child.set_meta("_font_changed", true)
+
+
+		if child.get_child_count() > 0:
+			_adjust_font_size(child)
 
 func register_node(node_data: Dictionary) -> void:
+	var dpi_scale = OS.get_screen_dpi() / 60.0
+	
 	if node_data.has('category'):
 		set_category(node_data.category)
 
-	if node_data.has('name'):
-		self.set_name(title + "-" + str(get_instance_id()))
-		set_title(node_data.name)
+	if node_data.has('title'):
+		var name = node_data.title + "@" + str(get_instance_id())
+		set_custom_title(node_data.title, name)
 
 	if node_data.has('category') and node_data.has('name'):
 		set_id(node_data.category + '/' + node_data.name)
@@ -70,7 +97,7 @@ func register_node(node_data: Dictionary) -> void:
 		_custom_title.hide_remove_button()
 
 	if node_data.has('min_size'):
-		rect_min_size = get_minimum_size() + node_data.min_size
+		rect_min_size = get_minimum_size() + node_data.min_size * dpi_scale
 
 	_node_id = node_data.id
 
@@ -93,8 +120,11 @@ func set_type(type: int) -> void:
 func set_icon(icon) -> void:
 	_custom_title.set_icon(icon)
 
-func set_title(title: String) -> void:
-	self.name = title
+func set_custom_title(title: String, nodeName = null) -> void:
+	if nodeName:
+		name = nodeName
+		set_title("")
+
 	_custom_title.set_title(title)
 
 func get_title() -> String:
@@ -102,18 +132,6 @@ func get_title() -> String:
 
 func get_id() -> String:
 	return _node_id
-
-func set_name(name: String, index: int = 1):
-	var new_name = "{name}{index}".format({
-		'name': name,
-		'index': index,
-	})
-
-	.set_name(new_name)
-
-	# Godot adds @ if the name collides with an existing connected_inputs
-	if '@' in self.name:
-		self.set_name(name, index + 1)
 
 func add_slot(data: Dictionary) -> void:
 	_node_body_data.push_back({type = BodyDataType.SLOT, io_data = data})
@@ -192,11 +210,6 @@ func _add_slot_labels(index: int, input_slot: Dictionary, output_slot: Dictionar
 	return slots_row
 
 func render() -> void:
-	if self.node_id == '':
-		printerr('Please specify your node id for', self.name)
-
-		return
-
 	AnimaUI.customise_node_style(self, _custom_title, _node_type)
 
 	for index in _node_body_data.size():

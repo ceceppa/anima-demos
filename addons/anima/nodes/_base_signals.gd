@@ -8,7 +8,6 @@ var node_category: String
 var _node_type: int
 var input_slots: Array = []
 var output_slots: Array = []
-var _connected_inputs: Array = []
 var _connected_outputs: Array = []
 
 var preview_panel: Panel = null;
@@ -32,19 +31,6 @@ func connect_input(slot: int, from: Node, from_port: int) -> void:
 	if row_container:
 		row_container.set_connected(AnimaUI.PORT.INPUT)
 
-	var is_already_connected := false
-	for index in range(0, _connected_inputs.size()):
-		var connected_input = _connected_inputs[index]
-
-		if connected_input[0] == slot:
-			_connected_inputs[index] = [slot, from, from_port]
-
-			is_already_connected = true
-			break
-
-	if not is_already_connected:
-		_connected_inputs.push_back([slot, from, from_port])
-
 func connect_output(slot: int, to_node: Node, to_port: int) -> void:
 	var row_container = find_node('Row' + str(slot), true, false)
 
@@ -55,18 +41,13 @@ func connect_output(slot: int, to_node: Node, to_port: int) -> void:
 	for index in range(0, _connected_outputs.size()):
 		var connected_output = _connected_outputs[index]
 
-		if connected_output[0] == slot:
-			_connected_outputs[index] = [slot, to_node, to_port]
-
+		if connected_output[0] == slot and connected_output[1] == to_node and connected_output[2] == to_port:
 			is_already_connected = true
 			break
 
 	if not is_already_connected:
 		_connected_outputs.push_back([slot, to_node, to_port])
 		
-func get_connected_inputs() -> Array:
-	return _connected_inputs
-
 func get_connected_outputs() -> Array:
 	return _connected_outputs
 
@@ -77,21 +58,15 @@ func disconnect_input(slot: int) -> void:
 	if row_container:
 		row_container.set_disconnected(AnimaUI.PORT.INPUT)
 
-	for input in _connected_inputs:
-		if input[0] == slot:
-			_connected_inputs.erase(input)
-
-			break
-
-func disconnect_output(slot: int) -> void:
+func disconnect_output(slot: int, to_node: Node, to_port: int) -> void:
 	var row_container = find_node('Row' + str(slot), true, false)
 
 	if row_container:
 		row_container.set_disconnected(AnimaUI.PORT.OUTPUT)
 
-	for input in _connected_outputs:
-		if input[0] == slot:
-			_connected_outputs.erase(input)
+	for output in _connected_outputs:
+		if output[0] == slot and output[1] == to_node and output[2] == to_port:
+			_connected_outputs.erase(output)
 
 			break
 

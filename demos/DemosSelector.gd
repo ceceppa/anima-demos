@@ -45,7 +45,7 @@ func _get_anima() -> AnimaNode:
 	anima.then({ property = "_bg_rect_size", from = Vector2(0, 0), to = Vector2(300, 2), duration = 0.2})
 	anima.then({ property = "_bg_rect_size", to = Vector2(300, 100), duration = 0.3})
 
-	anima.then({ node = $AnimaLabel, property = 'opacity', duration = 0.3, to = 1, hide_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY })
+	anima.then({ node = $AnimaLabel, property = 'opacity', duration = 0.3, to = 1, visibility_strategy = Anima.VISIBILITY.TRANSPARENT_ONLY })
 	anima.with({ node = $AnimaLabel, animation = 'typewrite', duration = 0.3 })
 
 	anima.wait(0.7)

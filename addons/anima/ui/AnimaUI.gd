@@ -77,7 +77,8 @@ const MAPPED_ICONS := {
 	TYPE_INT: 'int',
 	TYPE_VECTOR2: 'Vector2',
 	TYPE_VECTOR3: 'Vector3',
-	TYPE_COLOR: 'Color'
+	TYPE_COLOR: 'Color',
+	TYPE_RECT2: 'Rect2'
 }
 
 func create_row_for_node(index: int, input_label_text: String, input_tooltip: String, output_label_text: String, output_tooltip: String, input_default_value = null) -> PanelContainer:
@@ -213,7 +214,7 @@ func generate_row_slot_panel_style():
 	return style
 
 func get_dpi_scale() -> float:
-	return 1.0
+	return OS.get_screen_dpi() / 60.0
 
 func set_godot_gui(base_control: Control) -> void:
 	_godot_base_control = base_control
@@ -232,11 +233,11 @@ func get_node_icon(node: Node) -> Texture:
 
 	return node_icon
 
-func debug(caller: Node, v1: String, v2 = "", v3 = "", v4 = "", v5 = "", v6 = "") -> void:
+func debug(caller, v1: String, v2 = "", v3 = "", v4 = "", v5 = "", v6 = "") -> void:
 	if not _is_debug_enabled:
 		return
 
-	printt(caller, v1, v2, v3, v4, v5, v6)
+	printt(caller.name, v1, v2, v3, v4, v5, v6)
 
 func get_godot_icon_for_type(type: int) -> Texture:
 	if MAPPED_ICONS.has(type):

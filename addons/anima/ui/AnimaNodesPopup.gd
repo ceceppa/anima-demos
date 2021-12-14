@@ -1,7 +1,7 @@
 tool
 extends PopupPanel
 
-signal node_selected(node)
+signal node_selected(node, path)
 
 onready var _anima_nodes_list: VBoxContainer = find_node('AnimaNodesList')
 
@@ -17,5 +17,5 @@ func show() -> void:
 
 	anima.play()
 
-func _on_AnimaNodesList_node_selected(node: Node):
-	emit_signal("node_selected", node)
+func _on_AnimaNodesList_node_selected(node: Node, path: String):
+	emit_signal("node_selected", node, path)

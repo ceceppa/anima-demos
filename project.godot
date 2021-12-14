@@ -134,6 +134,10 @@ Anima="*res://addons/anima/core/anima.gd"
 
 enabled=PoolStringArray( "res://addons/anima/plugin.cfg" )
 
+[global]
+
+scale=false
+
 [network]
 
 limits/debugger_stdout/max_chars_per_second=52048

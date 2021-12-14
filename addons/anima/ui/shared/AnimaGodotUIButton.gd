@@ -3,6 +3,7 @@ extends Button
 
 export (String) var icon_name setget set_icon_name
 export (String) var pressed_icon_name setget set_pressed_icon_name
+export (NodePath) var linked_field
 
 func _ready():
 	if icon == null:

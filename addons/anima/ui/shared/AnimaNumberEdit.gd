@@ -17,6 +17,8 @@ const REG_EX = {
 }
 
 export (Type) var type setget set_type
+export (float) var min_value = -999.90
+export (float) var max_value = 999.99
 
 var _regex := RegEx.new()
 
@@ -44,15 +46,16 @@ func _on_NumberEdit_text_changed(new_text: String):
 		set_cursor_position(text.length())
 
 func get_value():
-	if text.find(":") >= 0:
+	if type == Type.STRING:
 		return text
 
+	var value := float(text)
+	value = clamp(abs(value), min_value, max_value)
+
 	if type == Type.INTEGER:
-		return int(text)
-	elif type == Type.FLOAT:
-		return float(text)
-	else:
-		return text
+		return int(value)
+
+	return value
 
 func set_value(value: String) -> void:
 	text = value

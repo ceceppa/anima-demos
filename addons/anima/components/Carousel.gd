@@ -11,6 +11,7 @@ onready var _controls: HBoxContainer = find_node('Controls')
 
 export (int) var index setget set_index
 export (float) var duration = 0.3
+export (float) var padding := 0.0
 export (Anima.EASING) var scroll_easing = Anima.EASING.LINEAR
 export (Anima.EASING) var height_easing = Anima.EASING.LINEAR
 
@@ -22,11 +23,17 @@ func _ready():
 
 		if child is Button:
 			child.connect("pressed", self, "_on_control_pressed", [index])
-			
-	_update_size()
 
-func _update_size():
-	_container.rect_min_size.x = rect_size.x * _container.get_child_count()
+	$Wrapper.anchor_right = 0
+
+	_update_size()
+	set_index(index)
+
+func _update_size() -> void:
+	var size: float = rect_size.x  * _container.get_child_count()
+
+	_container.rect_min_size.x = size
+	_container.rect_size.x = size
 
 	for child in _container.get_children():
 		var node: Control = child
@@ -36,7 +43,6 @@ func _update_size():
 
 		_heights.push_back(node.rect_size.y)
 
-	set_index(index)
 
 func _maybe_get_container() -> void:
 	_container = find_node('Container')
@@ -45,6 +51,8 @@ func get_active_index() -> int:
 	return index
 
 func set_index(new_index: int) -> void:
+	_update_size()
+
 	if not is_inside_tree():
 		return
 
@@ -55,19 +63,27 @@ func set_index(new_index: int) -> void:
 		return
 
 	var x = rect_size.x * index
-	var wrapper_height = _heights[index]
-	var height = _controls.rect_size.y + wrapper_height
+	var wrapper_height = get_expected_wrapper_height()
+	var height = get_expected_height()
 
 	var anima: AnimaNode = Anima.begin(self)
 	anima.set_single_shot(true)
 
-	anima.then({ property = "size:y", to = height, easing = height_easing, duration = duration })
+	anima.then({ property = "min_size:y", to = height, easing = height_easing, duration = duration })
 	anima.also({ node = _container, property = "position:x", to = -x, easing = scroll_easing })
 	anima.also({ node = $Wrapper, property = "size:y", to = wrapper_height, easing = height_easing })
 	anima.play()
 
 	emit_signal("carousel_height_changed", height)
 	emit_signal("index_changed", new_index)
+
+func get_expected_wrapper_height() -> float:
+	return _heights[index]
+
+func get_expected_height() -> float:
+	var height = _controls.rect_size.y + get_expected_wrapper_height()
+
+	return height
 
 func _on_Container_item_rect_changed() -> void:
 	emit_signal("carousel_size_changed", rect_size)

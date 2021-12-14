@@ -18,6 +18,9 @@ func set_style(style: StyleBoxFlat, selected_style: StyleBoxFlat) -> void:
 func set_title(title: String) -> void:
 	$Container/Title.set_text(title)
 
+func set_tooltip(tooltip: String) -> void:
+	$Container/Title.set_tooltip(tooltip)
+
 func set_icon(icon) -> void:
 	if icon is String:
 		$Container/Icon.set_texture(load(icon))
@@ -44,3 +47,5 @@ func _on_CollapseButton_pressed():
 	else:
 		emit_signal("hide_content")
 
+func _on_Customise_pressed():
+	pass
