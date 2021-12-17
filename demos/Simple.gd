@@ -4,22 +4,24 @@ var _anima: AnimaNode
 
 func _ready() -> void:
 	_anima = Anima.begin($icon)
-	_anima.group(
-		[
-			{ node = $icon },
-			{ group = $Node }
-		],
-		{
-			animation = "fadeInUp",
-			items_delay = 0.1,
-			duration = 0.3,
-			on_started = [funcref(self, '_test'), ['started normal'], ['completed backwards']] ,
-			on_completed = [funcref(self, '_test'), ['completed normal'], ['started backwards']] 
-		}
-	)
-#	_anima.then({ property = "x", from = -100.0, relative = true, duration = 0.3, on_started = [funcref(self, '_test'), [false], [true]] })
-	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
-#	_anima.then({ node = $icon, property = "x", from = 0, to = 100, duration = 0.3 })
+#	_anima.group(
+#		[
+#			{ node = $icon },
+#			{ group = $Node }
+#		],
+#		{
+#			animation = "zoomInUp",
+#			items_delay = 0.1,
+#			duration = 0.3,
+#			on_started = [funcref(self, '_test'), ['started normal'], ['completed backwards']] ,
+#			on_completed = [funcref(self, '_test'), ['completed normal'], ['started backwards']] 
+#		}
+#	)
+#	_anima.then({ property = "x", to = 100.0, relative = true, duration = 0.3, on_started = [funcref(self, '_test'), [false], [true]] })
+#	_anima.then({ property = "x", to = 100.0, relative = true, duration = 0.3, on_started = [funcref(self, '_test'), [false], [true]] })#	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
+#	_anima.then({ property = "x", to = -100.0, relative = true, duration = 0.3, on_started = [funcref(self, '_test'), [false], [true]] })#	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
+#	_anima.then({ property = "x", to = -100.0, duration = 0.3, on_started = [funcref(self, '_test'), [false], [true]] })#	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
+	_anima.then({ node = $icon, animation = "bounce", duration = 1.0 })
 
 func _on_Button_pressed():
 	_anima.play()

@@ -108,13 +108,13 @@ static func get_property_value(node: Node, property: String):
 			return position.z
 		"position":
 			return get_position(node)
-		"rotation":
+		"rotation","rotate":
 			return get_rotation(node)
-		"rotation:x":
+		"rotation:x", "rotate:x":
 			return get_rotation(node).x
-		"rotation:y":
+		"rotation:y", "rotate:y":
 			return get_rotation(node).y
-		"rotation:z":
+		"rotation:z", "rotate:z":
 			return get_rotation(node).z
 		"opacity":
 			return node.modulate.a
@@ -233,7 +233,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				property_name = "modulate",
 				key = "a"
 			}
-		"rotation":
+		"rotation", "rotate":
 			var property_name = "rotation"
 
 			if node is Control:
@@ -244,17 +244,17 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 			return {
 				property_name = property_name
 			}
-		"rotation:x":
+		"rotation:x", "rotate:x":
 			return {
 				property_name = "rotation",
 				key = "x"
 			}
-		"rotation:y":
+		"rotation:y", "rotate:y":
 			return {
 				property_name = "rotation",
 				key = "y"
 			}
-		"rotation:z":
+		"rotation:z", "rotate:z":
 			return {
 				property_name = "rotation",
 				key = "z"
@@ -303,7 +303,8 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		}
 
 	if node_property_name:
-		if node[node_property_name] is Rect2 and p.size() > 1:
+		var is_rect2 = node[node_property_name] is Rect2
+		if is_rect2 and p.size() > 1:
 			var k: String = p[1]
 
 			if k == "x" or k == "y":
@@ -317,17 +318,20 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 			return {
 				property_name = node_property_name,
 				key = key,
-				subkey = subkey
+				subkey = subkey,
+				is_rect2 = false
 			}
 
 		if key:
 			return {
 				property_name = node_property_name,
-				key = key
+				key = key,
+				is_rect2 = is_rect2
 			}
 
 		return {
-			property_name = node_property_name
+			property_name = node_property_name,
+			is_rect2 = is_rect2
 		}
 
 	if property.find('__') == 0:

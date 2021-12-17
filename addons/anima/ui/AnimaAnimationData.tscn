@@ -29,7 +29,7 @@ __meta__ = {
 
 [node name="AnimaData" type="VBoxContainer"]
 anchor_right = 1.0
-margin_bottom = 184.0
+margin_bottom = 257.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 custom_constants/separation = 12
@@ -263,8 +263,8 @@ text = "Property"
 [node name="AnimationType" type="Control" parent="."]
 margin_top = 140.0
 margin_right = 1024.0
-margin_bottom = 198.133
-rect_min_size = Vector2( 0, 58.1333 )
+margin_bottom = 172.0
+rect_min_size = Vector2( 0, 32 )
 
 [node name="AnimationContainer" type="GridContainer" parent="AnimationType"]
 anchor_right = 1.0
@@ -330,9 +330,9 @@ __meta__ = {
 }
 
 [node name="Wrapper" type="Control" parent="."]
-margin_top = 210.0
+margin_top = 184.0
 margin_right = 1024.0
-margin_bottom = 210.0
+margin_bottom = 184.0
 size_flags_horizontal = 3
 
 [node name="PropertyValues" type="VBoxContainer" parent="Wrapper"]

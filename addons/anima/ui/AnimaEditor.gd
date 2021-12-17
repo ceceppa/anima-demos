@@ -77,7 +77,7 @@ func _add_nodes(nodes_data: Array, animations_names: Array, events_slots: Array)
 
 		node.set_offset(node_data.position)
 		node.name = node_data.name
-#		node.set_custom_title(node_data.title, node_data.name)
+		node.set_custom_title(node_data.title, node_data.name)
 		node.restore_data(node_data.data)
 
 		node.render()
@@ -93,9 +93,11 @@ func _connect_nodes(connection_list: Array) -> void:
 		_graph_edit.connect_node(connection.from, connection.from_port, connection.to, connection.to_port)
 
 func set_anima_node(node) -> void:
+	var should_animate = _anima_visual_node != node
 	_anima_visual_node = node
 
-	_maybe_show_graph_edit()
+	if should_animate:
+		_maybe_show_graph_edit()
 
 func show() -> void:
 	.show()

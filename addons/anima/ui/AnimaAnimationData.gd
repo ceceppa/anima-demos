@@ -66,7 +66,7 @@ func get_animation_data() -> Dictionary:
 			type = _property_type,
 			relative = _relative_check.pressed,
 			pivot = _pivot_button.get_value(),
-			easing = _easing_button.get_meta('_value'),
+			easing = _easing_button.get_meta('_value') if _easing_button.has_meta('_value') else null,
 			animate_as = as_group.get_pressed_button().get_index()
 		}
 
@@ -244,13 +244,17 @@ func _maybe_init_anima_node() -> void:
 		{
 			duration = 0.15,
 			items_delay = 0.015,
-			animation = 'fadeInLeft',
+			animation = "fadeInLeft",
 		}
 	)
 
 	_anima_property_values.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY, true)
 
-func _adjust_height(calculate_property_values_height: bool, pivot_size: float = -1.0) -> void:
+func _adjust_height(pivot_size: float = -1.0) -> void:
+	if _property_values == null:
+		_property_values = find_node("PropertyValues")
+
+	var calculate_property_values_height = _property_values.has_meta("_will_be_visible") and _property_values.get_meta("_will_be_visible")
 	var new_size := 0 # _animation_container.rect_size.y
 	
 	var pivot_button: Control = find_node('PivotButton')
@@ -303,6 +307,7 @@ func _animate_content_type(direction: int, animation_container_visible) -> void:
 
 	_animation_container.visible = true
 	_property_container.visible = true
+	_property_values.set_meta("_will_be_visible", direction != AnimaTween.PLAY_MODE.NORMAL)
 
 	if direction == AnimaTween.PLAY_MODE.NORMAL:
 		_anima_content_type.play_backwards()
@@ -323,7 +328,7 @@ func _animate_content_type(direction: int, animation_container_visible) -> void:
 	_property_container.visible = not _animation_container.visible
 
 func _on_PivotButton_pivot_height_changed(new_size):
-	_adjust_height(true, new_size)
+	_adjust_height(new_size)
 
 func _on_PivotButton_pivot_point_selected():
 	emit_signal("value_updated")
@@ -346,11 +351,11 @@ func _on_AsGroup_pressed():
 	emit_signal("value_updated")
 
 func _on_Carousel_carousel_height_changed(final_height):
-	_adjust_height(true)
+	_adjust_height()
 
 func _on_PropertyValues_item_rect_changed():
 	$Timer.stop()
 	$Timer.start()
 
 func _on_Timer_timeout():
-	_adjust_height(true)
+	_adjust_height()

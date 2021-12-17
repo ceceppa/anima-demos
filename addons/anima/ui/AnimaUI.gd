@@ -237,7 +237,7 @@ func debug(caller, v1: String, v2 = "", v3 = "", v4 = "", v5 = "", v6 = "") -> v
 	if not _is_debug_enabled:
 		return
 
-	printt(caller.name, v1, v2, v3, v4, v5, v6)
+	printt(caller, v1, v2, v3, v4, v5, v6)
 
 func get_godot_icon_for_type(type: int) -> Texture:
 	if MAPPED_ICONS.has(type):

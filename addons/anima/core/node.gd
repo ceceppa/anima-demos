@@ -14,7 +14,6 @@ var _anima_backwards_tween := AnimaTween.new()
 var _total_animation_length := 0.0
 var _last_animation_duration := 0.0
 
-var _timer := Timer.new()
 var _loop_times := 0
 var _loop_count := 0
 var _should_loop := false
@@ -27,30 +26,20 @@ var _is_single_shot := false
 
 var __do_nothing := 0.0
 
-func _ready():
-	if _timer.get_parent() != self:
-		_init_node(self)
-
 func _exit_tree():
-	if _timer != null and not _timer.is_queued_for_deletion():
-		_timer.stop()
+	if _anima_tween == null or _anima_tween.is_queued_for_deletion():
+		return
 
 	_anima_tween.stop_all()
 	_anima_backwards_tween.stop_all()
 
-	_timer.queue_free()
 	_anima_tween.queue_free()
 	_anima_backwards_tween.queue_free()
 
 func _init_node(node: Node):
-	_timer.one_shot = true
-	_timer.autostart = false
-	_timer.connect("timeout", self, '_on_timer_timeout')
-
 	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
 	_anima_backwards_tween.connect("animation_completed", self, '_on_all_tween_completed')
 
-	add_child(_timer)
 	add_child(_anima_tween)
 	add_child(_anima_backwards_tween)
 
@@ -214,12 +203,13 @@ func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
 	if _apply_visibility_strategy_on_play and mode == AnimaTween.PLAY_MODE.NORMAL:
 		set_visibility_strategy(_anima_tween._visibility_strategy)
 
-	_timer.one_shot = true
-	_timer.wait_time = max(Anima.MINIMUM_DURATION, delay)
-	_timer.start()
+	var wait_time = max(Anima.MINIMUM_DURATION, delay)
+	yield(get_tree().create_timer(wait_time), "timeout")
+
+	_do_play()
+	_maybe_play()
 
 func stop() -> void:
-	_timer.stop()
 	_anima_tween.stop_all()
 	_anima_backwards_tween.stop_all()
 
@@ -274,8 +264,11 @@ func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION, spee
 
 	_play_speed = speed
 
-	_timer.wait_time = max(Anima.MINIMUM_DURATION, delay)
+	var wait_time = max(Anima.MINIMUM_DURATION, delay)
+	yield(get_tree().create_timer(wait_time), "timeout")
+
 	_do_play()
+	_maybe_play()
 
 func get_length() -> float:
 	return _total_animation_length
@@ -335,7 +328,7 @@ func _setup_animation(data: Dictionary) -> float:
 			return 0.0
 
 		return _setup_grid_animation(data)
-	elif data.has('group'):
+	elif data.has("group"):
 		if not data.has('grid_size'):
 			data.grid_size = Vector2(1, data.group.get_children().size())
 
@@ -369,9 +362,11 @@ func _setup_node_animation(data: Dictionary) -> float:
 		if script.has_method(data.animation):
 			callback = funcref(script, data.animation)
 
-		var real_duration = callback.call_func(_anima_tween, data)
-		if real_duration is float:
-			duration = real_duration
+		_anima_tween.add_frames(data, callback.call_func(data.node))
+
+#		var real_duration = 
+#		if real_duration is float:
+#			duration = real_duration
 	else:
 		_anima_tween.add_animation_data(data)
 
@@ -380,19 +375,19 @@ func _setup_node_animation(data: Dictionary) -> float:
 func _setup_grid_animation(animation_data: Dictionary) -> float:
 	var animation_type = Anima.GRID.SEQUENCE_TOP_LEFT
 	
-	if animation_data.has('animation_type'):
+	if animation_data.has("animation_type"):
 		animation_type = animation_data.animation_type
 
-	if not animation_data.has('items_delay'):
+	if not animation_data.has("items_delay"):
 		animation_data.items_delay = Anima.DEFAULT_ITEMS_DELAY
 
-	if animation_data.has('grid'):
+	if animation_data.has("grid"):
 		animation_data._grid_node = animation_data.grid
 	else:
 		animation_data._grid_node = animation_data.group
 
-	animation_data.erase('grid')
-	animation_data.erase('group')
+	animation_data.erase("grid")
+	animation_data.erase("group")
 
 	var duration: float
 
@@ -439,6 +434,8 @@ func _get_children(animation_data: Dictionary, shuffle := false) -> Array:
 		if '__do_nothing' in child:
 			continue
 		elif animation_data.has('skip_hidden') and not child.is_visible():
+			continue
+		elif animation_data.has("of") and child.get_class() != animation_data.of:
 			continue
 
 		row_items.push_back(child)
@@ -644,10 +641,6 @@ func _create_grid_animation_with(nodes: Array, animation_data: Dictionary) -> fl
 		with(data)
 
 	return animation_data.duration + (animation_data.items_delay * nodes.size())
-
-func _on_timer_timeout() -> void:
-	_do_play()
-	_maybe_play()
 
 func _maybe_play() -> void:
 	_loop_times -= 1

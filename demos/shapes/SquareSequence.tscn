@@ -15,14 +15,13 @@ __meta__ = {
 
 [node name="AnimaSquare" type="Control" parent="."]
 margin_left = -100.0
-margin_right = -0.00125122
+margin_right = -0.00128174
 margin_bottom = 100.0
-rect_scale = Vector2( 1, 1 )
 rect_pivot_offset = Vector2( 49.9994, 50 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false,
-"_old_modulate": Color( 1, 1, 1, 0 )
+"_visibility_strategy_reverted": true
 }
 rect = Rect2( 0, 0, 100, 100 )
 is_filled = true
@@ -35,7 +34,7 @@ margin_bottom = -120.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false,
-"_old_modulate": Color( 1, 1, 1, 1 )
+"_visibility_strategy_reverted": true
 }
 rect = Rect2( 0, 0, 60, 0 )
 color = Color( 0.839216, 0.839216, 0.839216, 1 )
@@ -48,7 +47,7 @@ margin_bottom = 40.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false,
-"_old_modulate": Color( 1, 1, 1, 0 )
+"_visibility_strategy_reverted": true
 }
 rect = Rect2( 0, 0, 10, 10 )
 is_filled = true
@@ -62,7 +61,7 @@ margin_bottom = -120.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false,
-"_old_modulate": Color( 1, 1, 1, 1 )
+"_visibility_strategy_reverted": true
 }
 rect = Rect2( 0, 0, 60, 0 )
 color = Color( 0.839216, 0.839216, 0.839216, 1 )
@@ -75,7 +74,7 @@ margin_bottom = 40.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false,
-"_old_modulate": Color( 1, 1, 1, 0 )
+"_visibility_strategy_reverted": true
 }
 rect = Rect2( 0, 0, 10, 10 )
 is_filled = true
@@ -88,7 +87,7 @@ anchor_bottom = 0.289
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false,
-"_old_modulate": Color( 1, 1, 1, 1 )
+"_visibility_strategy_reverted": true
 }
 color = Color( 1, 1, 1, 1 )
 is_filled = true
@@ -102,11 +101,6 @@ __anima_visual_editor_data = {
 "visibility_strategy": 2
 } ],
 "connection_list": [ {
-"from": "Animation267352",
-"from_port": 0,
-"to": "Animation548142",
-"to_port": 0
-}, {
 "from": "Animation431274",
 "from_port": 1,
 "to": "Animation465392",
@@ -172,9 +166,19 @@ __anima_visual_editor_data = {
 "to": "Animation453958",
 "to_port": 0
 }, {
+"from": "Animation267352",
+"from_port": 0,
+"to": "Animation548142",
+"to_port": 0
+}, {
 "from": "Animation453958",
 "from_port": 0,
 "to": "Animation566892",
+"to_port": 0
+}, {
+"from": "Animation566892",
+"from_port": 1,
+"to": "Animation314609",
 "to_port": 0
 } ],
 "data_by_animation": {
@@ -449,17 +453,42 @@ __anima_visual_editor_data = {
 }, {
 "data": {
 "animation_data": {
-"animation": {
-"label": "Roll Out",
-"name": "roll_out"
+"property": {
+"animate_as": 0,
+"easing": 26,
+"name": "scale",
+"pivot": [ 0, -1 ],
+"relative": false,
+"to": [ "10", "10" ],
+"type": 5
 },
-"type": 0
+"type": 1
 },
 "delay": 0.5,
 "duration": 0.7
 },
 "node_path": "AnimaSquare",
 "start_time": 4.35
+}, {
+"data": {
+"animation_data": {
+"property": {
+"animate_as": 0,
+"easing": null,
+"from": 1.0,
+"name": "opacity",
+"pivot": [ 0, -1 ],
+"relative": false,
+"to": 0.0,
+"type": 3
+},
+"type": 1
+},
+"delay": 0.0,
+"duration": 0.7
+},
+"node_path": "AnimaSquare",
+"start_time": 4.85
 } ]
 },
 "events_slots": [  ],
@@ -784,11 +813,16 @@ __anima_visual_editor_data = {
 }, {
 "data": {
 "animation_data": {
-"animation": {
-"label": "Roll Out",
-"name": "roll_out"
+"property": {
+"animate_as": 0,
+"easing": 26,
+"name": "scale",
+"pivot": [ 0, -1 ],
+"relative": false,
+"to": [ "10", "10" ],
+"type": 5
 },
-"type": 0
+"type": 1
 },
 "delay": 0.5,
 "duration": 0.7
@@ -798,7 +832,30 @@ __anima_visual_editor_data = {
 "node_path": NodePath("AnimaSquare"),
 "position": Vector2( 14040, -140 ),
 "title": "AnimaSquare"
+}, {
+"data": {
+"animation_data": {
+"property": {
+"animate_as": 0,
+"easing": null,
+"from": 1.0,
+"name": "opacity",
+"pivot": [ 0, -1 ],
+"relative": false,
+"to": 0.0,
+"type": 3
+},
+"type": 1
+},
+"delay": 0.0,
+"duration": 0.7
+},
+"id": "Animation",
+"name": "Animation314609",
+"node_path": NodePath("AnimaSquare"),
+"position": Vector2( 15060, -120 ),
+"title": "./AnimaSquare"
 } ],
-"scroll_offset": Vector2( 11728, -323.984 ),
+"scroll_offset": Vector2( 12848, -228.64 ),
 "zoom": 1.0
 }

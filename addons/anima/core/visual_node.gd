@@ -58,11 +58,10 @@ func _get_animation_data_by_name(animation_name: String) -> Dictionary:
 	return {}
 
 func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_initial_values: bool) -> void:
-	var anima: AnimaNode = Anima.begin(self)
+	var anima: AnimaNode = Anima.begin_single_shot(self)
 	var visibility_strategy: int = animations_data.visibility_strategy
 	var timeline_debug := {}
 	
-	anima.set_single_shot(true)
 	anima.set_root_node(get_source_node())
 	anima.set_visibility_strategy(visibility_strategy)
 
@@ -75,6 +74,7 @@ func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_
 		AnimaUI.debug(self, "getting node from path:", node_path, node)
 		var data: Dictionary = _create_animation_data(node, animation.data.duration, animation.data.delay, animation.data.animation_data)
 
+		data._root_node = source_node
 		data._wait_time = animation.start_time
 
 		if not timeline_debug.has(data._wait_time):
@@ -83,6 +83,7 @@ func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_
 		var what = data.property if data.has("property") else data.animation
 
 		timeline_debug[data._wait_time].push_back({ duration = data.duration, delay = data.delay, what = what })
+
 		anima.with(data)
 
 	var keys = timeline_debug.keys()
@@ -114,6 +115,7 @@ func preview_animation(node: Node, duration: float, delay: float, animation_data
 
 	AnimaUI.debug(self, 'playing node animation with data', anima_data)
 
+	anima_data._root_node = get_source_node()
 	anima.then(anima_data)
 
 	anima.play()
@@ -134,13 +136,14 @@ func _create_animation_data(node: Node, duration: float, delay: float, animation
 		duration = duration,
 		delay = delay
 	}
-	var properties_to_reset := ["opacity", "position", "size", "rotation", "scale"]
+	var properties_to_reset := ["modulate", "position", "size", "rotation", "scale"]
 
 	if animation_data.type == AnimaUI.VISUAL_ANIMATION_TYPE.ANIMATION:
 		anima_data.animation = animation_data.animation.name
 	else:
 		var node_name: String = node.name
 		var property_name: String = animation_data.property.name
+
 		properties_to_reset.clear()
 		properties_to_reset.push_back(animation_data.property.name)
 
@@ -192,5 +195,10 @@ func _reset_initial_values() -> void:
 				node[mapped_property.property_name][mapped_property.key] = initial_value
 			else:
 				node[mapped_property.property_name] = initial_value
+
+			printt("Resetting initial values", node.name, mapped_property, initial_value)
+
+		if node.has_meta("_old_modulate"):
+			node.remove_meta("_old_modulate")
 
 	_initial_values.clear()
