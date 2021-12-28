@@ -228,6 +228,9 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 	previous_frame.erase("easing")
 	previous_frame.erase("pivot")
 
+	var is_mesh = animation_data.node is MeshInstance
+	var properties_to_flip_values = ["y", "position:y"]
+
 	for property_to_animate in frame_data.keys():
 		var data = animation_data.duplicate()
 
@@ -237,6 +240,11 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 		var from_value = previous_frame[property_to_animate]
 		var to_value = frame_data[property_to_animate]
 		var relative = relative_properties.find(property_to_animate) >= 0
+
+		var should_flip_value = is_mesh and properties_to_flip_values.find(property_to_animate) >= 0
+		if should_flip_value:
+			from_value *= -0.1
+			to_value *= -0.1
 
 		data.property = property_to_animate
 		data.relative = relative

@@ -29,8 +29,8 @@ __meta__ = {
 }
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.88647, 0.462786, 0, -0.462786, 0.88647, -2.10456, 2, 4 )
+transform = Transform( 1, 0, 0, 0, 0.88647, 0.462786, 0, -0.462786, 0.88647, -2.10456, 2.65581, 4 )
 current = true
-fov = 95.6
+fov = 83.8
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
