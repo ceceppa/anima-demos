@@ -214,7 +214,9 @@ func generate_row_slot_panel_style():
 	return style
 
 func get_dpi_scale() -> float:
-	return OS.get_screen_dpi() / 60.0
+	return 1.0
+	print(OS.get_screen_dpi())
+#	return OS.get_screen_dpi() / 256.0
 
 func set_godot_gui(base_control: Control) -> void:
 	_godot_base_control = base_control

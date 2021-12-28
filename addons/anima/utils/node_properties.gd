@@ -117,6 +117,16 @@ static func get_property_value(node: Node, property: String):
 		"rotation:z", "rotate:z":
 			return get_rotation(node).z
 		"opacity":
+			if node is MeshInstance:
+				var material = node.get_surface_material(0)
+
+				if material == null:
+					return 0.0
+				elif material is SpatialMaterial:
+					return material.albedo_color.a
+				else:
+					return material.get_shader_param("opacity")
+
 			return node.modulate.a
 		"skew:x":
 			return node.get_global_transform().y.x
@@ -229,6 +239,23 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				key = "origin"
 			}
 		"opacity":
+			if node is MeshInstance:
+				var material = node.get_surface_material(0)
+
+				if material == null:
+					return {}
+				elif material is SpatialMaterial:
+					return {
+						is_object = true,
+						property_name = material,
+						key = "albedo_color",
+						subkey = "a"
+					}
+
+				return {
+					callback = funcref(material, 'set_shader_param'),
+					param = "opacity"
+				}
 			return {
 				property_name = "modulate",
 				key = "a"

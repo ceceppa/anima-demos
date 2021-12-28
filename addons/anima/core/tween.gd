@@ -69,6 +69,10 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 
 	animation_data._easing_points = easing_points
 	var property_data = 	AnimaNodesProperties.map_property_to_godot_property(animation_data.node, animation_data.property)
+
+	if not property_data.has("property_name"):
+		return
+
 	var relative = animation_data.has("relative") and animation_data.relative
 
 	var object: Node = _get_animated_object_item(property_data, relative)
@@ -100,9 +104,12 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 
 func _get_animated_object_item(property_data: Dictionary, is_relative: bool) -> Node:
 	var is_rect2 = property_data.has("is_rect2") and property_data.is_rect2
+	var is_object = property_data.has("is_object") and property_data.is_object
 
 	if is_rect2:
 		return AnimateRect2.new()
+	elif is_object:
+		return AnimateObject.new()
 	elif property_data.has('subkey'):
 		return AnimatedPropertyWithSubKeyItem.new()
 	elif property_data.has('key'):
@@ -138,9 +145,11 @@ func set_root_node(node: Node) -> void:
 func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> float:
 	var last_duration := 0.0
 	var is_first_frame = true
-	var relative_properties: Array = full_keyframes_data.relative if full_keyframes_data.has("relative") else []
+	var relative_properties: Array = ["x", "y", "z", "position", "position:x", "position:z", "position:y"]
 	var pivot = full_keyframes_data.pivot if full_keyframes_data.has("pivot") else null
 
+	if full_keyframes_data.has("relative"):
+		relative_properties = full_keyframes_data.relative
 
 	# Flattens the keyframe_data
 	var keyframes_data = _flatten_keyframes_data(full_keyframes_data)
@@ -446,7 +455,7 @@ func _on_tween_started(node, _ignore) -> void:
 
 class AnimatedItem extends Node:
 	var _node: Node
-	var _property: String
+	var _property
 	var _key
 	var _subKey
 	var _animation_data: Dictionary
@@ -596,6 +605,10 @@ class AnimatedPropertyWithKeyItem extends AnimatedItem:
 class AnimatedPropertyWithSubKeyItem extends AnimatedItem:
 	func apply_value(value) -> void:
 		_node[_property][_key][_subKey] = value
+
+class AnimateObject extends AnimatedItem:
+	func apply_value(value) -> void:
+		_property[_key][_subKey] = value
 
 class AnimateRect2 extends AnimatedItem:
 	func animate(elapsed: float) -> void:
