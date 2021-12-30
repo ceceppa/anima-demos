@@ -93,11 +93,15 @@ func also(data: Dictionary, extra_keys_to_ignore := []) -> float:
 		'_wait_time',
 		'delay',
 		'relative',
-		'_grid_node'
+		'_grid_node',
 	]
 
 	if previous_data.has('_grid_node'):
 		previous_data.grid = previous_data._grid_node
+
+	if data.has("animation"):
+		keys_to_ignore.push_back("from")
+		keys_to_ignore.push_back("to")
 
 	for key in previous_data:
 		if keys_to_ignore.find(key) >= 0 or extra_keys_to_ignore.find(key) >= 0:
@@ -107,7 +111,6 @@ func also(data: Dictionary, extra_keys_to_ignore := []) -> float:
 			data[key] = previous_data[key]
 
 	data.__do_not_update_last_tween_data = true
-
 	return with(data)
 
 func group(group_data: Array, animation_data: Dictionary) -> void:

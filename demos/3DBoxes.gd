@@ -12,7 +12,7 @@ func _ready():
 	
 	var start_position: Vector3 = DEFAULT_START_POSITION
 
-	var anima := Anima.begin($Node)
+	var anima: AnimaNode = Anima.begin($Node)
 	anima.then({ group = $Node, animation = '3dboxes', duration = 3, items_delay = 0.02 })
 
 	if _play_backwards:
@@ -22,7 +22,7 @@ func _ready():
 	_reset_boxes_position($Node, start_position)
 	anima.loop()
 
-	var ring := Anima.begin($ring)
+	var ring: AnimaNode = Anima.begin($ring)
 	ring.then({ node = $ring, animation = 'ring', duration = 3 })
 
 	if _play_backwards:
@@ -40,7 +40,7 @@ func generate_animation(tween: AnimaTween, data: Dictionary) -> void:
 		{ from = 0, to = 360 }
 	]
 
-	tween.add_frames(data, "rotation:y", rotate)
+#	tween.add_frames(data, "rotation:y", rotate)
 
 func _boxes_animation(tween: AnimaTween, data: Dictionary) -> void:
 	var position_frames = [
@@ -66,10 +66,10 @@ func _boxes_animation(tween: AnimaTween, data: Dictionary) -> void:
 		{ percentage = 100, to = Color('#6b9eb1') },
 	]
 
-	tween.add_relative_frames(data, "position:x", position_frames)
-	tween.add_relative_frames(data, "rotation:x", rotation_frames)
-	tween.add_frames(data, "scale", scale_frames)
-	tween.add_frames(data, "shader_param:albedo", shader_params)
+#	tween.add_relative_frames(data, "position:x", position_frames)
+#	tween.add_relative_frames(data, "rotation:x", rotation_frames)
+#	tween.add_frames(data, "scale", scale_frames)
+#	tween.add_frames(data, "shader_param:albedo", shader_params)
 
 func _init_reverse_boxes() -> void:
 	var node = Node.new()
@@ -82,7 +82,7 @@ func _init_reverse_boxes() -> void:
 	_init_boxes(node)
 	_reset_boxes_position(node, DEFAULT_START_POSITION + Vector3(0, 0, 2))
 
-	var anima_reverse := Anima.begin(node)
+	var anima_reverse: AnimaNode = Anima.begin(node)
 	anima_reverse.then({ group = node, animation = '3dboxes', duration = 3, items_delay = 0.02 })
 
 	anima_reverse.loop_backwards()

@@ -90,7 +90,12 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 		_:
 			printerr('Pivot point not handled yet')
 
-static func get_property_value(node: Node, property: String):
+static func get_property_value(node: Node, animation_data: Dictionary):
+	var property = animation_data.property
+
+	if property is Object:
+		return property[animation_data.key]
+
 	property = property.to_lower()
 
 	match property:
@@ -113,6 +118,9 @@ static func get_property_value(node: Node, property: String):
 		"rotation:x", "rotate:x":
 			return get_rotation(node).x
 		"rotation:y", "rotate:y":
+			if node is Control or node is Node2D:
+				return get_rotation(node)
+
 			return get_rotation(node).y
 		"rotation:z", "rotate:z":
 			return get_rotation(node).z
@@ -198,24 +206,24 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		"x", "position:x":
 			if node is Control:
 				return {
-					property_name = "rect_position",
+					property = "rect_position",
 					key = "x",
 				}
 
 			return {
-				property_name = "global_transform",
+				property = "global_transform",
 				key = "origin",
 				subkey = "x"
 			}
 		"y", "position:y":
 			if node is Control:
 				return {
-					property_name = "rect_position",
+					property = "rect_position",
 					key = "y",
 				}
 
 			return {
-				property_name = "global_transform",
+				property = "global_transform",
 				key = "origin",
 				subkey = "y"
 			}
@@ -224,18 +232,18 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				printerr('position:z is not supported by Control nodes')
 
 			return {
-				property_name = "global_transform",
+				property = "global_transform",
 				key = "origin",
 				subkey = "z"
 			}
 		"position":
 			if node is Control:
 				return {
-					property_name = "rect_position"
+					property = "rect_position"
 				}
 			
 			return {
-				property_name = "global_transform",
+				property = "global_transform",
 				key = "origin"
 			}
 		"opacity":
@@ -246,8 +254,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 					return {}
 				elif material is SpatialMaterial:
 					return {
-						is_object = true,
-						property_name = material,
+						property = material,
 						key = "albedo_color",
 						subkey = "a"
 					}
@@ -257,7 +264,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 					param = "opacity"
 				}
 			return {
-				property_name = "modulate",
+				property = "modulate",
 				key = "a"
 			}
 		"rotation", "rotate":
@@ -269,34 +276,54 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				property_name = "rotation_degrees"
 
 			return {
-				property_name = property_name
+				property = property_name
 			}
 		"rotation:x", "rotate:x":
 			return {
-				property_name = "rotation",
+				property = "rotation",
 				key = "x"
 			}
 		"rotation:y", "rotate:y":
+			var property_name = "rotation"
+
+			if node is Control:
+				return {
+					property = "rect_rotation"
+				}
+			elif node is Node2D:
+				return {
+					property = "rotation_degrees"
+				}
+
 			return {
-				property_name = "rotation",
+				property = "rotation",
 				key = "y"
 			}
 		"rotation:z", "rotate:z":
 			return {
-				property_name = "rotation",
+				property = "rotation",
 				key = "z"
 			}
 		"skew:x":
+			if not node is Node2D:
+				return {}
+
 			return {
-				property_name = "transform",
+				property = "transform",
 				key = "y",
 				subkey = "x"
 			}
 		"skew:y":
+			if not node is Node2D:
+				return {}
+
 			return {
-				property_name = "transform",
+				property = "transform",
 				key = "x",
 				subkey = "y"
+			}
+		"skew":
+			return {
 			}
 
 	var p = property.split(':')
@@ -343,7 +370,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 
 		if subkey:
 			return {
-				property_name = node_property_name,
+				property = node_property_name,
 				key = key,
 				subkey = subkey,
 				is_rect2 = false
@@ -351,21 +378,24 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 
 		if key:
 			return {
-				property_name = node_property_name,
+				property = node_property_name,
 				key = key,
 				is_rect2 = is_rect2
 			}
 
 		return {
-			property_name = node_property_name,
+			property = node_property_name,
 			is_rect2 = is_rect2
 		}
 
 	if property.find('__') == 0:
 		return {
-			property_name = property
+			property = property
 		}
 
 	return {
-		property_name = property
+		property = property
 	}
+
+static func apply_skew(v):
+	print(v)

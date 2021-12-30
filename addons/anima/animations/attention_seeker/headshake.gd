@@ -4,22 +4,23 @@ var KEYFRAMES := {
 	},
 	6.5: {
 		x = -6,
-		rotate = -9
+		"rotate:y": -9
 	},
 	18.5: {
 		x = 5,
-		rotate = 7
+		"rotate:y": 7
 	},
 	31.5: {
 		x = -3,
-		rotate = -5
+		"rotate:y": -5
 	},
 	43.5: {
 		x = 2,
-		rotate = 3
+		"rotate:y": 3
 	},
 	50: {
 		x = 0,
-		rotate = 0
+		"rotate:y": 0
 	},
+	pivot = Anima.PIVOT.CENTER
 }

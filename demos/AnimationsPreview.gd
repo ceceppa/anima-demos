@@ -1,6 +1,23 @@
 extends Control
 
+onready var _control_or_spirte: HBoxContainer = find_node('ControlOrSprite')
+onready var _mesh_container: Spatial = find_node("MeshContainer")
+onready var _2d_container: VBoxContainer = find_node("2DContainer")
+onready var _duration: LineEdit = find_node("DurationEdit")
+onready var _control_test := find_node("ControlTest")
+onready var _sprite_test := find_node("SpriteTest")
+onready var _list_container := find_node("ListContainer")
+onready var _mesh_cube := find_node("MeshInstance")
+
+var _anima_panel: AnimaNode
+
 func _ready():
+	_anima_panel = Anima.begin(find_node("Panel"))
+	var p: Panel = $HBoxContainer/Panel
+	var style: StyleBoxFlat = p.get_stylebox("panel")
+
+	_anima_panel.then({ property = style, key = "bg_color", from = Color("25252a"), to = Color.transparent, duration = 0.3 })
+	_anima_panel.also({ node = _2d_container, animation = "fadeOutRight" })
 	_setup_list()
 
 func _setup_list() -> void:
@@ -16,7 +33,7 @@ func _setup_list() -> void:
 
 		if category != old_category:
 			var header = create_new_header(category)
-			$HBoxContainer/ScrollContainer/PanelContainer/ListContainer.add_child(header)
+			_list_container.add_child(header)
 
 		var button := Button.new()
 		button.set_text(file.replace('_', ' ').capitalize())
@@ -24,7 +41,7 @@ func _setup_list() -> void:
 		button.set_meta('script', file)
 		button.connect("pressed", self, '_on_animation_button_pressed', [button])
 
-		$HBoxContainer/ScrollContainer/PanelContainer/ListContainer.add_child(button)
+		_list_container.add_child(button)
 		old_category = category
 
 func create_new_header(text: String) -> PanelContainer:
@@ -47,16 +64,20 @@ func create_new_header(text: String) -> PanelContainer:
 
 func _on_animation_button_pressed(button: Button) -> void:
 	var script_name: String = button.get_meta('script')
+	var is_2d = find_node("2D").pressed
 
-	var duration = float($HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text)
+	var duration = float(_duration.text)
 
-	_play_animation($HBoxContainer/VBoxContainer/ControlContainer/ControlTest, button)
-	_play_animation($HBoxContainer/VBoxContainer/SpriteContainer/Control2/SpriteTest, button)
+	if is_2d:
+		_play_animation(_control_test, button)
+		_play_animation(_sprite_test, button)
+	else:
+		_play_animation(_mesh_cube, button)
 
 func _play_animation(node: Node, button: Button):
 	var script_name: String = button.get_meta('script')
 
-	var duration = float($HBoxContainer/ScrollContainer/PanelContainer/ListContainer/HBoxContainer/VBoxContainer/HBoxContainer/DurationEdit.text)
+	var duration = float(_duration.text)
 	var parent = node.get_parent()
 	var clone = node.duplicate()
 
@@ -84,12 +105,20 @@ func _on_control_animation_completed(animation_player: AnimationPlayer) -> void:
 	print(animation_player)
 
 func _on_ControlCheckbox_pressed():
-	$HBoxContainer/VBoxContainer/ControlLabel.visible = $HBoxContainer/ScrollContainer/PanelContainer/ListContainer/VBoxContainer/ControlCheckbox.pressed
-	$HBoxContainer/VBoxContainer/ControlContainer.visible = $HBoxContainer/ScrollContainer/PanelContainer/ListContainer/VBoxContainer/ControlCheckbox.pressed
+	var control_label := find_node("ControlLabel")
+	var control_container := find_node("ControlContainer")
+	var is_visible = find_node("ControlCheckbox").checked
+
+	control_label.visible = is_visible
+	control_container.visible = is_visible
 
 func _on_SpriteCheckbox_pressed():
-	$HBoxContainer/VBoxContainer/SpriteLabel.visible = $HBoxContainer/ScrollContainer/PanelContainer/ListContainer/VBoxContainer/SpriteCheckbox.pressed
-	$HBoxContainer/VBoxContainer/SpriteContainer.visible = $HBoxContainer/ScrollContainer/PanelContainer/ListContainer/VBoxContainer/SpriteCheckbox.pressed
+	var sprite_label := find_node("SpriteLabel")
+	var sprite_container := find_node("SpriteContainer")
+	var is_visible = find_node("ControlCheckbox").checked
+
+	sprite_label.visible = is_visible
+	sprite_container.visible = is_visible
 
 func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 	anima_tween.add_animation_data(data)
@@ -97,11 +126,24 @@ func generate_animation(anima_tween: AnimaTween, data: Dictionary) -> void:
 
 
 func _on_Timer_timeout():
-	var control := $HBoxContainer/VBoxContainer/ControlContainer/ControlTest
-	var sprite := $HBoxContainer/VBoxContainer/SpriteContainer/Control2/SpriteTest
+	_remove_duplicate(_control_test.get_parent(), _control_test)
+	_remove_duplicate(_sprite_test.get_parent(), _sprite_test)
 	
-	_remove_duplicate(control.get_parent(), control)
-	_remove_duplicate(sprite.get_parent(), sprite)
-	
-	sprite.show()
-	control.show()
+	_control_test.show()
+	_sprite_test.show()
+
+func _on_3D_pressed():
+	if _mesh_container.visible:
+		return
+
+	_mesh_container.show()
+	_anima_panel.play()
+
+func _on_2D_pressed():
+	if not _mesh_container.visible:
+		return
+
+	_anima_panel.play_backwards()
+
+	yield(_anima_panel, "animation_completed")
+	_mesh_container.hide()

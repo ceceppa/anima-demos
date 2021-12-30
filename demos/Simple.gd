@@ -21,7 +21,7 @@ func _ready() -> void:
 #	_anima.then({ property = "x", to = 100.0, relative = true, duration = 0.3, on_started = [funcref(self, '_test'), [false], [true]] })#	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
 #	_anima.then({ property = "x", to = -100.0, relative = true, duration = 0.3, on_started = [funcref(self, '_test'), [false], [true]] })#	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
 #	_anima.then({ property = "x", to = -100.0, duration = 0.3, on_started = [funcref(self, '_test'), [false], [true]] })#	_anima.set_visibility_strategy(Anima.VISIBILITY.TRANSPARENT_ONLY)
-	_anima.then({ node = $icon, animation = "flash", duration = 1.0 })
+	_anima.then({ node = $icon, property = "x", from = ":size:x", to = 0, duration = 1.0 })
 
 func _on_Button_pressed():
 	_anima.play()
