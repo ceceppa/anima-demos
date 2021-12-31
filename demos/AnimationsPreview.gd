@@ -107,7 +107,7 @@ func _on_control_animation_completed(animation_player: AnimationPlayer) -> void:
 func _on_ControlCheckbox_pressed():
 	var control_label := find_node("ControlLabel")
 	var control_container := find_node("ControlContainer")
-	var is_visible = find_node("ControlCheckbox").checked
+	var is_visible = find_node("ControlCheckbox").pressed
 
 	control_label.visible = is_visible
 	control_container.visible = is_visible
@@ -115,7 +115,7 @@ func _on_ControlCheckbox_pressed():
 func _on_SpriteCheckbox_pressed():
 	var sprite_label := find_node("SpriteLabel")
 	var sprite_container := find_node("SpriteContainer")
-	var is_visible = find_node("ControlCheckbox").checked
+	var is_visible = find_node("SpriteCheckbox").pressed
 
 	sprite_label.visible = is_visible
 	sprite_container.visible = is_visible

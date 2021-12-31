@@ -82,7 +82,8 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 
 			var property: String = PoolStringArray(info).join(":")
 #			animation_data.property = property
-			var property_value = AnimaNodesProperties.get_property_value(source_node, animation_data)
+
+			var property_value = AnimaNodesProperties.get_property_value(source_node, animation_data, property)
 
 			AnimaUI.debug("AnimatedItem", "maybe_calculate_value: search", source_node, rm.get_string(), property, property_value)
 

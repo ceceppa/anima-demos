@@ -251,7 +251,7 @@ func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relativ
 
 			frame_data["skew:x"] = skew.x / 32.0
 			frame_data["skew:y"] = skew.y / 32.0
-			
+
 			keys.push_back("skew:x")
 			key = "skew:y"
 

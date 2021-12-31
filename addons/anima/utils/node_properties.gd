@@ -90,8 +90,9 @@ static func set_2D_pivot(node: Node, pivot: int) -> void:
 		_:
 			printerr('Pivot point not handled yet')
 
-static func get_property_value(node: Node, animation_data: Dictionary):
-	var property = animation_data.property
+static func get_property_value(node: Node, animation_data: Dictionary, property = null):
+	if property == null:
+		property = animation_data.property
 
 	if property is Object:
 		return property[animation_data.key]

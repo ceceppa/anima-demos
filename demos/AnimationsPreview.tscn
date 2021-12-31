@@ -58,9 +58,10 @@ current = true
 fov = 63.1
 
 [node name="Spatial" type="Spatial" parent="MeshContainer"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.10789, 0 )
 
 [node name="MeshInstance" type="MeshInstance" parent="MeshContainer/Spatial"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4536, 0.655352, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.454, -5, 0 )
 mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
 
